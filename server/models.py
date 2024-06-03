@@ -3,6 +3,7 @@ from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
 
 
+
 class User(db.Model):
     __tablename__ = 'users'
     id=db.Column(db.Integer,primary_key=True)
@@ -12,7 +13,6 @@ class User(db.Model):
     is_active=db.Column(db.Boolean,default=True)
     role=db.Column(db.String(255),nullable=False)
     account_type=db.Column(db.String(255),nullable=False)
-   
     account=db.relationship('Account', back_populates="user")
     
     @validates('email')
@@ -82,4 +82,5 @@ class Notification(db.Model):
     __tablename__ = 'notifications'
     id=db.Column(db.Integer,primary_key=True)
     message=db.Column(db.String(255),nullable=False)
+    transaction_id=db.Column(db.Integer, db.ForeignKey("transactions.id"),nullable=False)
     user_id=db.Column(db.Integer, db.ForeignKey('users.id'))
