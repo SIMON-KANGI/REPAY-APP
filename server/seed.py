@@ -11,7 +11,8 @@ with app.app_context():
     print("Adding users...")
     users = [
         User(username='Simon Mwangi', email='simon.mwangi@repay.com', password="7889Kangi", account_type='personal'),
-        User(username='Ngethe Mwas', email='simonmwangi@gmail.com', password="7889Kangi", account_type='personal')
+        User(username='Ngethe Mwas', email='simonmwangi@gmail.com', password="7889Kangi", account_type='personal'),
+        User(username='Ngethe Mwas', email='simonkangi@gmail.com', password="7889Kangi", account_type='business')
     ]
     for user in users:
         db.session.add(user)
