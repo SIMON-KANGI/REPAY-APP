@@ -10,6 +10,8 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String(20), nullable=False)
     profile = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
+    phone=db.Column(db.Integer, nullable=False, unique=True)
+    location_id=db.Column(db.Integer, nullable=False)
     _password = db.Column(db.String(255), nullable=False)  # Changed column name to _password
     is_active = db.Column(db.Boolean, default=True)
     role = db.Column(db.String(255), nullable=False)
@@ -124,3 +126,8 @@ class Notification(db.Model, SerializerMixin):
     transaction_id = db.Column(db.Integer, db.ForeignKey("transactions.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     users=db.relationship('User',  back_populates='notifications')
+    
+class Location(db.Model):
+    __tablename__ = 'locations'
+    id = db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(20), unique=True)
