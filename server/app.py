@@ -29,10 +29,53 @@ class Users(Resource):
     
     def post(self):
         data = request.get_json()
-        new_user = User(username=data['username'], email=data['email'],profile=data['profile'], password=data['password'], account_type=data['account_type'], accounts=data['accounts'])
+        
+        # Log form data and uploaded files
+        app.logger.info(f"Form data: {request.form}")
+        app.logger.info(f"Files: {request.files}")
+        
+        # Extract data from the request
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        account_type = data.get('account_type')
+        profile = data.get('profile')
+        file_to_upload = request.files.get('file')
+        
+        # Validate required fields
+        missing_fields = []
+        if not all([username, email, password, account_type, profile, file_to_upload]):
+            missing_fields.append("username", "email", "password", "account_type", "profile", "file")
+            return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+        
+        # Upload profile image to Cloudinary
+        try:
+            if profile == 'image':
+                upload_result = uploader.upload(file_to_upload, resource_type='image')
+            else:
+                return jsonify({"error": "Profile must be an image"}), 400
+        except Exception as e:
+            app.logger.error(f"Error uploading file to Cloudinary: {e}")
+            return jsonify({"error": "File upload failed"}), 500
+        
+        # Get the uploaded file URL
+        file_url = upload_result.get('url')
+        
+        # Create a new user with the provided data
+        new_user = User(username=username, email=email, profile=file_url, password=password, account_type=account_type)
+        
+        # Add the user to the database
         db.session.add(new_user)
         db.session.commit()
-        return jsonify(new_user)
+        
+        # Return a response with the new user's information
+        return jsonify({
+            "id": new_user.id,
+            "username": new_user.username,
+            "email": new_user.email,
+            "profile": new_user.profile,
+            "account_type": new_user.account_type
+        }), 201  # HTTP status code for created resource
 
 api.add_resource(Users, '/users')
 
