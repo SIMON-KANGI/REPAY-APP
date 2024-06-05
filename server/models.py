@@ -8,7 +8,7 @@ class User(db.Model, SerializerMixin):
     serialize_only=('id','username','email','role','account_type')
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False)
-    profile = db.Column(db.String(20), nullable=False)
+    profile = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(255), nullable=False, unique=True)
     _password = db.Column(db.String(255), nullable=False)  # Changed column name to _password
     is_active = db.Column(db.Boolean, default=True)
@@ -16,7 +16,7 @@ class User(db.Model, SerializerMixin):
     account_type = db.Column(db.String(255), nullable=False)
     accounts = db.relationship('Account', back_populates="users")
     created_at = db.Column( db.DateTime, server_default=db.func.now())
-    notifications = db.relationship('Notification', back_populates="users")
+    notifications = db.relationship('Notification',cascade="all, delete-orphan", back_populates="users")
     @validates('email')
     def validate_email(self, key, email):
         if not email:
@@ -123,4 +123,4 @@ class Notification(db.Model, SerializerMixin):
     message = db.Column(db.String(255), nullable=False)
     transaction_id = db.Column(db.Integer, db.ForeignKey("transactions.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    users=db.relationship('User', cascade="all, delete-orphan", back_populates='notifications')
+    users=db.relationship('User',  back_populates='notifications')
