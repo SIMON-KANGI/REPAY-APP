@@ -90,15 +90,6 @@ class Users(Resource):
         send_welcome_email(new_user.email)
         return jsonify({'message': 'User created successfully', 'user': new_user.to_dict()})
 
-        # Return a response with the new user's information
-        return jsonify({
-            "id": new_user.id,
-            "username": new_user.username,
-            "email": new_user.email,
-            "profile": new_user.profile,
-            "account_type": new_user.account_type
-        }), 201  # HTTP status code for created resource
-
 api.add_resource(Users, '/users')
 
 class Login(Resource):
