@@ -6,6 +6,8 @@ from flask_jwt_extended import create_access_token, create_refresh_token, jwt_re
 import cloudinary
 from cloudinary import uploader
 import cloudinary.api
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -17,7 +19,22 @@ cloudinary.config(
     api_key=os.getenv('API_KEY'),
     api_secret=os.getenv('API_SECRET')
 )
+app.config['SENDGRID_API_KEY'] = os.getenv('SENDGRID_API_KEY')
 
+def send_welcome_email(email):
+    message = Mail(
+        from_email=('simonmwangikangi@gmail.com', 'REPAY'),
+        to_emails=email,
+        subject='Welcome to REPAY!',
+        html_content='<strong>Thank you for signing up!</strong>')
+    try:
+        sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e)
 @app.route('/')
 def Home():
     return "Repay API"
@@ -28,6 +45,9 @@ class Users(Resource):
         return jsonify(users)
     
     def post(self):
+        if request.content_type != 'application/json':
+            return jsonify({"error": "Content-Type must be application/json"}), 415
+        
         data = request.get_json()
         
         # Log form data and uploaded files
@@ -67,7 +87,9 @@ class Users(Resource):
         # Add the user to the database
         db.session.add(new_user)
         db.session.commit()
-        
+        send_welcome_email(new_user.email)
+        return jsonify({'message': 'User created successfully', 'user': new_user.to_dict()})
+
         # Return a response with the new user's information
         return jsonify({
             "id": new_user.id,
