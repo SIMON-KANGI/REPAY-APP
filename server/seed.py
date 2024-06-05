@@ -1,5 +1,5 @@
 from app import app
-from models import User, Account, Category
+from models import User, Account, Category, Location
 from config import db
 
 with app.app_context():
@@ -10,9 +10,9 @@ with app.app_context():
     
     print("Adding users...")
     users = [
-        User(username='Simon Mwangi',profile="img", email='simon.mwangi@repay.com', password="7889Kangi", account_type='personal'),
-        User(username='Ngethe Mwas',profile="img", email='simonmwangi@gmail.com', password="7889Kangi", account_type='personal'),
-        User(username='Ngethe Mwas', profile='img', email='simonkangi@gmail.com', password="7889Kangi", account_type='business')
+        User(username='Simon Mwangi',profile="img", email='simon.mwangi@repay.com', password="7889Kangi",phone='0797222488', location_id=1, account_type='personal'),
+        User(username='Ngethe Mwas',profile="img", email='simonmwangi@gmail.com', password="7889Kangi", phone='0793452488', location_id=4, account_type='personal'),
+        User(username='Ngethe Mwas', profile='img', email='simonkangi@gmail.com', password="7889Kangi", phone='0722447565', location_id=2, account_type='business')
     ]
     for user in users:
         db.session.add(user)
@@ -34,6 +34,24 @@ with app.app_context():
         Category(name='I&M'),
         Category(name='Stanbic'),
         Category(name='Family')
+    ]
+    for category in categories:
+        db.session.add(category)
+    db.session.commit()
+    
+    locationss = [
+        Location(name='Nairobi'),
+        Location(name='Kisumu'),
+         Location(name='Mombasa'),
+        Location(name='Eldoret'),
+         Location(name='Kiambu'),
+        Location(name='Nakuru'),
+         Location(name='Mandera'),
+        Location(name='Lamu'),
+         Location(name='Kilifi'),
+        Location(name='Thika'),
+         Location(name='Nyeri'),
+        Location(name='Kakamega'),
     ]
     for category in categories:
         db.session.add(category)
