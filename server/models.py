@@ -15,7 +15,8 @@ class User(db.Model, SerializerMixin):
     role = db.Column(db.String(255), nullable=False)
     account_type = db.Column(db.String(255), nullable=False)
     accounts = db.relationship('Account', back_populates="users")
-    
+    created_at = db.Column( db.DateTime, server_default=db.func.now())
+    notifications = db.relationship('Notification', back_populates="users")
     @validates('email')
     def validate_email(self, key, email):
         if not email:
@@ -66,7 +67,7 @@ class Account(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     users = db.relationship('User', back_populates="accounts")
     category = db.relationship('Category', back_populates='accounts')
-    
+    created_at = db.Column( db.DateTime, server_default=db.func.now())
     @property
     def password(self):
         return self._password
@@ -111,11 +112,15 @@ class Transaction(db.Model, SerializerMixin):
     amount = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
+    created_at = db.Column( db.DateTime, server_default=db.func.now())
 
 class Notification(db.Model, SerializerMixin):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column( db.DateTime, server_default=db.func.now())
     message = db.Column(db.String(255), nullable=False)
     transaction_id = db.Column(db.Integer, db.ForeignKey("transactions.id"), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    users=db.relationship('User', cascade="all, delete-orphan", back_populates='notifications')
