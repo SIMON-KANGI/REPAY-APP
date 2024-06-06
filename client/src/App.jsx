@@ -1,13 +1,14 @@
 import { useState } from 'react'
 
-import './App.css'
-
+import Login from './pages/authentication/Login'
+import { Route, Routes } from 'react-router-dom'
 function App() {
-  
-
   return (
     <>
-  <h1 className='text-center text-red-600 font-bold text-4xl'>REPAY</h1>
+<Routes>
+  <Route path="/login" element={<Login />} />
+  <Route path="*" element={<h1>404</h1>} />
+</Routes>
     </>
   )
 }
