@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
@@ -13,19 +13,28 @@ function Login() {
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
     const [login, { isLoading }] = useLoginMutation();
-    
+    const [showPassword, setShowPassword] = useState(false);
+
+    function handleShowPassword() {
+        setShowPassword(!showPassword);
+    }
+
     const formSchema = yup.object().shape({
         email: yup.string().required('Must enter an email').email('Invalid email format'),
         password: yup.string().required('Must enter a password').min(8, 'Password must be at least 8 characters'),
     });
-    
+
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            const result = await login({ email: values.email, password: values.password }).unwrap();
-            const { access_token, user } = result;
+            const response = await login({
+                email: values.email,
+                password: values.password,
+            });
+            const { access_token, username, role, content } = response.data;
             localStorage.setItem('access', access_token);
-            dispatch(setCredentials({ accessToken: access_token, user }));
-            toast.success(`Logged in as ${user.username}`, { position: 'top-right' });
+            localStorage.setItem('username', username);
+            dispatch(setCredentials({ accessToken: access_token, username:username, role:role, user: content }));
+            toast.success(`Logged in as ${username}`, { position: 'top-right' });
             navigate(from, { replace: true });
         } catch (error) {
             toast.error(error.data?.message || 'An unexpected error occurred');
@@ -33,7 +42,7 @@ function Login() {
             setSubmitting(false);
         }
     };
-    
+
     return (
         <div>
             <h1>Login</h1>
@@ -52,8 +61,11 @@ function Login() {
 
                         <div className="m-4 relative p-4">
                             <label className="absolute -top-6">Password*</label>
-                            <Field type="password" name="password" className="w-3/4 p-2 border-gray-700 border-2" />
+                            <Field type={showPassword ? "text" : "password"} name="password" className="w-3/4 p-2 border-gray-700 border-2" />
                             <ErrorMessage name="password" component="div" className="text-red-600" />
+                            <button type="button" onClick={handleShowPassword}>
+                                {showPassword ? "Hide" : "Show"} Password
+                            </button>
                         </div>
 
                         <button className="bg-blue-600 py-3 w-3/4 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
