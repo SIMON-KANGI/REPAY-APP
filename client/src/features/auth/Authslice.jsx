@@ -12,7 +12,7 @@ const AuthSlice =createSlice({
     },
     reducers:{
         setCredentials:(state,action)=>{
-            const {username,accessToken,id,user,role,profile, isLoggedIn}=action.payload
+            const {username,accessToken,id,user,role,profile}=action.payload
             state.isLoggedIn=true
             state.username=username;
             state.accessToken=accessToken;
