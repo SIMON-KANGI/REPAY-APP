@@ -1,31 +1,41 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { setCredentials,logout } from './Authslice';
+import { setCredentials, logout } from './Authslice';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://127.0.0.1:5555', //url for the api
-    credentials: 'include', // Corrected typo
+    baseUrl: 'http://127.0.0.1:5555', // URL for the API
+    credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
-        const accessToken = getState().auth.accessToken; //access token when the login is successful
+        const accessToken = getState().auth.accessToken; // Access token when login is successful
         if (accessToken) {
             headers.set('Authorization', `Bearer ${accessToken}`);
         }
         return headers;
     }
 });
-// get a new access token when the access token expires
+
+// Get a new access token when the access token expires
 const baseQueryWithReAuth = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
 
     if (result?.error?.originalStatus === 403) {
-        console.log('sending refresh token');
-        // const refreshToken = localStorage.getItem('refresh_token');
+        console.log('Sending refresh token');
+
         // Implement refresh token logic here
-        
-        const refreshResult = await baseQuery('/login', api, extraOptions);
-        console.log(refreshResult);
+        const refreshToken = getState().auth.refreshToken;
+        const refreshResult = await baseQuery({
+            url: '/refresh-token',
+            method: 'POST',
+            body: { refreshToken }
+        }, api, extraOptions);
+
         if (refreshResult?.data) {
             const user = api.getState().auth.user;
-            api.dispatch(setCredentials({ ...refreshResult.data, user }));
+            // Assuming refreshResult.data contains the new accessToken and refreshToken
+            api.dispatch(setCredentials({ 
+                accessToken: refreshResult.data.accessToken, 
+                refreshToken: refreshResult.data.refreshToken, 
+                user 
+            }));
             result = await baseQuery(args, api, extraOptions);
         } else {
             api.dispatch(logout());
@@ -36,5 +46,16 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
     baseQuery: baseQueryWithReAuth,
-    endpoints: (builder) => ({})
+    endpoints: (builder) => ({
+        login: builder.mutation({
+            query: (credentials) => ({
+                url: '/login',
+                method: 'POST',
+                body: credentials
+            }),
+        }),
+        // Other endpoints can be defined here
+    }),
 });
+
+export const { useLoginMutation } = apiSlice;
