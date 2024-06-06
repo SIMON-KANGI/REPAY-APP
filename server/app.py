@@ -1,40 +1,71 @@
 from config import create_app, db
 from flask_restful import Api, Resource
 from flask import request, jsonify, make_response, session
-from models import Transaction, Account, User, Notification
+from models import Transaction, Account, User, Notification, Location
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, unset_jwt_cookies
 import cloudinary
 from cloudinary import uploader
 import cloudinary.api
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 import os
+import requests
 from dotenv import load_dotenv
+
 load_dotenv()
 app = create_app()
 api = Api(app)
+
+api_url = 'https://n8jqr8.api.infobip.com/sms/2/text/advanced'
+api_key = os.getenv('INFO_API_KEY')
 
 cloudinary.config(
     cloud_name=os.getenv('CLOUD_NAME'),
     api_key=os.getenv('API_KEY'),
     api_secret=os.getenv('API_SECRET')
 )
-app.config['SENDGRID_API_KEY'] = os.getenv('SENDGRID_API_KEY')
+app.config['SEND_API_KEY'] = os.getenv('SEND_API_KEY')
 
 def send_welcome_email(email):
     message = Mail(
         from_email=('simonmwangikangi@gmail.com', 'REPAY'),
         to_emails=email,
         subject='Welcome to REPAY!',
-        html_content='<strong>Thank you for signing up!</strong>')
+        html_content='<strong>Thank you for signing up!</strong>'
+    )
     try:
-        sg = SendGridAPIClient(app.config['SENDGRID_API_KEY'])
+        sg = SendGridAPIClient(app.config['SEND_API_KEY'])
         response = sg.send(message)
         print(response.status_code)
         print(response.body)
         print(response.headers)
     except Exception as e:
         print(e)
+
+def send_welcome_sms(phone):
+    headers = {
+        "Authorization": f"App {api_key}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "messages": [
+            {
+                "from": "REPAY",
+                "destinations": [
+                    {"to": phone}
+                ],
+                "text": "Welcome to REPAY! Thank you for signing up."
+            }
+        ]
+    }
+
+    # Send the request
+    response = requests.post(api_url, headers=headers, json=payload)
+
+    # Check the response
+    if response.status_code == 200:
+        print("Message sent successfully!")
+    else:
+        print(f"Failed to send message. Status code: {response.status_code}, Response: {response.json()}")
+
 @app.route('/')
 def Home():
     return "Repay API"
@@ -58,14 +89,26 @@ class Users(Resource):
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
+        location = data.get('location')
+        phone = data.get('phone')
         account_type = data.get('account_type')
         profile = data.get('profile')
         file_to_upload = request.files.get('file')
         
+        location = Location.query.filter(Location.name == location).first()
+        location_id = location.id
+        
         # Validate required fields
         missing_fields = []
-        if not all([username, email, password, account_type, profile, file_to_upload]):
-            missing_fields.append("username", "email", "password", "account_type", "profile", "file")
+        if not all([username, email, phone, password, account_type, location_id, profile, file_to_upload]):
+            missing_fields.append("username")
+            missing_fields.append("email")
+            missing_fields.append("phone")
+            missing_fields.append("password")
+            missing_fields.append("location_id")
+            missing_fields.append("account_type")
+            missing_fields.append("profile")
+            missing_fields.append("file")
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
         
         # Upload profile image to Cloudinary
@@ -82,12 +125,16 @@ class Users(Resource):
         file_url = upload_result.get('url')
         
         # Create a new user with the provided data
-        new_user = User(username=username, email=email, profile=file_url, password=password, account_type=account_type)
+        new_user = User(username=username, email=email, phone=phone, location_id=location_id, profile=file_url, password=password, account_type=account_type)
         
         # Add the user to the database
         db.session.add(new_user)
         db.session.commit()
+        
+        # Send welcome email and SMS
         send_welcome_email(new_user.email)
+        send_welcome_sms(new_user.phone)
+        
         return jsonify({'message': 'User created successfully', 'user': new_user.to_dict()})
 
 api.add_resource(Users, '/users')
