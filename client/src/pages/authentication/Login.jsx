@@ -7,6 +7,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLoginMutation } from '../../features/auth/Authapi';
 import { toast } from 'react-toastify'; // Ensure you have this library installed and configured
 import GoogleAuthProviderWrapper from './GoogleLogin';
+import LoginGoogle from './GoogleLogin';
 
 function Login() {
     const dispatch = useDispatch();
@@ -73,12 +74,15 @@ function Login() {
                             {isLoading ? 'Logging in...' : 'Login'}
                         </button>
                         
-                          <GoogleAuthProviderWrapper/>
+                         
+                          {/* <LoginGoogle/> */}
                         
                         <p className="text-sm mt-2">Don't have an account? <Link to="/register" className="text-blue-600">Register here</Link></p>
                     </Form>
                 )}
-            </Formik>
+            </Formik> 
+                
+            <GoogleAuthProviderWrapper/>
         </div>
     );
 }
