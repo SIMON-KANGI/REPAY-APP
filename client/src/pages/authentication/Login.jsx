@@ -6,12 +6,13 @@ import { setCredentials } from '../../features/auth/Authslice';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLoginMutation } from '../../features/auth/Authapi';
 import { toast } from 'react-toastify'; // Ensure you have this library installed and configured
+import GoogleAuthProviderWrapper from './GoogleLogin';
 
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || '/';
+    const from = location.state?.from?.pathname || '/login';
     const [login, { isLoading }] = useLoginMutation();
     const [showPassword, setShowPassword] = useState(false);
 
@@ -68,9 +69,12 @@ function Login() {
                             </button>
                         </div>
 
-                        <button className="bg-blue-600 py-3 w-3/4 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
+                        <button className="bg-rose-600 py-3 w-3/4 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
                             {isLoading ? 'Logging in...' : 'Login'}
                         </button>
+                        
+                          <GoogleAuthProviderWrapper/>
+                        
                         <p className="text-sm mt-2">Don't have an account? <Link to="/register" className="text-blue-600">Register here</Link></p>
                     </Form>
                 )}
