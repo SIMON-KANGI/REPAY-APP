@@ -12,7 +12,7 @@ with app.app_context():
     users = [
         User(username='Simon Mwangi',profile="img", email='simon.mwangi@repay.com', password="7889Kangi",phone='0797222488', location_id=1, account_type='personal'),
         User(username='Ngethe Mwas',profile="img", email='simonmwangi@gmail.com', password="7889Kangi", phone='0793452488', location_id=4, account_type='personal'),
-        User(username='Ngethe Mwas', profile='img', email='simonkangi@gmail.com', password="7889Kangi", phone='0722447565', location_id=2, account_type='business')
+        User(username='Ngethe Mwas', profile='img', email='simonmwangikangi@gmail.com', password="7889Kangi", phone='0722447565', location_id=2, account_type='business')
     ]
     for user in users:
         db.session.add(user)
