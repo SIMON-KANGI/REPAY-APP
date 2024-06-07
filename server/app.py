@@ -1,6 +1,6 @@
 from config import create_app, db
 from flask_restful import Api, Resource
-from flask import request, jsonify, make_response, session
+from flask import request, jsonify, make_response, session, url_for, redirect
 from models import Transaction, Account, User, Notification, Location
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, unset_jwt_cookies
 import cloudinary
@@ -9,14 +9,29 @@ import cloudinary.api
 import os
 import requests
 from dotenv import load_dotenv
+from authlib.integrations.flask_client import OAuth
 
 load_dotenv()
 app = create_app()
 api = Api(app)
 
+oauth = OAuth(app)
+
 api_url = 'https://n8jqr8.api.infobip.com/sms/2/text/advanced'
 api_key = os.getenv('INFO_API_KEY')
 
+google = oauth.register(
+    name='google',
+    client_id=os.getenv('GOOGLE_CLIENT_ID'),
+    client_secret=os.getenv('GOOGLE_CLIENT_SECRET'),
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    access_token_params=None,
+    refresh_token_url=None,
+    redirect_uri=os.getenv('GOOGLE_REDIRECT_URI'),
+    client_kwargs={'scope': 'openid profile email'}
+)
 cloudinary.config(
     cloud_name=os.getenv('CLOUD_NAME'),
     api_key=os.getenv('API_KEY'),
@@ -57,10 +72,7 @@ def send_welcome_sms(phone):
         ]
     }
 
-    # Send the request
     response = requests.post(api_url, headers=headers, json=payload)
-
-    # Check the response
     if response.status_code == 200:
         print("Message sent successfully!")
     else:
@@ -81,11 +93,9 @@ class Users(Resource):
         
         data = request.get_json()
         
-        # Log form data and uploaded files
         app.logger.info(f"Form data: {request.form}")
         app.logger.info(f"Files: {request.files}")
         
-        # Extract data from the request
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
@@ -98,7 +108,6 @@ class Users(Resource):
         location = Location.query.filter(Location.name == location).first()
         location_id = location.id
         
-        # Validate required fields
         missing_fields = []
         if not all([username, email, phone, password, account_type, location_id, profile, file_to_upload]):
             missing_fields.append("username")
@@ -111,7 +120,6 @@ class Users(Resource):
             missing_fields.append("file")
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
         
-        # Upload profile image to Cloudinary
         try:
             if profile == 'image':
                 upload_result = uploader.upload(file_to_upload, resource_type='image')
@@ -121,17 +129,13 @@ class Users(Resource):
             app.logger.error(f"Error uploading file to Cloudinary: {e}")
             return jsonify({"error": "File upload failed"}), 500
         
-        # Get the uploaded file URL
         file_url = upload_result.get('url')
         
-        # Create a new user with the provided data
         new_user = User(username=username, email=email, phone=phone, location_id=location_id, profile=file_url, password=password, account_type=account_type)
         
-        # Add the user to the database
         db.session.add(new_user)
         db.session.commit()
         
-        # Send welcome email and SMS
         send_welcome_email(new_user.email)
         send_welcome_sms(new_user.phone)
         
@@ -139,6 +143,45 @@ class Users(Resource):
 
 api.add_resource(Users, '/users')
 
+@app.route('/login/google')
+def login_google():
+    redirect_uri = url_for('authorized', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+
+@app.route('/login/authorized', methods=['GET', 'OPTIONS'])
+def authorized():
+    if request.method == 'GET':
+        token = google.authorize_access_token()
+        user_info = google.parse_id_token(token)
+        email = user_info['email']
+        username = user_info['name']  # Assuming 'name' field contains the username
+        
+        # Check if the user exists in the database
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            # If the user doesn't exist, register the user using Google info
+            user = User(username=username, email=email)
+            db.session.add(user)
+            db.session.commit()
+
+        # Generate JWT tokens for the user
+        access_token = create_access_token(identity={"email": user.email, "role": user.role, "id": user.id})
+        refresh_token = create_refresh_token(identity={"email": user.email, "role": user.role, "id": user.id})
+
+        # Return the tokens and user info in the response
+        return jsonify({
+            'access_token': access_token,
+            'refresh_token': refresh_token,
+            'user': user.to_dict()  # Assuming to_dict() method returns user info as a dictionary
+        })
+    elif request.method == 'OPTIONS':
+        # Handle OPTIONS request for CORS
+        response = jsonify({'message': 'Handled OPTIONS request'})
+        response.headers.add('Access-Control-Allow-Origin', '*')  # Allow requests from any origin
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')  # Allow specific headers
+        response.headers.add('Access-Control-Allow-Methods', 'GET,OPTIONS')  # Allow specific methods
+        return response
 class Login(Resource):
     def post(self):
         if request.content_type != 'application/json':
@@ -150,7 +193,7 @@ class Login(Resource):
 
         user = User.query.filter_by(email=email).first()
 
-        if user and user.check_password_hash(password):
+        if user and user.check_password(password):
             access_token = create_access_token(identity={"email": user.email, "role": user.role, "id": user.id})
             refresh_token = create_refresh_token(identity={"email": user.email, "role": user.role, "id": user.id})
             
@@ -206,14 +249,12 @@ class MakeTransaction(Resource):
             account_id = data['account_id']
             amount = data['amount']
             sender_id = data.get('sender_id')
-            transaction_type = data.get('transaction_type', 'received')  # default to 'received'
+            transaction_type = data.get('transaction_type', 'received')
 
-            # Fetch the account by ID
             account = Account.query.get(account_id)
             if not account:
                 return jsonify({"error": "Account not found"}), 404
             
-            # Perform the transaction
             if transaction_type == 'received':
                 account.received(amount)
             elif transaction_type == 'sent':
@@ -221,7 +262,6 @@ class MakeTransaction(Resource):
             else:
                 return jsonify({"error": "Invalid transaction type"}), 400
             
-            # Create a new transaction record
             transaction = Transaction(
                 amount=amount,
                 date=db.func.current_timestamp(),
@@ -232,7 +272,6 @@ class MakeTransaction(Resource):
             db.session.add(transaction)
             db.session.commit()
 
-            # Create a new notification
             notification_message = f"Transaction of {amount} {transaction_type} on account {account.number}"
             notification = Notification(
                 message=notification_message,
@@ -242,7 +281,7 @@ class MakeTransaction(Resource):
             db.session.add(notification)
             db.session.commit()
             
-            return jsonify(account.to_dict()), 200  # Use .to_dict() for serialization
+            return jsonify(account.to_dict()), 200
 
         except KeyError as e:
             return jsonify({"error": f"Missing key: {e.args[0]}"}), 400
@@ -276,4 +315,7 @@ class Notifications(Resource):
 api.add_resource(Notifications, '/notifications')
 
 if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+    with app.app_context():
+        app.run(port=5555, debug=True)
+
+    
