@@ -7,8 +7,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLoginMutation } from '../../features/auth/Authapi';
 import { toast } from 'react-toastify'; // Ensure you have this library installed and configured
 import GoogleAuthProviderWrapper from './GoogleLogin';
-import LoginGoogle from './GoogleLogin';
-
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Spinner } from '@chakra-ui/react'
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -46,33 +46,38 @@ function Login() {
     };
 
     return (
-        <div>
-            <h1>Login</h1>
+        <div className='flex flex-col my-6 py-16 px-4 items-center  justify-center w-full'>
+            
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={formSchema}
                 onSubmit={handleSubmit}
             >
                 {({ isSubmitting }) => (
-                    <Form className="block">
-                        <div className="block m-4 relative p-4">
-                            <label className="absolute -top-6">Email*</label>
-                            <Field type="email" name="email" className="w-3/4 p-2 border-gray-700 border-2" />
+                    <Form className="block  p-20  border rounded-md border-slate-500">
+                    <h1 className='text-center text-3xl font-bold'>Login to REPAY</h1>
+                        <div className="block w-full mt-6 relative p-4">
+                            <label className="absolute -top-2">Email<span className='text-rose-600'>*</span></label>
+                            <Field type="email" name="email" placeholder="Email" className="w-72 p-2 rounded-md border-gray-700 border" />
                             <ErrorMessage name="email" component="div" className="text-red-600" />
                         </div>
 
-                        <div className="m-4 relative p-4">
-                            <label className="absolute -top-6">Password*</label>
-                            <Field type={showPassword ? "text" : "password"} name="password" className="w-3/4 p-2 border-gray-700 border-2" />
+                        <div className="block w-full mt-6 relative p-4">
+                            <label className="absolute -top-2">Password<span className='text-rose-600'>*</span></label>
+                            <Field type={showPassword ? "text" : "password"} name="password" placeholder="Password" className="w-72 rounded-md p-2 border-gray-700 border" />
                             <ErrorMessage name="password" component="div" className="text-red-600" />
                             <button type="button" onClick={handleShowPassword}>
-                                {showPassword ? "Hide" : "Show"} Password
+                                {showPassword ? <FaEye /> : <FaEyeSlash />}
                             </button>
                         </div>
-
-                        <button className="bg-rose-600 py-3 w-3/4 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
-                            {isLoading ? 'Logging in...' : 'Login'}
+                        <div className="block w-full mt-4 relative p-4">
+                             <button className="bg-rose-600 py-3 w-72 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
+                            {isLoading ? <Spinner/> : 'Login'}
                         </button>
+                        </div>
+                        <div className="bg-blue-600  text-center text-white rounded-md block w-full mt-4 relative p-4" >
+                                <GoogleAuthProviderWrapper/>    
+                         </div>
                         
                          
                           {/* <LoginGoogle/> */}
@@ -81,8 +86,10 @@ function Login() {
                     </Form>
                 )}
             </Formik> 
+            <hr/>
+            <p className="text-sm mt-2">or</p>
                 
-            <GoogleAuthProviderWrapper/>
+          
         </div>
     );
 }
