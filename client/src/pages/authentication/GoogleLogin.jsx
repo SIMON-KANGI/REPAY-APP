@@ -15,7 +15,7 @@ const LoginGoogle = () => {
       onSuccess: async (response) => {
         try {
           const { access_token } = response;
-          const res = await axios.post('http://127.0.0.1:5555/login/authorized', { access_token });
+          const res = await axios.get('http://127.0.0.1:5555/login/authorized', { access_token });
   
           const { data } = res;
           const { access_token: backendAccessToken, refresh_token, user } = data;
