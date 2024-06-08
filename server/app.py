@@ -10,6 +10,8 @@ import os
 import requests
 from dotenv import load_dotenv
 from authlib.integrations.flask_client import OAuth
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 load_dotenv()
 app = create_app()
@@ -38,7 +40,8 @@ cloudinary.config(
     api_secret=os.getenv('API_SECRET')
 )
 app.config['SEND_API_KEY'] = os.getenv('SEND_API_KEY')
-
+if not all([cloudinary.config().cloud_name, cloudinary.config().api_key, cloudinary.config().api_secret]):
+    raise ValueError("No Cloudinary configuration found. Ensure CLOUD_NAME, API_KEY, and API_SECRET are set.")
 def send_welcome_email(email):
     message = Mail(
         from_email=('simonmwangikangi@gmail.com', 'REPAY'),
@@ -88,14 +91,16 @@ class Users(Resource):
         return jsonify(users)
     
     def post(self):
-        if request.content_type != 'application/json':
-            return jsonify({"error": "Content-Type must be application/json"}), 415
-        
-        data = request.get_json()
-        
         app.logger.info(f"Form data: {request.form}")
         app.logger.info(f"Files: {request.files}")
-        
+
+      
+        data = request.form
+        file_to_upload = request.files.get('file')
+
+        if not file_to_upload or file_to_upload.filename == '':
+            return jsonify({"error": "File is required"}), 400
+
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
@@ -103,43 +108,52 @@ class Users(Resource):
         phone = data.get('phone')
         account_type = data.get('account_type')
         profile = data.get('profile')
-        file_to_upload = request.files.get('file')
-        
-        location = Location.query.filter(Location.name == location).first()
-        location_id = location.id
-        
-        missing_fields = []
-        if not all([username, email, phone, password, account_type, location_id, profile, file_to_upload]):
-            missing_fields.append("username")
-            missing_fields.append("email")
-            missing_fields.append("phone")
-            missing_fields.append("password")
-            missing_fields.append("location_id")
-            missing_fields.append("account_type")
-            missing_fields.append("profile")
-            missing_fields.append("file")
+        app.logger.info(
+            f"Recieved Data: username:{username}, email:{email}, phone:{phone},location:{location}, profile:{profile}, account_type:{account_type}"
+        )
+        # Validate missing fields
+        missing_fields = [field for field in ["username", "email", "phone", "password", "location", "account_type", "profile"] if not data.get(field)]
+        if missing_fields:
             return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
-        
+
+        # Upload file to Cloudinary (or handle it appropriately in your context)
         try:
             if profile == 'image':
+                # Ensure you have your uploader configured
                 upload_result = uploader.upload(file_to_upload, resource_type='image')
             else:
                 return jsonify({"error": "Profile must be an image"}), 400
         except Exception as e:
             app.logger.error(f"Error uploading file to Cloudinary: {e}")
             return jsonify({"error": "File upload failed"}), 500
-        
+
         file_url = upload_result.get('url')
-        
-        new_user = User(username=username, email=email, phone=phone, location_id=location_id, profile=file_url, password=password, account_type=account_type)
-        
+
+        # Assuming your User model has the correct constructor and to_dict method
+        location_obj = Location.query.filter(Location.name == location).first()
+        if not location_obj:
+            return jsonify({"error": "Invalid location"}), 400
+
+        new_user = User(
+            username=username,
+            email=email,
+            phone=phone,
+            location_id=location_obj.id,
+            profile=file_url,
+            password=password,
+            account_type=account_type
+        )
+
         db.session.add(new_user)
         db.session.commit()
-        
+
+        # Send welcome email and SMS
         send_welcome_email(new_user.email)
         send_welcome_sms(new_user.phone)
-        
+        # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
+
         return jsonify({'message': 'User created successfully', 'user': new_user.to_dict()})
+
 
 api.add_resource(Users, '/users')
 
@@ -149,39 +163,65 @@ def login_google():
     return google.authorize_redirect(redirect_uri)
 
 
-@app.route('/login/authorized', methods=['GET', 'OPTIONS'])
-def authorized():
-    if request.method == 'GET':
-        token = google.authorize_access_token()
-        user_info = google.parse_id_token(token)
-        email = user_info['email']
-        username = user_info['name']  # Assuming 'name' field contains the username
-        
-        # Check if the user exists in the database
-        user = User.query.filter_by(email=email).first()
-        if not user:
-            # If the user doesn't exist, register the user using Google info
-            user = User(username=username, email=email)
-            db.session.add(user)
-            db.session.commit()
+class GoogleLogin(Resource):
+    @staticmethod
+    def authorized():
+        if request.method == 'GET':
+            token = google.authorize_access_token()
+            user_info = google.parse_id_token(token)
+            email = user_info['email']
+            username = user_info['name']  # Assuming 'name' field contains the username
+            
+            # Check if the user exists in the database
+            user = User.query.filter_by(email=email).first()
+            if not user:
+                # If the user doesn't exist, register the user using Google info
+                user = User(username=username, email=email)
+                db.session.add(user)
+                db.session.commit()
 
-        # Generate JWT tokens for the user
-        access_token = create_access_token(identity={"email": user.email, "role": user.role, "id": user.id})
-        refresh_token = create_refresh_token(identity={"email": user.email, "role": user.role, "id": user.id})
+            # Generate JWT tokens for the user
+            access_token = create_access_token(identity={"email": user.email, "role": user.role, "id": user.id})
+            refresh_token = create_refresh_token(identity={"email": user.email, "role": user.role, "id": user.id})
 
-        # Return the tokens and user info in the response
-        return jsonify({
-            'access_token': access_token,
-            'refresh_token': refresh_token,
-            'user': user.to_dict()  # Assuming to_dict() method returns user info as a dictionary
-        })
-    elif request.method == 'OPTIONS':
-        # Handle OPTIONS request for CORS
-        response = jsonify({'message': 'Handled OPTIONS request'})
-        response.headers.add('Access-Control-Allow-Origin', '*')  # Allow requests from any origin
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')  # Allow specific headers
-        response.headers.add('Access-Control-Allow-Methods', 'GET,OPTIONS')  # Allow specific methods
-        return response
+            # Return the tokens and user info in the response
+            return jsonify({
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+                'user': user.to_dict()  # Assuming to_dict() method returns user info as a dictionary
+            })
+    
+    def post(self):
+        access_token = request.json.get('access_token')
+        if access_token:
+            # Retrieve the nonce value stored in session or elsewhere
+            nonce = session.get('nonce')
+
+            if nonce:
+                user_info = google.parse_id_token(access_token, nonce=nonce)
+                email = user_info['email']
+                username = user_info['name'] 
+                user = User.query.filter_by(email=email).first()
+                if user:
+                    access_token = create_access_token(identity={"email": user.email, "role": user.role, "id": user.id})
+                    refresh_token = create_refresh_token(identity={"email": user.email, "role": user.role, "id": user.id})
+                    return jsonify({
+                        'access_token': access_token,
+                        'id': user.id,
+                        'content': user.to_dict(),
+                        'username': user.username,
+                        'role': user.role,
+                        'refresh_token': refresh_token
+                    }), 200
+                else:
+                    return jsonify({'message': 'User not found'}), 404
+            else:
+                return jsonify({'message': 'Nonce not found'}), 400
+        else:
+            return jsonify({'message': 'Access token not provided'}), 400
+
+api.add_resource(GoogleLogin, '/login/authorized')
+
 class Login(Resource):
     def post(self):
         if request.content_type != 'application/json':
