@@ -46,29 +46,36 @@ function SignUp() {
       if (file) {
         formData.append('file', file);
       } else {
+        setSubmitting(false);
         return toast.error('File is required');
       }
 
-      const response = await axios.post('http://127.0.0.1:5555/users', formData, {
-        headers: {
-          'Content-Type':'application/json'
-        }
-      });
+      const response = await axios.post('http://127.0.0.1:5555/users', formData);
+      
+      if (!response.ok) {
+        const errorMessage = await response.json();
+        console.log(formData);
+        setError(
+          errorMessage.error || "An error occurred. Please try again later."
+        );
+      }
 
       const { access_token, username, role, content } = response.data;
 
       localStorage.setItem('access', access_token);
       localStorage.setItem('username', username);
-
+      
       dispatch({ type: 'SET_CREDENTIALS', payload: { accessToken: access_token, username, role, user: content } });
 
       toast.success(`Logged in as ${username}`, { position: 'top-right' });
       navigate('/dashboard', { replace: true });
     } catch (error) {
+      console.error("Error posting data:", error);
       toast.error(error.response?.data?.message || 'An unexpected error occurred');
     } finally {
       setSubmitting(false);
     }
+    console.log(formData)
   };
 
   const handleFileChange = (e) => {
@@ -104,12 +111,10 @@ function SignUp() {
                   style={{ display: "none" }}
                 />
                 <p className="w-fit flex p-2">
-                  Drag and drop an image
                   <FaImage />
                 </p>
                 {file && (
                   <div>
-                    <h3>Preview:</h3>
                     {file.type.startsWith("image/") && (
                       <img
                         src={URL.createObjectURL(file)}
