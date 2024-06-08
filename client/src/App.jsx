@@ -2,16 +2,23 @@ import { useState } from 'react'
 
 import Login from './pages/authentication/Login'
 import { Route, Routes } from 'react-router-dom'
-import SignUp from './pages/authentication/SignUp'
+
+import NavBar from './components/NavBar'
+import AccountType from './pages/authentication/AccountType'
+import Personal from './pages/authentication/Personal'
 function App() {
   return (
     <>
-    <h1>Home</h1>
-<Routes>
-  <Route path="/login" element={<Login />} />
-  <Route path="/register" element={<SignUp/>} />
-  <Route path="*" element={<h1>404</h1>} />
-</Routes>
+   <NavBar/>
+   <main className='container'>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/account-personal" element={<Personal/>} />
+      <Route path="/account" element={<AccountType />} />
+      <Route path="*" element={<h1>404</h1>} />
+    </Routes>
+   </main>
+
     </>
   )
 }
