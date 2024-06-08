@@ -5,7 +5,7 @@ from sqlalchemy.orm import validates
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     serialize_rule=()
-    serialize_only=('id','username','email','role','account_type')
+    serialize_only=('id','username','email','role','account_type', 'phone', 'profile','location_id',)
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False)
     profile = db.Column(db.String(255), nullable=False)
@@ -55,6 +55,10 @@ class User(db.Model, SerializerMixin):
             'email': self.email,
             'role': self.role,
             'account_type': self.account_type,
+            'phone':self.phone,
+            'profile': self.profile,
+            'location_id': self.location_id,
+            
             'accounts':[{'id':account.id, "number": account.number, 'balance': account.balance}for account in self.accounts]
         }
 class Account(db.Model, SerializerMixin):
