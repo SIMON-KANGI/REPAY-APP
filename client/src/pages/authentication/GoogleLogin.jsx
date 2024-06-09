@@ -7,6 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
 import { useLoginMutation } from '../../features/auth/Authapi';
+import { FcGoogle } from "react-icons/fc";
 const LoginGoogle = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -37,8 +38,9 @@ const LoginGoogle = () => {
     });
   
     return (
-        <div>
-            <button onClick={() => googleLogin()}>
+        <div className="block w-full mt-4 relative p-4">
+            <button onClick={() => googleLogin()} className=" py-3 flex justify-center w-96 text-center text-black border border-gray-700 rounded-md">
+            <FcGoogle fontSize={'1.3rem'}/>
         Sign with Google
       
       </button>
