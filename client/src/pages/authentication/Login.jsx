@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'; // Ensure you have this library installe
 import GoogleAuthProviderWrapper from './GoogleLogin';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Spinner } from '@chakra-ui/react'
+import { FcGoogle } from "react-icons/fc";
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -46,8 +47,13 @@ function Login() {
     };
 
     return (
+    <section className="flex w-full h-screen">
+    <div className="bg-gray-200 lg:w-3/4 w-0 lg:flex lg:flex-col justify-center items-center overflow-hidden">
+    <h1 className='text-green-700 text-4xl font-bold'>RE<span className='text-rose-600'>PAY</span></h1>
+        <img src="/Money-Transfer.png" alt="placeholder" className="max-w-full max-h-full object-cover" />
+      </div>
         <div className='flex flex-col my-6 py-16 px-4 items-center  justify-center w-full'>
-            
+        
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={formSchema}
@@ -58,31 +64,29 @@ function Login() {
                     <h1 className='text-center text-3xl font-bold'>Login to REPAY</h1>
                         <div className="block w-full mt-6 relative p-4">
                             <label className="absolute -top-2">Email<span className='text-rose-600'>*</span></label>
-                            <Field type="email" name="email" placeholder="Email" className="w-72 p-2 rounded-md border-gray-700 border" />
+                            <Field type="email" name="email" placeholder="Email" className="w-96 p-2 rounded-md border-gray-700 border" />
                             <ErrorMessage name="email" component="div" className="text-red-600" />
                         </div>
 
                         <div className="block w-full mt-6 relative p-4">
-                            <label className="absolute -top-2">Password<span className='text-rose-600'>*</span></label>
-                            <Field type={showPassword ? "text" : "password"} name="password" placeholder="Password" className="w-72 rounded-md p-2 border-gray-700 border" />
+                            <label className="absolute -top-2 left-2">Password<span className='text-rose-600'>*</span></label>
+                            <Field type={showPassword ? "text" : "password"} name="password" placeholder="Password" className="w-96 relative rounded-md p-2 border-gray-700 border" />
                             <ErrorMessage name="password" component="div" className="text-red-600" />
-                            <button type="button" onClick={handleShowPassword}>
+                            <button type="button" className='absolute right-2 top-2 ' onClick={handleShowPassword}>
                                 {showPassword ? <FaEye /> : <FaEyeSlash />}
                             </button>
                         </div>
                         <div className="block w-full mt-4 relative p-4">
-                             <button className="bg-rose-600 py-3 w-72 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
+                             <button className="bg-rose-600 py-3 w-96 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
                             {isLoading ? <Spinner/> : 'Login'}
                         </button>
                         </div>
-                        <div className="bg-blue-600  text-center text-white rounded-md block w-full mt-4 relative p-4" >
-                                <GoogleAuthProviderWrapper/>    
-                         </div>
+                        <GoogleAuthProviderWrapper/>    
                         
                          
                           {/* <LoginGoogle/> */}
                         
-                        <p className="text-sm mt-2">Don't have an account? <Link to="/register" className="text-blue-600">Register here</Link></p>
+                        <p className="text-sm mt-2">Don't have an account? <Link to="/account" className="text-blue-600">Register here</Link></p>
                     </Form>
                 )}
             </Formik> 
@@ -91,6 +95,8 @@ function Login() {
                 
           
         </div>
+    </section>
+        
     );
 }
 
