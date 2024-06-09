@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import NavBar from '../../components/NavBar';
 
 function Personal() {
   const [file, setFile] = useState(null);
@@ -84,64 +85,65 @@ function Personal() {
   };
 
   return (
-    <div>
+    <section>
+    <NavBar/>
+      <div className='flex justify-center'>
       <Formik
         initialValues={initialValues}
         validationSchema={formSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
-          <Form>
+          <Form className='border border-slate-600 p-4 lg:w-1/2 w-full'>
             <div>
              <h1 className='text-center text-2xl font-bold'>Personal Account</h1>
             </div>
 
-            <div className="flex p-4 border-dotted border-2 rounded-full border-slate-800 my-3 justify-center align-middle h-60 w-60">
-              <label className="drop-area">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                />
-                <p className="w-fit flex p-2">
-                  <FaImage />
-                </p>
-                {file && (
-                  <div>
-                    {file.type.startsWith("image/") && (
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt="Preview"
-                        style={{ maxWidth: "100%", maxHeight: "200px" }}
-                      />
-                    )}
-                  </div>
-                )}
-              </label>
-            </div>
+            
+      <div className="flex p-4 border-dotted border-2 relative rounded-full border-slate-800 my-3 justify-center items-center h-40 w-40 overflow-hidden">
+        <label className="drop-area cursor-pointer w-full h-full flex justify-center items-center">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            style={{ display: "none" }}
+          />
+          {!file && (
+            <p className="w-fit flex p-2">
+              <FaImage size={30} />
+            </p>
+          )}
+          {file && file.type.startsWith("image/") && (
+            <img
+              src={URL.createObjectURL(file)}
+              alt="Preview"
+              className="absolute inset-0 w-full h-full object-cover rounded-full"
+            />
+          )}
+        </label>
+      </div>
 
-            <div>
-              <label>Full Name</label>
-              <Field name="username" placeholder="Full Name" className="w-3/4 p-2 border-gray-700 border-2" />
+            <div className="flex flex-col w-full relative p-4">
+              <label className='font-bold'>Full Name</label>
+              <Field name="username" placeholder="Full Name" className="w-full  p-2 rounded-md border-gray-700 border" />
               <ErrorMessage name="username" component="div" className="text-red-600" />
             </div>
 
-            <div>
-              <label>Email</label>
-              <Field type="email" name="email" className="w-3/4 p-2 border-gray-700 border-2" />
+            <div className="flex flex-col w-full  relative p-4">
+              <label className='font-bold'>Email</label>
+              <Field type="email" name="email" placeholder="Email" className="w-full p-2  rounded-md border-gray-700 border" />
               <ErrorMessage name="email" component="div" className="text-red-600" />
             </div>
 
-            <div>
-              <label>Phone Number</label>
-              <Field type="text" name="phone" className="w-3/4 p-2 border-gray-700 border-2" />
+            <div className="flex flex-col w-full font-bold  relative p-4">
+              <label className='font-bold'>Phone Number</label>
+              <Field type="text" name="phone" className="w-full p-2 rounded-md border-gray-700 border" />
               <ErrorMessage name="phone" component="div" className="text-red-600" />
             </div>
 
-            <div className="w-full text-xl p-3">
-              <label htmlFor="location" className='text-white'>Location</label>
-              <Field as="select" name="location" className='m-3 w-3/4 p-2 rounded-sm border-gray-700 border-2'>
+            <div className="w-full flex flex-col  p-3">
+              <label htmlFor="location" className='text-black font-bold'>Location</label>
+              <Field as="select" name="location" className='m-3 w-full p-2 rounded-md border-gray-700 border-2'>
                 <option value="">Choose location</option>
                 <option value="Nairobi">Nairobi</option>
                 <option value="Kisumu">Kisumu</option>
@@ -153,25 +155,27 @@ function Personal() {
               <ErrorMessage name="location" component="div" className="text-red-600" />
             </div>
 
-            <div>
-              <label>Password</label>
-              <Field type="password" name="password" className="w-3/4 p-2 border-gray-700 border-2" />
+            <div className="flex flex-col w-full relative p-4">
+              <label className='font-bold'>Password</label>
+              <Field type="password" name="password" className="w-full p-2 rounded-md border-gray-700 border" />
               <ErrorMessage name="password" component="div" className="text-red-600" />
             </div>
 
-            <div>
-              <label>Confirm Password</label>
-              <Field type="password" name="confirmPassword" className="w-3/4 p-2 border-gray-700 border-2" />
+            <div className="flex flex-col w-full  relative p-4">
+              <label className='font-bold'>Confirm Password</label>
+              <Field type="password" name="confirmPassword" className="w-full p-2 rounded-md border-gray-700 border" />
               <ErrorMessage name="confirmPassword" component="div" className="text-red-600" />
             </div>
 
-            <button type="submit" disabled={isSubmitting} className="p-2 mt-3 bg-blue-500 text-white">
-              Submit
+            <button type="submit" disabled={isSubmitting} className="p-2 mt-3 w-full bg-green-900 text-white">
+              Create Account
             </button>
           </Form>
         )}
       </Formik>
     </div>
+    </section>
+    
   );
 }
 
