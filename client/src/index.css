@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 .containers{
-    background-color: rgb(12, 12, 40);
+    /* background-color: rgb(12, 12, 40); */
+    background-color: rgb(230,230,230);
 }
 .try{
-    color:chartreuse
+    color:rgb(112, 175, 49)
 }
