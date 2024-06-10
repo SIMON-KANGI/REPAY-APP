@@ -60,7 +60,7 @@ function Login() {
                 onSubmit={handleSubmit}
             >
                 {({ isSubmitting }) => (
-                    <Form className="block text-white  p-20  border rounded-md border-slate-500">
+                    <Form className="block text-stone-900  p-20  border rounded-md border-slate-500">
                     <h1 className='text-center text-3xl font-bold'>Login to REPAY</h1>
                         <div className="block w-full mt-6 relative p-4">
                             <label className="absolute -top-2">Email<span className='text-rose-600'>*</span></label>
