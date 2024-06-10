@@ -17,7 +17,7 @@ function Cards() {
     <div>
        <Box className='lg:flex justify-center' data-aos='fade-up'>
 
-      <Card background={'rgba(65,70,80,0.4)'} margin={'1rem'}textColor={'white'}>
+      <Card background={'stone.800'} margin={'1rem'}textColor={'white'}>
 <CardHeader className=''>
 
     <h1 className='text-center text-2xl font-bold'>
@@ -31,7 +31,7 @@ function Cards() {
     View your transactions history. Buy products</p>
 </CardBody>
       </Card>
-      <Card background={'rgba(40,65,80,0.4)'} margin={'1rem'} textColor={'white'}>
+      <Card background={'stone.900'} margin={'1rem'} textColor={'white'}>
 <CardHeader>
     <h1 className='text-center text-2xl font-bold'>
     <span className='text-rose-600 text-4xl'>
@@ -43,7 +43,7 @@ function Cards() {
     <p>Make withrawals according to your account</p>
 </CardBody>
       </Card>
-      <Card background={'rgba(60,40,70,0.4)'} margin={'1rem'} textColor={'white'}>
+      <Card background={'stone.950'} margin={'1rem'} textColor={'white'}>
 <CardHeader>
     <h1 className='text-center text-2xl font-bold'>
     <span className='text-orange-400 text-4xl'>
@@ -59,7 +59,7 @@ function Cards() {
     </Box> 
     <h1 className='text-center text-slate-200 text-4xl'>Manage Your Funds On Repay</h1>
     <Box className='lg:flex justify-center'>
-        <Card background={'transparent'} margin={'2rem'} textColor={'white'} width={'400px'} data-aos="fade-right" className='hover:border hover:shadow-md'>
+        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-right" className='hover:border hover:shadow-md'>
             <CardBody>
                 <img src="money.png" alt="app" className='lg:rounded-full rounded-md lg:w-80 lg:h-80' />
                 <h1 className='font-bold text-2xl mt-4'>REPAY Mobile App</h1>
@@ -69,7 +69,7 @@ function Cards() {
             </p>
             </CardBody>
         </Card>
-        <Card background={'transparent'} margin={'2rem'} textColor={'white'} width={'400px'} data-aos="fade-up" className='hover:border hover:shadow-md'>
+        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-up" className='hover:border hover:shadow-md'>
             <CardBody>
                 <img src="bank.jpg" alt="app" className='lg:rounded-full rounded-md lg:h-80 lg:w-80'/>
                 <h1 className='font-bold text-2xl mt-4'>BANK to BANK<br/>Transfers</h1>
@@ -79,7 +79,7 @@ function Cards() {
             </p>
             </CardBody>
         </Card>
-        <Card background={'transparent'} margin={'2rem'} textColor={'white'} width={'400px'} data-aos="fade-left" className='hover:border hover:shadow-md'>
+        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-left" className='hover:border hover:shadow-md'>
             <CardBody>
                 <img src="free.jpg" alt="app" className='lg:rounded-full rounded-md lg:w-80 xl:w-72 xl:h-72 lg:h-80'/>
                 <h1 className='font-bold text-2xl mt-4'>REPAY is Free to use</h1>
