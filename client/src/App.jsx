@@ -1,8 +1,7 @@
-import { useState } from 'react'
 
 import Login from './pages/authentication/Login'
 import { Route, Routes } from 'react-router-dom'
-
+import About from './pages/About'
 import NavBar from './components/NavBar'
 import AccountType from './pages/authentication/AccountType'
 import Personal from './pages/authentication/Personal'
@@ -15,6 +14,7 @@ function App() {
    <main className='containers bg-sky-950 h-full'>
     <Routes>
      <Route path="/" element={<Home/>} />
+     <Route path="/how-it-works" element={<About/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/account-personal" element={<Personal/>} />
       <Route path="/account-business" element={<Business/>} />
