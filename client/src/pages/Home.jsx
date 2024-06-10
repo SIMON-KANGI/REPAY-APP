@@ -30,7 +30,7 @@ function Home() {
           </h2>
       <Cards/>
       <div className='flex justify-center'>
-         <button onClick={()=>navigate('/how-it-works')} className="bg-transparent border-emerald-500 text-rose-600 rounded-md px-20 py-3 border ">How it Works</button>
+         <button onClick={()=>navigate('/how-it-works')} className="bg-transparent border-stone-900 text-rose-600 font-bold rounded-md px-20 py-3 border-2 ">How it Works</button>
       </div>
       <h1 className='text-center text-3xl font-bold mt-6 text-stone-900'>FAQ's</h1>
       <FAQ/>
