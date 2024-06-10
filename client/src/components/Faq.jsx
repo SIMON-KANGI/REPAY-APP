@@ -26,7 +26,7 @@ function FAQ() {
 
   return (
     <div className="p-4 bg-stone-950 rounded-md mx-3 my-4">
-      <Accordion allowMultiple className="border-gray-500">
+      <Accordion allowMultiple className="border-stone-800">
         {Array.isArray(faqs) && faqs.length > 0 ? (
           faqs.map((faq, index) => (
             <AccordionItem key={index}>
