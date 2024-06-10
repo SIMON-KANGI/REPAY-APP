@@ -22,8 +22,8 @@ function NavBar() {
     <h1 className='text-lime-700 text-3xl font-bold'>RE<span className='text-rose-600'>PAY</span></h1>
     <nav className='text-white'>
 <ul className='text-black'>
-    <Link className='px-4 text-slate-200' to="/">Home</Link>
-    <Link className='px-4 text-slate-200' to="/about">About</Link>
+    <Link className='px-4 text-stone-900 font-bold text-xl' to="/">Home</Link>
+    <Link className='px-4 text-stone-900 font-bold text-xl' to="/how-it-works">How it Works</Link>
     <Menu>
   <MenuButton as={Button} rightIcon={<FaChevronDown />}>
     Account
