@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
-import { selectUserData} from '../features/AuthSlice'; 
+import { selectUserData } from '../features/auth/Authslice';
+
 
 const useAuth = (allowedRoles) => {
   const user = useSelector(selectUserData);
