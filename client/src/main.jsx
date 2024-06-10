@@ -8,16 +8,18 @@ import { BrowserRouter } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { ChakraProvider } from "@chakra-ui/react";
+import Chakra from './theme/useTheme.jsx'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
   <Provider store={store}>  
- <ChakraProvider>
+ <Chakra>
   <BrowserRouter> 
   
   <App />  
   
 </BrowserRouter>
- </ChakraProvider>
+  
+ </Chakra>
   
  
   
