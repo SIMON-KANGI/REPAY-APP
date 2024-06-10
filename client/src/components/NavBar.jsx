@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FaChevronDown } from 'react-icons/fa'
+import useAuth from '../hooks/UseAuth'
 import {
     Menu,
     MenuButton,
@@ -12,26 +13,33 @@ import {
     MenuDivider,
     Button
   } from '@chakra-ui/react'
+import LogOut from '../pages/authentication/LogOut'
 
 function NavBar() {
+  const isAuthenticated = useAuth(['admin', 'user']);
   return (
-    <header className='w-screen flex py-4 shadow-md justify-around items-center'>
+    <header className='w-screen flex py-10 shadow-md border-b border-slate-600 justify-around items-center'>
     <h1 className='text-lime-700 text-3xl font-bold'>RE<span className='text-rose-600'>PAY</span></h1>
-    <nav>
-<ul>
-    <Link className='px-4' to="/">Home</Link>
-    <Link className='px-4' to="/about">About</Link>
+    <nav className='text-white'>
+<ul className='text-black'>
+    <Link className='px-4 text-slate-200' to="/">Home</Link>
+    <Link className='px-4 text-slate-200' to="/about">About</Link>
     <Menu>
   <MenuButton as={Button} rightIcon={<FaChevronDown />}>
     Account
   </MenuButton>
   <MenuList>
     <MenuItem>
-    <Link to="/login">Login</Link></MenuItem>
-    <MenuItem>
-    <Link to="/account">SignUp</Link>
+    {!isAuthenticated &&<Link to="/login">Login</Link>}
     </MenuItem>
-   
+    <MenuItem>
+    {!isAuthenticated &&<Link to="/account">Register</Link>}
+    
+    </MenuItem>
+   <MenuItem>
+   {isAuthenticated &&<LogOut/>}
+    
+   </MenuItem>
   </MenuList>
 </Menu>
 </ul>
