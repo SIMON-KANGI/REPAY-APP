@@ -87,7 +87,7 @@ function Business() {
   return (
     <section>
     <NavBar/>
-       <div className='flex justify-center text-white'>
+       <div className='flex justify-center text-stone-900'>
       <Formik
         initialValues={initialValues}
         validationSchema={formSchema}
