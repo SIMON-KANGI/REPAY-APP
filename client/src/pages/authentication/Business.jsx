@@ -87,7 +87,7 @@ function Business() {
   return (
     <section>
     <NavBar/>
-       <div className='flex justify-center'>
+       <div className='flex justify-center text-white'>
       <Formik
         initialValues={initialValues}
         validationSchema={formSchema}
@@ -100,7 +100,7 @@ function Business() {
             </div>
 
             
-      <div className="flex p-4 border-dotted border-2 relative rounded-full border-slate-800 my-3 justify-center items-center h-40 w-40 overflow-hidden">
+      <div className="flex p-4 border-dotted border-2 relative rounded-full border-slate-300 my-3 justify-center items-center h-40 w-40 overflow-hidden">
         <label className="drop-area cursor-pointer w-full h-full flex justify-center items-center">
           <input
             type="file"
@@ -142,8 +142,8 @@ function Business() {
             </div>
 
             <div className="w-full flex flex-col  p-3">
-              <label htmlFor="location" className='text-black font-bold'>Location</label>
-              <Field as="select" name="location" className='m-3 w-full p-2 rounded-md border-gray-700 border-2'>
+              <label htmlFor="location" className=' font-bold'>Location</label>
+              <Field as="select" name="location" className='m-3 w-full text-black p-2 rounded-md border-gray-700 border-2'>
                 <option value="">Choose location</option>
                 <option value="Nairobi">Nairobi</option>
                 <option value="Kisumu">Kisumu</option>
