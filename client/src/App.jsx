@@ -12,7 +12,7 @@ function App() {
   return (
     <>
    {/* <NavBar/> */}
-   <main className='containers bg-sky-950 h-screen'>
+   <main className='containers bg-sky-950 h-full'>
     <Routes>
      <Route path="/" element={<Home/>} />
       <Route path="/login" element={<Login />} />
