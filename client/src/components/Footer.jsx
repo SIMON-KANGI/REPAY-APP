@@ -3,7 +3,7 @@ import { FaApple } from "react-icons/fa";
 import { FaGooglePlay } from "react-icons/fa";
 function Footer() {
   return (
-    <div className='shadow-md mt-6 p-16 bg-stone-950'>
+    <div className='shadow-md  p-16 bg-stone-950'>
     <section className='flex justify-around'>
          <div className='text-center'>
         <h1 className='font-bold text-slate-200'>Send & Receive</h1>
