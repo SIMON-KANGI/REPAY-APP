@@ -1,13 +1,23 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { Card,CardBody,CardHeader, CardFooter, Box } from '@chakra-ui/react'
 import { GrTransaction } from "react-icons/gr";
 import { PiHandWithdrawFill } from "react-icons/pi";
 import { GiReceiveMoney } from "react-icons/gi";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 function Cards() {
+    useEffect(() => {
+        AOS.init({
+          duration: 500,
+          easing: 'ease-in-out',
+          once: false
+        });
+      }, []);
   return (
-    <Box className='lg:flex justify-center'>
+    <div>
+       <Box className='lg:flex justify-center' data-aos='fade-up'>
 
-      <Card background={'rgba(65,65,105,0.4)'} margin={'1rem'}textColor={'white'}>
+      <Card background={'rgba(65,70,80,0.4)'} margin={'1rem'}textColor={'white'}>
 <CardHeader className=''>
 
     <h1 className='text-center text-2xl font-bold'>
@@ -21,7 +31,7 @@ function Cards() {
     View your transactions history. Buy products</p>
 </CardBody>
       </Card>
-      <Card background={'rgba(60,60,100,0.4)'} margin={'1rem'} textColor={'white'}>
+      <Card background={'rgba(40,65,80,0.4)'} margin={'1rem'} textColor={'white'}>
 <CardHeader>
     <h1 className='text-center text-2xl font-bold'>
     <span className='text-rose-600 text-4xl'>
@@ -33,7 +43,7 @@ function Cards() {
     <p>Make withrawals according to your account</p>
 </CardBody>
       </Card>
-      <Card background={'rgba(60,60,100,0.4)'} margin={'1rem'} textColor={'white'}>
+      <Card background={'rgba(60,40,70,0.4)'} margin={'1rem'} textColor={'white'}>
 <CardHeader>
     <h1 className='text-center text-2xl font-bold'>
     <span className='text-orange-400 text-4xl'>
@@ -45,7 +55,43 @@ function Cards() {
     <p>Make withrawals according to your account</p>
 </CardBody>
       </Card>
+      
+    </Box> 
+    <h1 className='text-center text-slate-200 text-4xl'>Manage Your Funds On Repay</h1>
+    <Box className='lg:flex justify-center'>
+        <Card background={'transparent'} margin={'2rem'} textColor={'white'} width={'400px'} data-aos="fade-right" className='hover:border hover:shadow-md'>
+            <CardBody>
+                <img src="money.png" alt="app" className='lg:rounded-full rounded-md lg:w-80 lg:h-80' />
+                <h1 className='font-bold text-2xl mt-4'>REPAY Mobile App</h1>
+            <p>
+                Download the REPAY mobile app.<br/>Manage all your accounts on one <br/>
+                device.
+            </p>
+            </CardBody>
+        </Card>
+        <Card background={'transparent'} margin={'2rem'} textColor={'white'} width={'400px'} data-aos="fade-up" className='hover:border hover:shadow-md'>
+            <CardBody>
+                <img src="bank.jpg" alt="app" className='lg:rounded-full rounded-md lg:h-80 lg:w-80'/>
+                <h1 className='font-bold text-2xl mt-4'>BANK to BANK<br/>Transfers</h1>
+            <p>
+                Download the REPAY mobile app.<br/>Manage all your accounts on one <br/>
+                device.
+            </p>
+            </CardBody>
+        </Card>
+        <Card background={'transparent'} margin={'2rem'} textColor={'white'} width={'400px'} data-aos="fade-left" className='hover:border hover:shadow-md'>
+            <CardBody>
+                <img src="free.jpg" alt="app" className='lg:rounded-full rounded-md lg:w-80 xl:w-72 xl:h-72 lg:h-80'/>
+                <h1 className='font-bold text-2xl mt-4'>REPAY is Free to use</h1>
+            <p>
+            When you send money to friends or family, it won’t cost you any extra money for the transaction.1 Which is good,
+             because there are way better things to spend money on, like concert tickets… or vacations.
+            </p>
+            </CardBody>
+        </Card>
     </Box>
+    </div>
+    
   )
 }
 
