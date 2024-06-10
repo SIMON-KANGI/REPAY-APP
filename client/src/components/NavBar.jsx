@@ -18,12 +18,12 @@ import LogOut from '../pages/authentication/LogOut'
 function NavBar() {
   const isAuthenticated = useAuth(['admin', 'user']);
   return (
-    <header className='w-screen flex py-10 shadow-md border-b border-slate-600 justify-around items-center'>
+    <header className='w-screen bg-stone-950 flex py-10 shadow-md  justify-around items-center'>
     <h1 className='text-lime-700 text-3xl font-bold'>RE<span className='text-rose-600'>PAY</span></h1>
     <nav className='text-white'>
 <ul className='text-black'>
-    <Link className='px-4 text-stone-900 font-bold text-xl' to="/">Home</Link>
-    <Link className='px-4 text-stone-900 font-bold text-xl' to="/how-it-works">How it Works</Link>
+    <Link className='px-4 text-stone-200 font-bold text-xl' to="/">Home</Link>
+    <Link className='px-4 text-stone-200 font-bold text-xl' to="/how-it-works">How it Works</Link>
     <Menu>
   <MenuButton as={Button} rightIcon={<FaChevronDown />}>
     Account
