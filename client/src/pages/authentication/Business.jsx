@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import NavBar from '../../components/NavBar';
+import Footer from '../../components/Footer';
 
 function Business() {
   const [file, setFile] = useState(null);
@@ -87,7 +88,7 @@ function Business() {
   return (
     <section>
     <NavBar/>
-       <div className='flex justify-center text-stone-900'>
+       <div className='flex justify-center my-8 text-stone-900'>
       <Formik
         initialValues={initialValues}
         validationSchema={formSchema}
@@ -100,7 +101,7 @@ function Business() {
             </div>
 
             
-      <div className="flex p-4 border-dotted border-2 relative rounded-full border-slate-300 my-3 justify-center items-center h-40 w-40 overflow-hidden">
+      <div className="flex p-4 border-dotted border-2 relative rounded-full border-stone-800 my-3 justify-center items-center h-40 w-40 overflow-hidden">
         <label className="drop-area cursor-pointer w-full h-full flex justify-center items-center">
           <input
             type="file"
@@ -120,6 +121,7 @@ function Business() {
               className="absolute inset-0 w-full h-full object-cover rounded-full"
             />
           )}
+        
         </label>
       </div>
 
@@ -137,7 +139,7 @@ function Business() {
 
             <div className="flex flex-col w-full font-bold  relative p-4">
               <label className='font-bold'>Phone Number</label>
-              <Field type="text" name="phone" className="w-full p-2 rounded-md border-gray-700 border" />
+              <Field type="text" name="phone" placeholder="phone number" className="w-full p-2 rounded-md border-gray-700 border" />
               <ErrorMessage name="phone" component="div" className="text-red-600" />
             </div>
 
@@ -157,13 +159,13 @@ function Business() {
 
             <div className="flex flex-col w-full relative p-4">
               <label className='font-bold'>Password</label>
-              <Field type="password" name="password" className="w-full p-2 rounded-md border-gray-700 border" />
+              <Field type="password" name="password" placeholder="password" className="w-full p-2 rounded-md border-gray-700 border" />
               <ErrorMessage name="password" component="div" className="text-red-600" />
             </div>
 
             <div className="flex flex-col w-full  relative p-4">
               <label className='font-bold'>Confirm Password</label>
-              <Field type="password" name="confirmPassword" className="w-full p-2 rounded-md border-gray-700 border" />
+              <Field type="password" name="confirmPassword" placeholder="confirm password" className="w-full p-2 rounded-md border-gray-700 border" />
               <ErrorMessage name="confirmPassword" component="div" className="text-red-600" />
             </div>
 
@@ -174,6 +176,7 @@ function Business() {
         )}
       </Formik>
     </div>
+    <Footer/>
     </section>
    
   );
