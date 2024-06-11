@@ -46,7 +46,7 @@ function SideBar() {
       </header>
       <section className='bg-stone-600 py-4'>
         <div className='mt-3 ml-3'>
-          <Link className='text-xl flex items-center mb-3 font-bold' to="dashboard">
+          <Link className='text-xl flex items-center mb-3 font-bold' to="/my-dashboard">
             <MdDashboard className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Dashboard</span>
           </Link>
