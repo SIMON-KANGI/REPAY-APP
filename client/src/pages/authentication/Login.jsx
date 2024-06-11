@@ -14,7 +14,7 @@ function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || '/login';
+    const from = location.state?.from?.pathname || '/my-dashboard';
     const [login, { isLoading }] = useLoginMutation();
     const [showPassword, setShowPassword] = useState(false);
 
