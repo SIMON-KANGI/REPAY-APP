@@ -17,6 +17,7 @@ class User(db.Model, SerializerMixin):
     role = db.Column(db.String(255), nullable=False)
     account_type = db.Column(db.String(255), nullable=False)
     accounts = db.relationship('Account', back_populates="users")
+    contacts = db.relationship('Contact', back_populates="users")
     created_at = db.Column( db.DateTime, server_default=db.func.now())
     notifications = db.relationship('Notification',cascade="all, delete-orphan", back_populates="users")
     @validates('email')
@@ -58,8 +59,9 @@ class User(db.Model, SerializerMixin):
             'phone':self.phone,
             'profile': self.profile,
             'location_id': self.location_id,
-            
-            'accounts':[{'id':account.id, "number": account.number, 'balance': account.balance}for account in self.accounts]
+             'notifications':[{'id':message.id, "message": message.message}for message in self.notifications],
+            'accounts':[{'id':account.id, "number": account.number, 'balance': account.balance}for account in self.accounts],
+            'contacts':[{'id':contact.id, "name": contact.name, 'phone': contact.phone}for contact in self.contacts]
         }
 class Account(db.Model, SerializerMixin):
     __tablename__ = 'accounts'
@@ -118,7 +120,7 @@ class Transaction(db.Model, SerializerMixin):
     amount = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    thirdParty_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     created_at = db.Column( db.DateTime, server_default=db.func.now())
 
@@ -135,3 +137,12 @@ class Location(db.Model):
     __tablename__ = 'locations'
     id = db.Column(db.Integer, primary_key=True)
     name=db.Column(db.String(20), unique=True)
+    
+class Contact(db.Model):
+    __tablename__ = 'contacts'
+    id = db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(20), nullable=False)
+    phone=db.Column(db.Integer, nullable=False, unique=True)
+    email=db.Column(db.String(20), nullable=True)
+    user_id=db.Column(db.Integer, db.ForeignKey('users.id'))
+    users = db.relationship('User', back_populates="contacts")
