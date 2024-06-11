@@ -52,6 +52,7 @@ with app.app_context():
         Location(name='Thika'),
          Location(name='Nyeri'),
         Location(name='Kakamega'),
+         Location(name='Muranga'),
     ]
     for location in locations:
         db.session.add(location)
