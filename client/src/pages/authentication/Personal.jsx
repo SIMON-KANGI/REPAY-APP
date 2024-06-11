@@ -31,7 +31,7 @@ function Personal() {
     confirmPassword: '',
     phone: '',
     location: '',
-    account_type: 'personal',
+    account_type: 'Personal',
     profile: 'image', // Assuming profile is always 'image' based on the backend code
   };
 
