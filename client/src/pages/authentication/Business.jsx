@@ -31,7 +31,7 @@ function Business() {
     confirmPassword: '',
     phone: '',
     location: '',
-    account_type: 'business',
+    account_type: 'Business',
     profile: 'image', // Assuming profile is always 'image' based on the backend code
   };
 
