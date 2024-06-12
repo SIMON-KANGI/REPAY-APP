@@ -1,7 +1,7 @@
 from config import create_app, db
 from flask_restful import Api, Resource
 from flask import request, jsonify, make_response, session, url_for, redirect
-from models import Transaction, Account, User, Notification, Location
+from models import Transaction, Account, User, Notification, Location, Category
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, unset_jwt_cookies
 import cloudinary
 from cloudinary import uploader
@@ -270,7 +270,9 @@ class Accounts(Resource):
     @jwt_required()
     def post(self):
         data = request.get_json()
-        account = Account(number=data['number'], password=data['password'], balance=data['balance'], category_id=data['category_id'], user_id=data['user_id'])
+        category=data['category']
+        category_id=Category.query.filter(category == Category.name).first()
+        account = Account(number=data['number'], password=data['password'], balance=data['balance'], category_id=category_id.id, user_id=data['user_id'])
         db.session.add(account)
         db.session.commit()
         return jsonify(account)
@@ -353,6 +355,12 @@ class Notifications(Resource):
         return jsonify(notifications)
 
 api.add_resource(Notifications, '/notifications')
+
+class Categories(Resource):
+    def get(self):
+        categories = [category.to_dict() for category in Category.query.all()]
+        return jsonify(categories)
+api.add_resource(Categories, '/categories')
 
 if __name__ == '__main__':
     with app.app_context():
