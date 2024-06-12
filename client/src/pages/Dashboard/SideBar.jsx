@@ -16,6 +16,7 @@ import { MdOutlineAccountTree } from "react-icons/md";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
 import { MdContacts } from "react-icons/md";
 import LogOut from '../authentication/LogOut';
+import Send from './Accounts/Send';
 
 function SideBar() {
   const user = useSelector(selectUserData);
@@ -63,10 +64,11 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              <Link className='flex hover:bg-stone-300 mb-2'>
+              {/* <Link className='flex hover:bg-stone-300 mb-2'>
                 <MdSendToMobile className='mr-2' />
                 <span>Send Money</span>
-              </Link>
+              </Link> */}
+              <Send/>
               <Link className='flex hover:bg-stone-300 mb-2'>
                 <PiHandWithdrawFill className='mr-2' />
                 <span>Withdraw</span>
