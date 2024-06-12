@@ -110,6 +110,7 @@ class Account(db.Model, SerializerMixin):
 
 class Category(db.Model, SerializerMixin):
     __tablename__ = 'categories'
+    serialize_only={'id','name'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     accounts = db.relationship('Account', back_populates='category')
@@ -119,6 +120,7 @@ class Transaction(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
+    type=db.Column(db.String, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     thirdParty_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
