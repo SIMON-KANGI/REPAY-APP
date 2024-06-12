@@ -70,7 +70,7 @@ class Account(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.Integer, nullable=False)
     _password = db.Column(db.String(255), nullable=False)  # Changed column name to _password
-    balance = db.Column(db.Integer, default=50000, nullable=False)
+    balance = db.Column(db.Integer, default=50000, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     users = db.relationship('User', back_populates="accounts")
