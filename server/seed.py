@@ -33,7 +33,9 @@ with app.app_context():
         Category(name='KCB'),
         Category(name='I&M'),
         Category(name='Stanbic'),
-        Category(name='Family')
+        Category(name='Family'),
+         Category(name='M-PESA'),
+          Category(name='Absa')
     ]
     for category in categories:
         db.session.add(category)
