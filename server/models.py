@@ -65,8 +65,9 @@ class User(db.Model, SerializerMixin):
         }
 class Account(db.Model, SerializerMixin):
     __tablename__ = 'accounts'
+    serialize_only = ('id', 'number', 'balance', 'category_id', 'user_id')
     serialize_rule=()
-    serialize_only=('id','number','balance','category_id','user_id')
+
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.Integer, nullable=False)
     _password = db.Column(db.String(255), nullable=False)  # Changed column name to _password
@@ -75,7 +76,8 @@ class Account(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     users = db.relationship('User', back_populates="accounts")
     category = db.relationship('Category', back_populates='accounts')
-    created_at = db.Column( db.DateTime, server_default=db.func.now())
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
     @property
     def password(self):
         return self._password
@@ -96,17 +98,25 @@ class Account(db.Model, SerializerMixin):
     
     def check_password_hash(self, password):
         return bcrypt.check_password_hash(self._password, password)
-    
+
+    @validates('number')
+    def validate_number(self, key, number): 
+        if not number:
+            raise ValueError('Number cannot be blank')
+        existing_number = Account.query.filter(Account.number == number).first()
+        if existing_number:
+            raise ValueError('Number already exists')
+        return number
+
     def to_dict(self):
+        category=Category.query.filter(Category.id==self.category_id).first()
         return {
             'id': self.id,
             'number': self.number,
             'balance': self.balance,
-            'category_id': self.category_id,
+            'category': category.name,
             'user_id': self.user_id,
-            
         }
-        
 
 class Category(db.Model, SerializerMixin):
     __tablename__ = 'categories'
