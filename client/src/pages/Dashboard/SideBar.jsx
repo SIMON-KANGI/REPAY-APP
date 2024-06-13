@@ -77,7 +77,7 @@ function SideBar() {
                 <FaBalanceScale className='mr-2' />
                 <span>Account Balance</span>
               </Link>
-              <Link className='flex hover:bg-stone-300'>
+              <Link to='/accounts' className='flex hover:bg-stone-300'>
                 <MdOutlineAccountTree className='mr-2' />
                 <span>Accounts</span>
               </Link>
