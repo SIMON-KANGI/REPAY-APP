@@ -265,41 +265,27 @@ api.add_resource(Logout, '/logout')
 class Accounts(Resource):
     def get(self):
         accounts = [account.to_dict() for account in Account.query.all()]
-        return jsonify(accounts), 200  # Returning a 200 status code for a successful GET request
+        return accounts, 200
 
     def post(self):
+        data = request.get_json()
+        category = data.get('category')
+        account_number = data.get('accountNumber')
+        password = data.get('password')
+        user_id = data.get('user_id')
+
+        if not all([category, account_number, password, user_id]):
+            return {"error": "Missing data fields"}, 400
+
         try:
-            data = request.get_json()
-            
-            if not data:
-                return jsonify({"error": "No input data provided"}), 400
-            
-            category = data.get('category')
-            account_number = data.get('accountNumber')
-            password = data.get('password')
-            user_id = data.get('user_id')
-            # balance=Account.query.get('balance')
-            
-            if not all([category, account_number, password, user_id]):
-                return jsonify({"error": "Missing data fields"}), 400
-            
-            # Create a new account instance
             account = Account(number=account_number, password=password, category_id=category, user_id=user_id)
-            
-            # Add the new account to the session and commit it to the database
             db.session.add(account)
             db.session.commit()
+            return jsonify(account.to_dict()), 201
+        except ValueError as e:
+            db.session.rollback()
+            return {"error": str(e)}, 400
 
-            # Convert the newly created account to a dictionary and return it
-            return jsonify(account.to_dict()), 201  # Returning a 201 status code for a successful POST request
-
-        except KeyError as e:
-            # Handle missing keys in the request data
-            return jsonify({"error": f"Missing key: {str(e)}"}), 400  # Returning a 400 status code for bad requests
-
-        except Exception as e:
-            # Handle other possible exceptions
-            return jsonify({"error": str(e)}), 500  # Returning a 500 status code for internal server errors
 
 api.add_resource(Accounts, '/accounts')
 
