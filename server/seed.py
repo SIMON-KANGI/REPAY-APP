@@ -20,7 +20,8 @@ with app.app_context():
     
     print("Adding accounts...")
     accounts = [
-        Account(number='123456789', password="7889Kangi", category_id=1, user_id=1)
+        Account(number=123456789, password="7889Kangi", category_id=1, user_id=1)
+       
     ]
     for account in accounts:
         db.session.add(account)
