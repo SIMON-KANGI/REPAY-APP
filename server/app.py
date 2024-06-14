@@ -290,72 +290,123 @@ class Accounts(Resource):
 api.add_resource(Accounts, '/accounts')
 
 class MakeTransaction(Resource):
-    @jwt_required()
     def post(self):
+        # check for the contentType
         if request.content_type != 'application/json':
             return jsonify({"error": "Content-Type must be application/json"}), 415
-        
-        data = request.get_json()
-        
+
+        data = request.json  # Change request.form to request.json
+
+        # required data from the front end
+        required_keys = ['account_name', 'amount', 'password', 'account', 'sender_id']
+        missing_keys = [key for key in required_keys if key not in data]
+
+        if missing_keys:
+            return jsonify({"error": f"Missing keys: {', '.join(missing_keys)}"}), 400
+
+        # received data
         try:
-            account_id = data['account_id']
-            amount = data['amount']
+            account_name = data.get('account_name')
+            amount = data.get('amount')
+            account_number = data.get('account')
             sender_id = data.get('sender_id')
             transaction_type = data.get('transaction_type', 'received')
+            password = data['password']
 
-            account = Account.query.get(account_id)
+            account = Account.query.filter(Account.category.has(name=account_name)).first()
+            sender_account = Account.query.filter(Account.user_id == sender_id).first()
+            third_party_account = Account.query.filter(Account.number == account_number).first()
+
+            app.logger.info(
+                f"Received Data: account_name:{account_name}, amount:{amount}, account_number:{account_number}, sender_id:{sender_id}, transaction_type:{transaction_type}"
+            )
+
             if not account:
                 return jsonify({"error": "Account not found"}), 404
-            
-            if transaction_type == 'received':
-                account.received(amount)
-            elif transaction_type == 'sent':
-                account.sent(amount)
-            else:
+
+            if not sender_account:
+                return jsonify({"error": "Sender account not found"}), 404
+
+            if not sender_account.check_password(password):
+                return jsonify({"error": "Invalid password"}), 401
+
+            if not third_party_account:
+                return jsonify({"error": "Recipient account not found"}), 404
+
+            if transaction_type not in ['received', 'sent']:
                 return jsonify({"error": "Invalid transaction type"}), 400
-            
+
+            try:
+                amount = float(amount)
+                if amount <= 0:
+                    return jsonify({"error": "Amount must be a positive number"}), 400
+            except ValueError:
+                return jsonify({"error": "Amount must be a valid number"}), 400
+
+            if transaction_type == 'received':
+                third_party_account.received(amount)
+            elif transaction_type == 'sent':
+                sender_account.sent(amount)
+                third_party_account.received(amount)
+
             transaction = Transaction(
                 amount=amount,
                 date=db.func.current_timestamp(),
-                user_id=account.user_id,
-                sender_id=sender_id,
-                account_id=account_id
+                user_id=sender_id,
+                account_id=sender_account.id,
+                thirdParty_id=third_party_account.user_id,  # Corrected typo
+                type=transaction_type
             )
+
             db.session.add(transaction)
             db.session.commit()
 
-            notification_message = f"Transaction of {amount} {transaction_type} on account {account.number}"
-            notification = Notification(
-                message=notification_message,
-                transaction_id=transaction.id,
-                user_id=account.user_id
+            # Notification for the sender
+            notification_sendmessage = (
+                f"Transaction of {amount} {transaction_type} to account {third_party_account.number}. "
+                f"Your new balance is {sender_account.balance}."
             )
-            db.session.add(notification)
+            notification_sender = Notification(
+                message=notification_sendmessage,
+                transaction_id=transaction.id,
+                user_id=sender_account.user_id
+            )
+            db.session.add(notification_sender)
             db.session.commit()
-            
-            return jsonify(account.to_dict()), 200
 
-        except KeyError as e:
-            return jsonify({"error": f"Missing key: {e.args[0]}"}), 400
-        except ValueError as e:
-            return jsonify({"error": str(e)}), 400
+            # Notification for the receiver
+            notification_receivedmessage = (
+                f"You have received {amount} from account {sender_account.number}. "
+                f"Your new balance is {third_party_account.balance}."
+            )
+            notification_receiver = Notification(
+                message=notification_receivedmessage,
+                transaction_id=transaction.id,
+                user_id=third_party_account.user_id
+            )
+            db.session.add(notification_receiver)
+            db.session.commit()
+
+            return jsonify(sender_account.to_dict()), 200
+
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            app.logger.error(f"Error processing transaction: {e}")
+            return jsonify({"error": "An error occurred while processing the transaction"}), 500
 
-api.add_resource(MakeTransaction, '/transaction')
+api.add_resource(MakeTransaction, '/transactions')
 
 class Transactions(Resource):
     def get(self):
         transactions = [transaction.to_dict() for transaction in Transaction.query.all()]
         return jsonify(transactions)
     
-    @jwt_required()
-    def post(self):
-        data = request.get_json()
-        transaction = Transaction(amount=data['amount'], date=data['date'], user_id=data['user_id'], account_id=data['account_id'])
-        db.session.add(transaction)
-        db.session.commit()
-        return jsonify(transaction)
+    # @jwt_required()
+    # def post(self):
+    #     data = request.get_json()
+    #     transaction = Transaction(amount=data['amount'], date=data['date'], user_id=data['user_id'], account_id=data['account_id'])
+    #     db.session.add(transaction)
+    #     db.session.commit()
+    #     return jsonify(transaction)
 
 api.add_resource(Transactions, '/transactions')
 
