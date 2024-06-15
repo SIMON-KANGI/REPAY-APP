@@ -75,6 +75,7 @@ class Account(db.Model, SerializerMixin):
     number = db.Column(db.Integer, nullable=False)
     _password = db.Column(db.String(255), nullable=False)  # Changed column name to _password
     balance = db.Column(db.Integer, default=50000, nullable=True)
+    currency=db.Column(db.String(255), nullable=False, default='KSH')
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     users = db.relationship('User', back_populates='accounts')
@@ -99,6 +100,12 @@ class Account(db.Model, SerializerMixin):
         self.balance -= amount
         return self.balance
     
+    def withdraw(self, amount):
+        if self.balance < amount:
+            raise ValueError('Insufficient funds')
+        self.balance -= amount
+        return self.balance
+    
     def check_password(self, password):
         return bcrypt.check_password_hash(self._password, password)
 
@@ -117,6 +124,7 @@ class Account(db.Model, SerializerMixin):
             'id': self.id,
             'number': self.number,
             'balance': self.balance,
+            'currency':self.currency,
             'category': category.name if category else None,
             'user_id': self.user_id,
         }
@@ -158,9 +166,16 @@ class Notification(db.Model, SerializerMixin):
 
 class Location(db.Model):
     __tablename__ = 'locations'
-    
+    serialize_rule=()
+    serialize_only={'id', 'name'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), unique=True)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
 
 class Contact(db.Model):
     __tablename__ = 'contacts'
