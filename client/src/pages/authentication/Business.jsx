@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { FaImage } from "react-icons/fa";
@@ -12,8 +12,21 @@ import Footer from '../../components/Footer';
 function Business() {
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
+  const [locations, setLocations] = useState([]);
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:5555/locations');
+        setLocations(response.data);
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+        toast.error('Failed to fetch locations');
+      }
+    };
+    
+    fetchLocations();
+  }, []);
   const formSchema = yup.object().shape({
     email: yup.string().email('Invalid email').required('Must enter email'),
     username: yup.string().required('Must enter a name').max(15),
@@ -67,7 +80,7 @@ function Business() {
       localStorage.setItem('access', access_token);
       localStorage.setItem('username', username);
       
-      dispatch({ type: 'SET_CREDENTIALS', payload: { accessToken: access_token, username, role, user: content } });
+      dispatch(setCredentials({ accessToken: access_token, username: username, role: role, user: content }));
 
       toast.success(`Logged in as ${username}`, { position: 'top-right' });
       navigate('/dashboard', { replace: true });
@@ -146,13 +159,10 @@ function Business() {
             <div className="w-full flex flex-col  p-3">
               <label htmlFor="location" className=' font-bold'>Location</label>
               <Field as="select" name="location" className='m-3 w-full text-black p-2 rounded-md border-gray-700 border-2'>
-                <option value="">Choose location</option>
-                <option value="Nairobi">Nairobi</option>
-                <option value="Kisumu">Kisumu</option>
-                <option value="Eldoret">Eldoret</option>
-                <option value="Mombasa">Mombasa</option>
-                <option value="Muranga">Muranga</option>
-                <option value="Turkana">Turkana</option>
+              <option value="">Choose location</option>
+                  {locations.map((location) => (
+                    <option key={location.id} value={location.name}>{location.name}</option>
+                  ))}
               </Field>
               <ErrorMessage name="location" component="div" className="text-red-600" />
             </div>
