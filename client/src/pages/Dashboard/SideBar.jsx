@@ -17,6 +17,7 @@ import { LiaFileInvoiceSolid } from "react-icons/lia";
 import { MdContacts } from "react-icons/md";
 import LogOut from '../authentication/LogOut';
 import Send from './Accounts/Send';
+import Withdraw from './Accounts/Withdraw';
 
 function SideBar() {
   const user = useSelector(selectUserData);
@@ -34,7 +35,7 @@ function SideBar() {
           <FcMenu onClick={handleCollapsed} className='text-xl' />
         </div>
         <div className='flex items-center mt-4'>
-          <div className='w-20 h-20 border-4 border-stone-300 rounded-full overflow-hidden'>
+          <div className={`w-20 h-20 border-4 border-stone-300 rounded-full overflow-hidden ${isCollapsed ? 'hidden' : 'block'}`}>
             <img src={user.profile} alt={user.username} className={`w-full h-full object-cover ${isCollapsed ? 'hidden' : 'block'}`} />
           </div>
           {!isCollapsed && (
@@ -71,7 +72,7 @@ function SideBar() {
               <Send/>
               <Link className='flex hover:bg-stone-300 mb-2'>
                 <PiHandWithdrawFill className='mr-2' />
-                <span>Withdraw</span>
+                <span><Withdraw/></span>
               </Link>
               <Link className='flex hover:bg-stone-300 mb-2'>
                 <FaBalanceScale className='mr-2' />
