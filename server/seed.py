@@ -19,13 +19,13 @@ with app.app_context():
     # db.session.commit()
     
     print("Adding accounts...")
-    accounts = [
-        Account(number=123456789, password="7889Kangi", category_id=1, user_id=1)
+    # accounts = [
+    #     Account(number=123456789, password="7889Kangi", category_id=1, user_id=1)
        
-    ]
-    for account in accounts:
-        db.session.add(account)
-    db.session.commit()
+    # ]
+    # for account in accounts:
+    #     db.session.add(account)
+    # db.session.commit()
     
     print("Adding categories...")
     categories = [
