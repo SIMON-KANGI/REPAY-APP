@@ -34,8 +34,8 @@ const FilterAccount=accounts.filter(account=>account.user_id===user.id)
                   {account.category}
                 </h1> 
                 <h1 className='text-3xl text-green-400 font-bold'>
-                <span className='text-xl text-stone-300'>Your balance: </span>
-                ${account.balance}</h1>
+                <span className='text-xl text-stone-300'>Your balance:  {account.currency}</span>
+               {account.balance}</h1>
                 <h1 className='text-3xl text-sky-500 '>
                 <span className='text-stone-300 text-xl'>Account No: </span>
                   {account.number}..
