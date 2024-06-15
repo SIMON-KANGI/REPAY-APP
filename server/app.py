@@ -395,6 +395,115 @@ class MakeTransaction(Resource):
 
 api.add_resource(MakeTransaction, '/transactions')
 
+
+
+class MakeWithdrawal(Resource):
+    def post(self):
+        # check for the contentType
+        if request.content_type != 'application/json':
+            return jsonify({"error": "Content-Type must be application/json"}), 415
+
+        data = request.json  # Change request.form to request.json
+
+        # required data from the front end
+        required_keys = ['Fromaccount_name', 'amount', 'password', 'Toaccount_name', 'sender_id']
+        missing_keys = [key for key in required_keys if key not in data]
+
+        if missing_keys:
+            return jsonify({"error": f"Missing keys: {', '.join(missing_keys)}"}), 400
+
+        # received data
+        try:
+            Fromaccount_name = data.get('Fromaccount_name')
+            amount = data.get('amount')
+            Toaccount_name = data.get('Toaccount_name')
+            sender_id = data.get('sender_id')
+            transaction_type = data.get('transaction_type', 'withdrawal')
+            password = data['password']
+
+            Fromaccount = Account.query.filter(Account.category.has(name=Fromaccount_name)).first()
+            sender_account = Account.query.filter(Account.user_id == sender_id).first()
+            third_party_account = Account.query.filter(Account.category.has(name= Toaccount_name)).first()
+
+            app.logger.info(
+                f"Received Data: Fromaccount_name:{Fromaccount_name}, amount:{amount}, Toaccount_name:{Toaccount_name}, sender_id:{sender_id}, transaction_type:{transaction_type}"
+            )
+
+            if not Fromaccount_name:
+                return jsonify({"error": "Account not found"}), 404
+
+            if not sender_account:
+                return jsonify({"error": "Sender account not found"}), 404
+
+            if not sender_account.check_password(password):
+                return jsonify({"error": "Invalid password"}), 401
+
+            if not third_party_account:
+                return jsonify({"error": "Recipient account not found"}), 404
+
+            if transaction_type not in ['withdrawal']:
+                return jsonify({"error": "Invalid transaction type"}), 400
+
+            try:
+                amount = float(amount)
+                if amount <= 0:
+                    return jsonify({"error": "Amount must be a positive number"}), 400
+            except ValueError:
+                return jsonify({"error": "Amount must be a valid number"}), 400
+
+            if Fromaccount_name != Toaccount_name:
+                third_party_account.received(amount)
+                Fromaccount.withdraw(amount)
+            else:
+                return jsonify({"error": "From and To accounts cannot be the same"}), 400
+
+
+            transaction = Transaction(
+                amount=amount,
+                date=db.func.current_timestamp(),
+                user_id=sender_id,
+                account_id=Fromaccount.id,
+                thirdParty_id=third_party_account.id,
+                type=transaction_type
+            )
+
+            db.session.add(transaction)
+            db.session.commit()
+
+            # Notification for the sender
+            notification_sendmessage = (
+                f"Withdarwal of {amount} {transaction_type} to account {third_party_account.number}. "
+                f"Your new balance is {sender_account.balance}."
+            )
+            notification_sender = Notification(
+                message=notification_sendmessage,
+                transaction_id=transaction.id,
+                user_id=sender_account.user_id
+            )
+            db.session.add(notification_sender)
+            db.session.commit()
+
+            # Notification for the receiver
+            notification_receivedmessage = (
+                f"You have received {amount} from account {sender_account.number}. "
+                f"Your new balance is {third_party_account.balance}."
+            )
+            notification_receiver = Notification(
+                message=notification_receivedmessage,
+                transaction_id=transaction.id,
+                user_id=third_party_account.user_id
+            )
+            db.session.add(notification_receiver)
+            db.session.commit()
+
+            return jsonify(sender_account.to_dict()), 200
+
+        except Exception as e:
+            app.logger.error(f"Error processing transaction: {e}")
+            return jsonify({"error": "An error occurred while processing the transaction"}), 500
+
+api.add_resource(MakeWithdrawal, '/withdrawal')
+
 class Transactions(Resource):
     def get(self):
         transactions = [transaction.to_dict() for transaction in Transaction.query.all()]
@@ -410,6 +519,7 @@ class Transactions(Resource):
 
 api.add_resource(Transactions, '/transactions')
 
+
 class Notifications(Resource):
     def get(self):
         notifications = [notification.to_dict() for notification in Notification.query.all()]
@@ -422,6 +532,12 @@ class Categories(Resource):
         categories = [category.to_dict() for category in Category.query.all()]
         return jsonify(categories)
 api.add_resource(Categories, '/categories')
+
+class Locations(Resource):
+    def get(self):
+        locations = [location.to_dict() for location in Location.query.all()]
+        return jsonify(locations)
+api.add_resource(Locations, '/locations')
 
 if __name__ == '__main__':
     with app.app_context():
