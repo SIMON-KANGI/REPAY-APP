@@ -122,7 +122,7 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              <Link className='flex hover:bg-stone-300 mb-2'>
+              <Link to={`/user/${user.username}`} className='flex hover:bg-stone-300 mb-2'>
                 <MdSendToMobile className='mr-2' />
                 <span>My Profile</span>
               </Link>
