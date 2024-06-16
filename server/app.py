@@ -156,6 +156,81 @@ class Users(Resource):
 
 
 api.add_resource(Users, '/users')
+class UserId(Resource):
+    def get(self, id):
+        user = User.query.filter_by(id=id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        return jsonify(user.to_dict())
+    
+    def delete(self, id):
+        user = User.query.filter_by(id=id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({'message': 'User deleted successfully'})
+    
+    def put(self, id):
+        user = User.query.filter(User.id == id).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        app.logger.info(f"Form data: {request.form}")
+        app.logger.info(f"Files: {request.files}")
+
+        data = request.form
+        file_to_upload = request.files.get('file')
+
+        if not file_to_upload or file_to_upload.filename == '':
+            return jsonify({"error": "File is required"}), 400
+
+        username = data.get('username', user.username)
+        email = data.get('email', user.email)
+        password = data.get('password')
+        location = data.get('location', user.location)
+        phone = data.get('phone', user.phone)
+        account_type = data.get('account_type', user.account_type)
+        profile = data.get('profile', user.profile)
+
+        app.logger.info(
+            f"Received Data: username:{username}, email:{email}, phone:{phone}, location:{location}, profile:{profile}, account_type:{account_type}"
+        )
+
+        try:
+            if profile == 'image':
+                upload_result = uploader.upload(file_to_upload, resource_type='image')
+            else:
+                return jsonify({"error": "Profile must be an image"}), 400
+        except Exception as e:
+            app.logger.error(f"Error uploading file to Cloudinary: {e}")
+            return jsonify({"error": "File upload failed"}), 500
+
+        file_url = upload_result.get('url')
+
+        location_obj = Location.query.filter(Location.name == location).first()
+        if not location_obj:
+            return jsonify({"error": "Invalid location"}), 400
+
+        user.username = username
+        user.email = email
+        if password:  # Only update password if provided
+            user.set_password(password)
+        user.location = location
+        user.phone = phone
+        user.account_type = account_type
+        user.profile_image_url = file_url  # Assuming you have a profile_image_url attribute
+
+        try:
+            db.session.commit()
+        except Exception as e:
+            app.logger.error(f"Error updating user: {e}")
+            db.session.rollback()
+            return jsonify({"error": "An error occurred while updating the user"}), 500
+
+        return jsonify(user.to_dict()), 200
+
+api.add_resource(UserId, '/users/<int:id>')
 
 @app.route('/login/google')
 def login_google():
@@ -426,7 +501,7 @@ class MakeWithdrawal(Resource):
             third_party_account = Account.query.filter(Account.category.has(name= Toaccount_name)).first()
 
             app.logger.info(
-                f"Received Data: Fromaccount_name:{Fromaccount_name}, amount:{amount}, Toaccount_name:{Toaccount_name}, sender_id:{sender_id}, transaction_type:{transaction_type}"
+                f"Received Data: Fromaccount_name:{Fromaccount_name}, amount:{amount}, Toaccount_name:{Toaccount_name}, sender_id:{sender_id}, transaction_type:{transaction_type} ,password:{password}"
             )
 
             if not Fromaccount_name:
@@ -435,7 +510,7 @@ class MakeWithdrawal(Resource):
             if not sender_account:
                 return jsonify({"error": "Sender account not found"}), 404
 
-            if not sender_account.check_password(password):
+            if not Fromaccount.check_password(password):
                 return jsonify({"error": "Invalid password"}), 401
 
             if not third_party_account:
