@@ -593,22 +593,40 @@ class MakeWithdrawal(Resource):
 api.add_resource(MakeWithdrawal, '/withdrawal')
 class CheckBalance(Resource):
     def post(self):
-        data=request.json
-        account_name=data['account']
-        user_id=data['user_id']
-        password=data['password']
-        account=Account.query.filter(Account.category.has(name=account_name)).first()
-        user_account=Account.query.filter(Account.user_id==user_id).first()
-        if not account and user_account.check_password(password):
-            return jsonify({"error": "Check account info"}), 404
-        
-        notification_message=(
-            f"Your account balance is ${user_account.balance}"
-        )
-        notification=Notification(message=notification_message,user_id=user_id)
+        data = request.get_json()
+        account_name = data.get('account')
+        user_id = data.get('user_id')
+        password = data.get('password')
+
+        if not account_name or not user_id or not password:
+            return jsonify({"error": "Account name, user ID, and password are required"}), 400
+
+        account = Account.query.filter(Account.category.has(name=account_name)).first()
+        if not account:
+            print("account not found")
+            return jsonify({"error": "Account not found"}), 404
+        print(account.user_id)
+        if account.user_id != user_id:
+            print("invalid user id")
+            return jsonify({"error": "Invalid user ID"}), 401
+
+        if not account.check_password(password):
+            print("invalid password")
+            return jsonify({"error": "Invalid password"}), 401
+
+        notification_message = f"Your account balance is ${account.balance}"
+        notification = Notification(message=notification_message, user_id=user_id)
         db.session.add(notification)
-        db.session.commit()
-api.add_resource(CheckBalance,'/checkbalance')
+        
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": "An error occurred while processing your request"}), 500
+
+        return jsonify({"message": notification_message}), 200
+
+api.add_resource(CheckBalance, '/checkbalance')
 class Transactions(Resource):
     def get(self):
         transactions = [transaction.to_dict() for transaction in Transaction.query.all()]
