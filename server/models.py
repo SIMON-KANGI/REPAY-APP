@@ -59,6 +59,7 @@ class User(db.Model, SerializerMixin):
             'username': self.username,
             'email': self.email,
             'role': self.role,
+            'password':self.password,
             'account_type': self.account_type,
             'phone': self.phone,
             'profile': self.profile,
