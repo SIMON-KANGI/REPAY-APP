@@ -15,19 +15,19 @@ const LoginGoogle = () => {
     const googleLogin = useGoogleLogin({
       onSuccess: async (response) => {
         try {
-          const { access_token } = response;
-          const res = await axios.get('http://127.0.0.1:5555/login/authorized', { access_token });
+          // const { access_token } = response;
+          const res = await axios.get('http://127.0.0.1:5555/login/authorized');
   
           const { data } = res;
-          const { access_token: backendAccessToken, refresh_token, user } = data;
+          const { access_token: access_token, refresh_token, user } = data;
   
-          localStorage.setItem('access', backendAccessToken);
+          localStorage.setItem('access', access_token);
           localStorage.setItem('refresh', refresh_token);
   
-          dispatch(setCredentials({ accessToken: backendAccessToken, user }));
+          dispatch(setCredentials({ accessToken:access_token, user }));
   
           toast.success(`Logged in as ${user.username}`, { position: 'top-right' });
-          navigate('/', { replace: true });
+          navigate('/my-dashboard', { replace: true });
         } catch (error) {
           toast.error('Login failed. Please try again.');
         }
