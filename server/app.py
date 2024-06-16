@@ -171,6 +171,8 @@ class UserId(Resource):
         db.session.commit()
         return jsonify({'message': 'User deleted successfully'})
     
+   
+    
     def put(self, id):
         user = User.query.filter(User.id == id).first()
         if not user:
@@ -187,18 +189,27 @@ class UserId(Resource):
 
         username = data.get('username', user.username)
         email = data.get('email', user.email)
-        password = data.get('password')
-        location = data.get('location', user.location)
+        password = data.get('password', user.password)
+        location = data.get('location', user.location_id)
         phone = data.get('phone', user.phone)
         account_type = data.get('account_type', user.account_type)
         profile = data.get('profile', user.profile)
 
         app.logger.info(
-            f"Received Data: username:{username}, email:{email}, phone:{phone}, location:{location}, profile:{profile}, account_type:{account_type}"
+            f"Received Data: username:{username}, email:{email}, password:{password}, phone:{phone}, location:{location}, profile:{profile}, account_type:{account_type}"
         )
 
+        location_obj = Location.query.filter(Location.name == location).first()
+        if not location_obj:
+            return jsonify({"error": "Invalid location"}), 400
+
+        # Check if the email already exists (excluding the current user)
+        existing_user = User.query.filter(User.email == email).first()
+        if existing_user and existing_user.id != user.id:
+            return jsonify({"error": "Email already exists"}), 400
+
         try:
-            if profile == 'image':
+            if file_to_upload.content_type.startswith('image/'):
                 upload_result = uploader.upload(file_to_upload, resource_type='image')
             else:
                 return jsonify({"error": "Profile must be an image"}), 400
@@ -208,18 +219,15 @@ class UserId(Resource):
 
         file_url = upload_result.get('url')
 
-        location_obj = Location.query.filter(Location.name == location).first()
-        if not location_obj:
-            return jsonify({"error": "Invalid location"}), 400
-
+        # Update user fields
         user.username = username
         user.email = email
         if password:  # Only update password if provided
             user.set_password(password)
-        user.location = location
+        user.location_id = location_obj.id
         user.phone = phone
         user.account_type = account_type
-        user.profile_image_url = file_url  # Assuming you have a profile_image_url attribute
+        user.profile = file_url  # Update the profile field with the new file URL
 
         try:
             db.session.commit()
@@ -230,7 +238,12 @@ class UserId(Resource):
 
         return jsonify(user.to_dict()), 200
 
+
+
 api.add_resource(UserId, '/users/<int:id>')
+
+
+
 
 @app.route('/login/google')
 def login_google():
@@ -578,7 +591,24 @@ class MakeWithdrawal(Resource):
             return jsonify({"error": "An error occurred while processing the transaction"}), 500
 
 api.add_resource(MakeWithdrawal, '/withdrawal')
-
+class CheckBalance(Resource):
+    def post(self):
+        data=request.json
+        account_name=data['account']
+        user_id=data['user_id']
+        password=data['password']
+        account=Account.query.filter(Account.category.has(name=account_name)).first()
+        user_account=Account.query.filter(Account.user_id==user_id).first()
+        if not account and user_account.check_password(password):
+            return jsonify({"error": "Check account info"}), 404
+        
+        notification_message=(
+            f"Your account balance is ${user_account.balance}"
+        )
+        notification=Notification(message=notification_message,user_id=user_id)
+        db.session.add(notification)
+        db.session.commit()
+api.add_resource(CheckBalance,'/checkbalance')
 class Transactions(Resource):
     def get(self):
         transactions = [transaction.to_dict() for transaction in Transaction.query.all()]
