@@ -52,6 +52,8 @@ class User(db.Model, SerializerMixin):
         return bcrypt.check_password_hash(self._password, password)
 
     def to_dict(self):
+        location=Location.query.filter(self.location_id==Location.id).first()
+        
         return {
             'id': self.id,
             'username': self.username,
@@ -60,9 +62,9 @@ class User(db.Model, SerializerMixin):
             'account_type': self.account_type,
             'phone': self.phone,
             'profile': self.profile,
-            'location_id': self.location_id,
+            'location':location.name,
             'notifications': [{'id': message.id, 'message': message.message} for message in self.notifications],
-            'accounts': [{'id': account.id, 'number': account.number, 'balance': account.balance} for account in self.accounts],
+            'accounts': [{'id': account.id,'number': account.number, 'balance': account.balance} for account in self.accounts],
             'contacts': [{'id': contact.id, 'name': contact.name, 'phone': contact.phone} for contact in self.contacts]
         }
 
