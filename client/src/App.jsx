@@ -12,7 +12,11 @@ import Notifications from './pages/Dashboard/Notifications'
 import Invoices from './pages/Dashboard/Invoices'
 import MainDash from './pages/Dashboard/MainDash'
 import Account from './pages/Dashboard/Accounts/Account'
+import User from './pages/Details/User'
+import { selectUserData } from './features/auth/Authslice'
+import { useSelector } from'react-redux'
 function App() {
+  const user = useSelector(selectUserData);
   return (
     <>
    {/* <NavBar/> */}
@@ -33,6 +37,7 @@ function App() {
       <Route path="/account" element={<AccountType />} />
       <Route path={'/my-dashboard/notifications'} element={<Notifications/>} />
       <Route path={'/invoices'} element={<Invoices/>} />
+      <Route path={`/user/${user.username}`} element={<User/>} />
       <Route path="*" element={<h1>404</h1>} />
     </Routes>
    </main>
