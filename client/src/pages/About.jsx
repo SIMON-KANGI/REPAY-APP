@@ -1,9 +1,18 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import Footer from '../components/Footer'
 import NavBar from '../components/NavBar'
 import { useNavigate } from 'react-router-dom'
+import AOS from 'aos'
+import 'aos/dist/aos.css';
 function About() {
   const navigate = useNavigate();
+  useEffect(() => {
+    AOS.init({
+      duration: 500,
+      easing: 'ease-in-out',
+      once: false
+    });
+  }, []);
   return (
     <div>
     <NavBar/>
@@ -33,9 +42,9 @@ Get started by enrolling your email or mobile number through <br/>your mobile ba
       </div>
       <div className='flex m-8 p-6  justify-center rounded-md shadow-md'>
       <div>
-          <img src='money.png' className=' rounded-full w-96 h-96' alt=""/>
+          <img src='money.png' className=' rounded-full w-96 h-96' data-aos='fade-right' alt=""/>
         </div>
-      <div className='mx-8'>
+      <div className='mx-8' data-aos='fade-up'>
          <h1 className='font-bold text-xl'>Step 1</h1>
         <h2 className='font-bold text-4xl text-rose-500'>Create a Repay Account</h2>
         <p className='text-xl'>
@@ -45,7 +54,7 @@ Get started by enrolling your email or mobile number through your mobile <br/>ba
         
       </div>
       <div className='flex m-8 p-6  justify-center rounded-md shadow-md'>
-      <div className='mx-8'>
+      <div className='mx-8' data-aos='fade-up'>
          <h1 className='font-bold text-xl'>Step 1</h1>
         <h2 className='font-bold text-4xl text-rose-500'>Create a Repay Account</h2>
         <p className='text-xl'>
@@ -53,7 +62,7 @@ Get started by enrolling your email or mobile number through your  <br/>mobile b
       </div>
        
         <div>
-          <img src='money.png' className='rounded-full w-96 h-96' alt=""/>
+          <img src='money.png' className='rounded-full w-96 h-96' data-aos='fade-left' alt=""/>
         </div>
       </div>
     </section>
