@@ -18,7 +18,8 @@ import { MdContacts } from "react-icons/md";
 import LogOut from '../authentication/LogOut';
 import Send from './Accounts/Send';
 import Withdraw from './Accounts/Withdraw';
-
+import EditUser from '../Details/EditUser';
+import Balance from './Accounts/Balance';
 function SideBar() {
   const user = useSelector(selectUserData);
   const [isCollapsed, setCollapsed] = useState(false);
@@ -76,7 +77,7 @@ function SideBar() {
               </Link>
               <Link className='flex hover:bg-stone-300 mb-2'>
                 <FaBalanceScale className='mr-2' />
-                <span>Account Balance</span>
+                <span><Balance/></span>
               </Link>
               <Link to='/accounts' className='flex hover:bg-stone-300'>
                 <MdOutlineAccountTree className='mr-2' />
@@ -106,7 +107,7 @@ function SideBar() {
               </Link>
               <Link className='flex hover:bg-stone-300'>
                 <FaBalanceScale className='mr-2' />
-                <span>Account Balance</span>
+                <span><Balance/></span>
               </Link>
             </AccordionPanel>
           </AccordionItem>
@@ -128,7 +129,7 @@ function SideBar() {
               </Link>
               <Link className='flex hover:bg-stone-300 mb-2'>
                 <FaEdit className='mr-2' />
-                <span>Edit Profile</span>
+                <span><EditUser/></span>
               </Link>
               <Link className='flex hover:bg-stone-300'>
                 <IoMdSettings className='mr-2' />
