@@ -16,7 +16,7 @@ function Withdraw() {
         amount: '',
         Toaccount_name: '',
         password: '',
-        transaction_type: 'withdraw',
+        transaction_type: 'withdrawal',
         sender_id: user.id,
     });
 
@@ -47,7 +47,7 @@ function Withdraw() {
                     amount: '',
                     Toaccount_name: '',
                     password: '',
-                    transaction_type: 'withdraw',
+                    transaction_type: 'withdrawal',
                     sender_id: user.id,
                 });
                 onClose();
