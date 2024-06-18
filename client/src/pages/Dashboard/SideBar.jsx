@@ -20,6 +20,7 @@ import Send from './Accounts/Send';
 import Withdraw from './Accounts/Withdraw';
 import EditUser from '../Details/EditUser';
 import Balance from './Accounts/Balance';
+import Contacts from './contacts/Contacts';
 function SideBar() {
   const user = useSelector(selectUserData);
   const [isCollapsed, setCollapsed] = useState(false);
@@ -141,7 +142,7 @@ function SideBar() {
         <div className='mt-4 ml-3'>
           <Link className='text-xl flex items-center mb-3 font-bold' to="contacts">
             <MdContacts className='mr-2' />
-            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Contacts</span>
+            <span className={`${isCollapsed ? 'hidden' : 'block'}`}><Contacts/></span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
@@ -166,7 +167,7 @@ function SideBar() {
       </section>
       
        <section className={`${isCollapsed ? 'hidden' : 'block'}`}>
-        <h1 className='text-center text-2xl font-bold text-rose-600'>{user.account_type} Account</h1>
+        <h1 className='text-center text-2xl font-bold text-rose-600'><LogOut/></h1>
        </section>
      
     </div>
