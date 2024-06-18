@@ -81,7 +81,7 @@ function Personal() {
       
       dispatch(setCredentials({ accessToken: access_token, username: username, role: role, user: content }));
 
-      navigate('/my-dashboard', { replace: true });
+      navigate('/login', { replace: true });
     } catch (error) {
       console.error("Error posting data:", error);
       toast.error(error.response?.data?.message || 'An unexpected error occurred');
