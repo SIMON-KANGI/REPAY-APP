@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { selectUserData } from '../../../features/auth/Authslice'
 import { Box, Card, CardBody } from '@chakra-ui/react'
-
+import { Link } from 'react-router-dom'
 function MyAccounts() {
     const [accounts, setAccounts]=useState([])
     const user = useSelector(selectUserData);
@@ -17,9 +17,11 @@ function MyAccounts() {
   return (
    
        <Box className='mt-20 grid lg:grid-cols-4  justify-evenly'>
+       
         {
           FilterAccount.map(account => (
-            <Card backgroundColor={'stone.800'} textColor={'stone.200'} key={account.id} className='mt-4 p-10 mx-4 items-center'>
+            <Link to={`/accounts/${account.id}`} state={{account}}>
+                 <Card backgroundColor={'stone.800'} textColor={'stone.200'} key={account.id} className='mt-4 p-10 mx-4 items-center'>
               <CardBody>
                 <h1 className='font-bold text-xl'>{account.account_number}</h1>
                 <h1 className='font-bold text-rose-600 text-2xl'>
@@ -36,6 +38,8 @@ function MyAccounts() {
                
               </CardBody>
             </Card>
+            </Link>
+         
           ))
         }
       </Box>
