@@ -83,7 +83,7 @@ function Business() {
       dispatch(setCredentials({ accessToken: access_token, username: username, role: role, user: content }));
 
       toast.success(`Logged in as ${username}`, { position: 'top-right' });
-      navigate('/dashboard', { replace: true });
+      navigate('/login', { replace: true });
     } catch (error) {
       console.error("Error posting data:", error);
       toast.error(error.response?.data?.message || 'An unexpected error occurred');
