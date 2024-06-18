@@ -15,6 +15,7 @@ import Account from './pages/Dashboard/Accounts/Account'
 import User from './pages/Details/User'
 import { selectUserData } from './features/auth/Authslice'
 import { useSelector } from'react-redux'
+import AccountDetails from './pages/Dashboard/Accounts/accountDetails'
 function App() {
   const user = useSelector(selectUserData);
   return (
@@ -35,6 +36,7 @@ function App() {
       <Route path="/account-personal" element={<Personal/>} />
       <Route path="/account-business" element={<Business/>} />
       <Route path="/account" element={<AccountType />} />
+      <Route path={'/accounts/:id'} element={<AccountDetails/>} />
       <Route path={'/my-dashboard/notifications'} element={<Notifications/>} />
       <Route path={'/invoices'} element={<Invoices/>} />
       <Route path={`/user/${user.username}`} element={<User/>} />
