@@ -1,0 +1,135 @@
+import React, { useEffect, useState } from 'react';
+import { Modal, ModalHeader, ModalOverlay, ModalContent, ModalBody, ModalCloseButton } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
+import { selectUserData } from '../../../features/auth/Authslice';
+import axios from 'axios';
+
+function SendMoney({ onClose, isOpen, contact }) {
+  const user = useSelector(selectUserData);
+  const [accounts, setAccounts] = useState([]);
+  const [formData, setFormData] = useState({
+    account_name:'',
+    amount: '',
+    password: '',
+    user_id: user.id,
+    account: contact.account,
+    transaction_type:'sent'
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function getAccounts() {
+      try {
+        const response = await axios.get('http://127.0.0.1:5555/accounts');
+        console.log('Accounts fetched:', response.data);
+        setAccounts(response.data);
+      } catch (err) {
+        console.error('Error fetching accounts:', err);
+      }
+    }
+    getAccounts();
+    
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post('http://127.0.0.1:5555/transactions', formData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Response:', response.data);
+      setFormData({
+        account_name:"",
+        amount: '',
+        password: '',
+        user_id: user.id,
+        account: contact.account,
+        transaction_type:'sent'
+      });
+      onClose();
+    } catch (err) {
+      setError('Transaction failed. Please try again.');
+      console.error('Error:', err.response ? err.response.data : err.message);
+    } finally {
+      setLoading(false);
+    }
+    console.log(formData)
+  };
+
+  const filteredAccounts = accounts.filter(account => account.user_id === user.id);
+
+  return (
+    <div>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton onClick={onClose} />
+          <ModalHeader className='text-center text-xl'>Send Money to {contact?.name}</ModalHeader>
+          <ModalBody>
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col mb-4">
+                <label className="mb-2 font-medium" htmlFor="account_name">Account Name</label>
+                <select
+                  name="account_name"
+                  className="p-2 border border-gray-300 rounded-md"
+                  onChange={handleChange}
+                  value={formData.account_name}
+                  required
+                >
+                  <option value=''>Select Account</option>
+                  {filteredAccounts.map(account => (
+                    <option key={account.id} value={account.category}>{account.category}</option>
+                  ))}
+                </select>
+              </div>
+              <div className='flex flex-col mb-4'>
+                <label htmlFor='amount' className='text-xl font-bold'>Amount</label>
+                <input
+                  type='number'
+                  name='amount'
+                  className='p-2 bg-stone-300'
+                  id='amount'
+                  value={formData.amount}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className='flex flex-col mb-4'>
+                <label htmlFor='password' className='text-xl font-bold'>Password</label>
+                <input
+                  type='password'
+                  name='password'
+                  className='p-2 bg-stone-300'
+                  id='password'
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              {error && <div className='text-red-500'>{error}</div>}
+              <button type='submit' className='w-full my-6 bg-stone-950 rounded-md text-white items-center py-3' disabled={loading}>
+                {loading ? 'Sending...' : 'Send Money'}
+              </button>
+            </form>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </div>
+  );
+}
+
+export default SendMoney;
