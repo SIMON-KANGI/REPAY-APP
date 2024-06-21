@@ -1,5 +1,6 @@
 import React from 'react'
-
+import SideBar from './SideBar'
+import TopNav from './TopNav'
 function Notifications() {
   return (
     <div className='flex'>
@@ -8,7 +9,7 @@ function Notifications() {
   <section className='w-full'>
       <TopNav/>
       <div>
-<Dashbord/>
+<h1 className='text-center text-2xl'>Notifications</h1>
       </div>
     </section>
   </div>
