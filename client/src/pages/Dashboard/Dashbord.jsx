@@ -161,7 +161,7 @@ function Dashbord() {
     </Box>
     </section>
     <section className='flex h-60 my-6'>
-    <Box class="p-5 mr-2 overflow-y-scroll h-60 w-1/2 position-fixed scroll-">
+    <Box class="p-5 mr-2 overflow-y-scroll h-60 w-1/2 scroll-">
         <div className="bg-stone-950 text-center justify-center flex h-12 align-middle">
         <h2 class="text-slate-100 p-3  w-100">
             Recent Transactions
