@@ -17,9 +17,9 @@ class User(db.Model, SerializerMixin):
     is_active = db.Column(db.Boolean, default=True)
     role = db.Column(db.String(255), nullable=False)
     account_type = db.Column(db.String(255), nullable=False)
-    accounts = db.relationship('Account', back_populates='users')
-    contacts = db.relationship('Contact', back_populates='users')
-    notifications = db.relationship('Notification', cascade='all, delete-orphan', back_populates='users')
+    accounts = db.relationship('Account', back_populates='users' ,cascade="all, delete-orphan")
+    contacts = db.relationship('Contact', back_populates='users', cascade="all, delete-orphan")
+    notifications = db.relationship('Notification', back_populates='users', cascade="all, delete-orphan")
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     @validates('email')
@@ -93,6 +93,20 @@ class Account(db.Model, SerializerMixin):
     def password(self, plain_password_text):
         self._password = bcrypt.generate_password_hash(plain_password_text).decode('utf-8')
     
+    
+    
+  
+    def update_currency(self, new_currency):
+        valid_currencies = ['USD', 'KSH']
+        if new_currency not in valid_currencies:
+            raise ValueError('Currency must be either USD or KSH')
+        if new_currency == 'USD' and self.currency == 'KSH':
+            self.balance /= 120
+        elif new_currency == 'KSH' and self.currency == 'USD':
+            self.balance *= 120
+        self.currency = new_currency
+            
+        
     def received(self, amount):
         self.balance += amount
         return self.balance
@@ -161,9 +175,10 @@ class Notification(db.Model, SerializerMixin):
     serialize_only = ('id', 'message', 'transaction_id')
     
     id = db.Column(db.Integer, primary_key=True)
+    sender=db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     message = db.Column(db.String(255), nullable=False)
-    transaction_id = db.Column(db.Integer, db.ForeignKey('transactions.id'), nullable=False)
+    transaction_id = db.Column(db.Integer, db.ForeignKey('transactions.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     users = db.relationship('User', back_populates='notifications')
 
@@ -186,6 +201,17 @@ class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     phone = db.Column(db.Integer, nullable=False, unique=True)
+    account=db.Column(db.Integer, nullable=False, unique=True)
     email = db.Column(db.String(20), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     users = db.relationship('User', back_populates='contacts')
+    
+    def to_dict(self):
+        return{
+            'id': self.id,
+            'name': self.name,
+            'phone': self.phone,
+            'account': self.account,
+            'email': self.email,
+            'user_id': self.user_id
+        }
