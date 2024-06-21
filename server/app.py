@@ -1,7 +1,7 @@
 from config import create_app, db
 from flask_restful import Api, Resource
 from flask import request, jsonify, make_response, session, url_for, redirect
-from models import Transaction, Account, User, Notification, Location, Category
+from models import Transaction, Account, User, Notification, Location, Category,Contact
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, unset_jwt_cookies
 import cloudinary
 from cloudinary import uploader
@@ -376,6 +376,62 @@ class Accounts(Resource):
 
 
 api.add_resource(Accounts, '/accounts')
+class AccountId(Resource):
+    def patch(self, id):
+        data = request.get_json()
+        account=Account.query.filter(Account.id == id).first()
+        category = data.get('category')
+        currency=data.get('currency')
+        account_number = data.get('accountNumber')
+        password = data.get('password')
+        user_id = data.get('user_id')
+
+        if not all([category, account_number, password, user_id]):
+            return {"error": "Missing data fields"}, 400
+
+        try:
+            account = Account.query.get(id)
+            account.number = account_number
+            account.password =  password
+            account.category_id = category
+            account.currency = currency
+            account.user_id = user_id
+            db.session.commit()
+            return jsonify(account.to_dict()), 200
+        except ValueError as e:
+            db.session.rollback()
+            return {"error": str(e)}, 400
+api.add_resource(AccountId, '/account/<int:id>')
+
+class ChangeCurrency(Resource):
+    def patch(self, id):
+        data = request.get_json()
+        currency = data.get('currency')
+
+        if not currency:
+            return {"error": "Missing currency field"}, 400
+
+        valid_currencies = ['USD', 'KSH']
+        if currency not in valid_currencies:
+            return {"error": "Invalid currency"}, 400
+
+        account = Account.query.get(id)
+        if not account:
+            return {"error": "Account not found"}, 404
+
+        try:
+            if account.currency != currency:
+                account.update_currency(currency)
+            db.session.commit()
+            return jsonify(account.to_dict()), 200
+        except ValueError as e:
+            db.session.rollback()
+            return {"error": str(e)}, 400
+        except Exception as e:
+            db.session.rollback()
+            return {"error": "An error occurred while updating the account"}, 500
+
+api.add_resource(ChangeCurrency, '/account/<int:id>/currency')
 
 class MakeTransaction(Resource):
     def post(self):
@@ -421,6 +477,7 @@ class MakeTransaction(Resource):
             if not third_party_account:
                 return jsonify({"error": "Recipient account not found"}), 404
 
+
             if transaction_type not in ['received', 'sent']:
                 return jsonify({"error": "Invalid transaction type"}), 400
 
@@ -442,7 +499,7 @@ class MakeTransaction(Resource):
                 date=db.func.current_timestamp(),
                 user_id=sender_id,
                 account_id=sender_account.id,
-                thirdParty_id=third_party_account.user_id,  # Corrected typo
+                thirdParty_id=third_party_account.user_id  ,  # Corrected typo
                 type=transaction_type
             )
 
@@ -455,6 +512,7 @@ class MakeTransaction(Resource):
                 f"Your new balance is {sender_account.balance}."
             )
             notification_sender = Notification(
+                sender=account_name,
                 message=notification_sendmessage,
                 transaction_id=transaction.id,
                 user_id=sender_account.user_id
@@ -468,6 +526,7 @@ class MakeTransaction(Resource):
                 f"Your new balance is {third_party_account.balance}."
             )
             notification_receiver = Notification(
+                sender=third_party_account.category,
                 message=notification_receivedmessage,
                 transaction_id=transaction.id,
                 user_id=third_party_account.user_id
@@ -601,32 +660,31 @@ class CheckBalance(Resource):
         if not account_name or not user_id or not password:
             return jsonify({"error": "Account name, user ID, and password are required"}), 400
 
-        account = Account.query.filter(Account.category.has(name=account_name)).first()
+        account = Account.query.filter(Account.user_id == user_id, Account.category.has(name=account_name)).first()
+        category=Category.query.filter(Category.name == account_name).first()
         if not account:
-            print("account not found")
+            app.logger.info("Account not found")
             return jsonify({"error": "Account not found"}), 404
-        print(account.user_id)
-        if account.user_id != user_id:
-            print("invalid user id")
-            return jsonify({"error": "Invalid user ID"}), 401
-
+        
         if not account.check_password(password):
-            print("invalid password")
+            app.logger.info("Invalid password")
             return jsonify({"error": "Invalid password"}), 401
 
-        notification_message = f"Your account balance is ${account.balance}"
-        notification = Notification(message=notification_message, user_id=user_id)
+        notification_message = f"Your {category.name} balance is ${account.balance}"
+        notification = Notification(message=notification_message, user_id=user_id, transaction_id=0)
         db.session.add(notification)
         
         try:
             db.session.commit()
         except Exception as e:
+            app.logger.error(f"An error occurred while processing the request: {e}")
             db.session.rollback()
             return jsonify({"error": "An error occurred while processing your request"}), 500
 
         return jsonify({"message": notification_message}), 200
 
 api.add_resource(CheckBalance, '/checkbalance')
+
 class Transactions(Resource):
     def get(self):
         transactions = [transaction.to_dict() for transaction in Transaction.query.all()]
@@ -661,6 +719,20 @@ class Locations(Resource):
         locations = [location.to_dict() for location in Location.query.all()]
         return jsonify(locations)
 api.add_resource(Locations, '/locations')
+
+class Contacts(Resource):
+    def get(self):
+        contacts = [contact.to_dict() for contact in Contact.query.all()]
+        return jsonify(contacts)
+    
+    def post(self):
+        data = request.get_json()
+        contact = Contact(name=data['name'], email=data['email'], 
+                          phone=data['phone'],account=data['account'], user_id=data['user_id'])
+        db.session.add(contact)
+        db.session.commit()
+        return jsonify(contact)
+api.add_resource(Contacts, '/contacts')
 
 if __name__ == '__main__':
     with app.app_context():
