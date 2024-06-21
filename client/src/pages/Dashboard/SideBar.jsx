@@ -1,26 +1,23 @@
+import React, { useState } from 'react';
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
-import { useState } from 'react';
 import { FcMenu } from 'react-icons/fc';
-import { selectUserData } from '../../features/auth/Authslice';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { MdDashboard, MdAccountBalanceWallet } from 'react-icons/md';
-import { IoIosArrowDown } from 'react-icons/io';
-import { MdSendToMobile } from "react-icons/md";
-import { PiHandWithdrawFill } from "react-icons/pi";
-import { FaBalanceScale, FaHome } from "react-icons/fa";
-import { ImProfile } from "react-icons/im";
-import { FaEdit } from "react-icons/fa";
-import { IoMdSettings, IoIosNotifications } from "react-icons/io";
-import { MdOutlineAccountTree } from "react-icons/md";
-import { LiaFileInvoiceSolid } from "react-icons/lia";
-import { MdContacts } from "react-icons/md";
+import { MdDashboard, MdAccountBalanceWallet, MdSendToMobile, MdOutlineAccountTree, MdContacts, MdAccountTree } from 'react-icons/md';
+import { IoIosArrowDown, IoIosNotifications } from 'react-icons/io';
+import { PiHandWithdrawFill } from 'react-icons/pi';
+import { FaBalanceScale, FaHome, FaEdit } from 'react-icons/fa';
+import { ImProfile } from 'react-icons/im';
+import { IoMdSettings } from 'react-icons/io';
+import { LiaFileInvoiceSolid } from 'react-icons/lia';
+import { selectUserData } from '../../features/auth/Authslice';
 import LogOut from '../authentication/LogOut';
 import Send from './Accounts/Send';
 import Withdraw from './Accounts/Withdraw';
 import EditUser from '../Details/EditUser';
 import Balance from './Accounts/Balance';
-import Contacts from './contacts/Contacts';
+
+
 function SideBar() {
   const user = useSelector(selectUserData);
   const [isCollapsed, setCollapsed] = useState(false);
@@ -34,11 +31,11 @@ function SideBar() {
       <header className='h-40 p-4'>
         <div className='flex w-full justify-between'>
           <h1 className={`text-2xl font-bold ${isCollapsed ? 'hidden' : 'block'}`}>REPAY</h1>
-          <FcMenu onClick={handleCollapsed} className='text-xl' />
+          <FcMenu onClick={handleCollapsed} className='text-xl cursor-pointer' />
         </div>
         <div className='flex items-center mt-4'>
           <div className={`w-20 h-20 border-4 border-stone-300 rounded-full overflow-hidden ${isCollapsed ? 'hidden' : 'block'}`}>
-            <img src={user.profile} alt={user.username} className={`w-full h-full object-cover ${isCollapsed ? 'hidden' : 'block'}`} />
+            <img src={user.profile} alt={user.username} className='w-full h-full object-cover' />
           </div>
           {!isCollapsed && (
             <div className='ml-4'>
@@ -67,20 +64,12 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              {/* <Link className='flex hover:bg-stone-300 mb-2'>
-                <MdSendToMobile className='mr-2' />
-                <span>Send Money</span>
-              </Link> */}
-              <Send/>
-              <Link className='flex hover:bg-stone-300 mb-2'>
-                <PiHandWithdrawFill className='mr-2' />
-                <span><Withdraw/></span>
-              </Link>
-              <Link className='flex hover:bg-stone-300 mb-2'>
-                <FaBalanceScale className='mr-2' />
-                <span><Balance/></span>
-              </Link>
-              <Link to='/accounts' className='flex hover:bg-stone-300'>
+             <Send/>
+              
+            <Withdraw/>
+             <Balance/>
+             
+              <Link to='/accounts' className='flex items-center hover:bg-stone-300'>
                 <MdOutlineAccountTree className='mr-2' />
                 <span>Accounts</span>
               </Link>
@@ -98,18 +87,16 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              <Link className='flex hover:bg-stone-300 mb-2'>
+              <Link to="/transactions" className='flex items-center hover:bg-stone-300 mb-2'>
                 <MdSendToMobile className='mr-2' />
                 <span>My Transactions</span>
               </Link>
-              <Link className='flex hover:bg-stone-300 mb-2'>
+              <Link to="/received" className='flex items-center hover:bg-stone-300 mb-2'>
                 <PiHandWithdrawFill className='mr-2' />
                 <span>Received</span>
               </Link>
-              <Link className='flex hover:bg-stone-300'>
-                <FaBalanceScale className='mr-2' />
-                <span><Balance/></span>
-              </Link>
+              <Balance/>
+            
             </AccordionPanel>
           </AccordionItem>
 
@@ -124,15 +111,15 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              <Link to={`/user/${user.username}`} className='flex hover:bg-stone-300 mb-2'>
-                <MdSendToMobile className='mr-2' />
+              <Link to={`/user/${user.username}`} className='flex items-center hover:bg-stone-300 mb-2'>
+                <ImProfile className='mr-2' />
                 <span>My Profile</span>
               </Link>
-              <Link className='flex hover:bg-stone-300 mb-2'>
+              <div className='flex items-center hover:bg-stone-300 mb-2'>
                 <FaEdit className='mr-2' />
-                <span><EditUser/></span>
-              </Link>
-              <Link className='flex hover:bg-stone-300'>
+               <EditUser/>
+              </div>
+              <Link to="/settings" className='flex items-center hover:bg-stone-300'>
                 <IoMdSettings className='mr-2' />
                 <span>Settings</span>
               </Link>
@@ -140,36 +127,36 @@ function SideBar() {
           </AccordionItem>
         </Accordion>
         <div className='mt-4 ml-3'>
-          <Link className='text-xl flex items-center mb-3 font-bold' to="contacts">
+          <Link to="/contacts" className='text-xl flex items-center mb-3 font-bold'>
             <MdContacts className='mr-2' />
-            <span className={`${isCollapsed ? 'hidden' : 'block'}`}><Contacts/></span>
+            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Contacts</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
-          <Link className='text-xl flex items-center mb-3 font-bold' to="invoices">
+          <Link to="/invoices" className='text-xl flex items-center mb-3 font-bold'>
             <LiaFileInvoiceSolid className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Invoices</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
-          <Link className='text-xl flex items-center mb-3 font-bold' to="notifications">
+          <Link to="/notifications" className='text-xl flex items-center mb-3 font-bold'>
             <IoIosNotifications className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Notifications</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
-          <Link className='text-xl flex items-center mb-3 font-bold' to="/">
+          <Link to="/" className='text-xl flex items-center mb-3 font-bold'>
             <FaHome className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Landing Page</span>
           </Link>
         </div>
-
       </section>
-      
-       <section className={`${isCollapsed ? 'hidden' : 'block'}`}>
-        <h1 className='text-center text-2xl font-bold text-rose-600'><LogOut/></h1>
-       </section>
-     
+
+      <section className={`${isCollapsed ? 'hidden' : 'block'}`}>
+        <div className='text-center text-2xl font-bold text-rose-600 mt-4'>
+          <LogOut />
+        </div>
+      </section>
     </div>
   );
 }
