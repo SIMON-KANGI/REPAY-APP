@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 function TopNav() {
     const user = useSelector(selectUserData);
     const [currentTime, setCurrentTime] = useState(new Date());
+    const notifications = user.notifications;
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -18,11 +19,11 @@ function TopNav() {
     }, []);
 
     const formatTime = (date) => {
-        const today=date.toUTCString();
+        const today = date.toUTCString();
         const hours = date.getHours();
         const minutes = date.getMinutes();
         const seconds = date.getSeconds();
-        return `${today.toString().slice(0,17)}-${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        return `${today.toString().slice(0, 17)}-${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
     return (
@@ -32,10 +33,17 @@ function TopNav() {
             <nav className='text-right mx-4'>
                 <ul>
                     <div className='flex items-center'>
-                        <Tooltip label='messages'>
-                            <Link to="/notifications">
-                                <IoNotifications fontSize={'1.5rem'} />
-                            </Link>
+                        <Tooltip label='Notifications'>
+                        <div className='notifications'>
+        <Link className='relative flex' to='/cart'>
+    <IoNotifications fontSize='1.5rem' />
+    <span className='rounded-full bg-rose-800 p-1 w-5 h-5 flex items-center justify-center text-white'>
+        {notifications.length}
+    </span>
+</Link>
+
+
+        </div>
                         </Tooltip>
                         <div className='w-10 h-10 border-4 mx-4 border-stone-300 rounded-full overflow-hidden'>
                             <img src={user.profile} alt={user.username} className='rounded-full w-10 h-10' />
