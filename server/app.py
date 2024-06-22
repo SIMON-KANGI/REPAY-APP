@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from authlib.integrations.flask_client import OAuth
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-
+from datetime import datetime
 load_dotenv()
 app = create_app()
 api = Api(app)
@@ -366,16 +366,40 @@ class Accounts(Resource):
             return {"error": "Missing data fields"}, 400
 
         try:
+            # Verify if the category exists
+            
+            if not category:
+                return {"error": "Invalid category ID"}, 400
+            
+            # Create a new account
             account = Account(number=account_number, password=password, category_id=category, user_id=user_id)
             db.session.add(account)
             db.session.commit()
+
+            # Create a notification
+            notification_message = (
+                f"You have successfully created a {category.name} account. "
+                f"Your new balance is {account.balance}."
+            )
+            notification_sender = Notification(
+                sender=category.name,
+                message=notification_message,
+                transaction_id=0,
+                user_id=user_id
+            )
+            db.session.add(notification_sender)
+            db.session.commit()
+
             return jsonify(account.to_dict()), 201
         except ValueError as e:
             db.session.rollback()
             return {"error": str(e)}, 400
-
+        except Exception as e:
+            db.session.rollback()
+            return {"error": "An error occurred while processing your request"}, 500
 
 api.add_resource(Accounts, '/accounts')
+
 class AccountId(Resource):
     def patch(self, id):
         data = request.get_json()
@@ -433,22 +457,24 @@ class ChangeCurrency(Resource):
 
 api.add_resource(ChangeCurrency, '/account/<int:id>/currency')
 
+
+
 class MakeTransaction(Resource):
     def post(self):
-        # check for the contentType
+        # Check for the contentType
         if request.content_type != 'application/json':
             return jsonify({"error": "Content-Type must be application/json"}), 415
 
         data = request.json  # Change request.form to request.json
 
-        # required data from the front end
+        # Required data from the front end
         required_keys = ['account_name', 'amount', 'password', 'account', 'sender_id']
         missing_keys = [key for key in required_keys if key not in data]
 
         if missing_keys:
             return jsonify({"error": f"Missing keys: {', '.join(missing_keys)}"}), 400
 
-        # received data
+        # Received data
         try:
             account_name = data.get('account_name')
             amount = data.get('amount')
@@ -477,7 +503,6 @@ class MakeTransaction(Resource):
             if not third_party_account:
                 return jsonify({"error": "Recipient account not found"}), 404
 
-
             if transaction_type not in ['received', 'sent']:
                 return jsonify({"error": "Invalid transaction type"}), 400
 
@@ -499,17 +524,20 @@ class MakeTransaction(Resource):
                 date=db.func.current_timestamp(),
                 user_id=sender_id,
                 account_id=sender_account.id,
-                thirdParty_id=third_party_account.user_id  ,  # Corrected typo
+                thirdParty_id=third_party_account.user_id,
                 type=transaction_type
             )
 
             db.session.add(transaction)
             db.session.commit()
 
+            # Get the current time and format it
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
             # Notification for the sender
             notification_sendmessage = (
-                f"Transaction of {amount} {transaction_type} to account {third_party_account.number}. "
-                f"Your new balance is {sender_account.balance}."
+                f"Transaction of {amount} {transaction_type} to account {third_party_account.number} on {current_time}."
+                f" Your new balance is {sender_account.balance}."
             )
             notification_sender = Notification(
                 sender=account_name,
@@ -522,8 +550,8 @@ class MakeTransaction(Resource):
 
             # Notification for the receiver
             notification_receivedmessage = (
-                f"You have received {amount} from account {sender_account.number}. "
-                f"Your new balance is {third_party_account.balance}."
+                f"You have received {amount} from account {sender_account.number} on {current_time}."
+                f" Your new balance is {third_party_account.balance}."
             )
             notification_receiver = Notification(
                 sender=third_party_account.category,
@@ -623,6 +651,7 @@ class MakeWithdrawal(Resource):
                 f"Your new balance is {sender_account.balance}."
             )
             notification_sender = Notification(
+                sender=Fromaccount_name,
                 message=notification_sendmessage,
                 transaction_id=transaction.id,
                 user_id=sender_account.user_id
@@ -636,6 +665,7 @@ class MakeWithdrawal(Resource):
                 f"Your new balance is {third_party_account.balance}."
             )
             notification_receiver = Notification(
+                sender=third_party_account.category,
                 message=notification_receivedmessage,
                 transaction_id=transaction.id,
                 user_id=third_party_account.user_id
@@ -671,7 +701,7 @@ class CheckBalance(Resource):
             return jsonify({"error": "Invalid password"}), 401
 
         notification_message = f"Your {category.name} balance is ${account.balance}"
-        notification = Notification(message=notification_message, user_id=user_id, transaction_id=0)
+        notification = Notification(sender=account_name,message=notification_message, user_id=user_id, transaction_id=0)
         db.session.add(notification)
         
         try:
