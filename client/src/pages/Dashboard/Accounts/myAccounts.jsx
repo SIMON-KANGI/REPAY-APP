@@ -4,22 +4,18 @@ import { useSelector } from 'react-redux'
 import { selectUserData } from '../../../features/auth/Authslice'
 import { Box, Card, CardBody } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
+import useFetch from '../../../hooks/UseFetch'
 function MyAccounts() {
-    const [accounts, setAccounts]=useState([])
+    
     const user = useSelector(selectUserData);
-  
-    useEffect(() => {
-      axios.get('http://127.0.0.1:5555/accounts')
-        .then(res => setAccounts(res.data))
-        .catch(err => console.error(err));
-    }, []);
-  const FilterAccount=accounts.filter(account=>account.user_id===user.id)
+    const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/accounts');
+  const FilterAccount=accounts?.filter(account=>account.user_id===user.id)
   return (
    
        <Box className='mt-20 grid lg:grid-cols-4  justify-evenly'>
        
         {
-          FilterAccount.map(account => (
+          FilterAccount?.map(account => (
             <Link to={`/accounts/${account.id}`} state={{account}}>
                  <Card backgroundColor={'stone.800'} textColor={'stone.200'} key={account.id} className='mt-4 p-10 mx-4 items-center'>
               <CardBody>
