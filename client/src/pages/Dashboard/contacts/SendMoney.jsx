@@ -6,7 +6,8 @@ import axios from 'axios';
 
 function SendMoney({ onClose, isOpen, contact }) {
   const user = useSelector(selectUserData);
-  const [accounts, setAccounts] = useState([]);
+
+  const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/accounts');
   const [formData, setFormData] = useState({
     account_name:'',
     amount: '',
@@ -15,22 +16,6 @@ function SendMoney({ onClose, isOpen, contact }) {
     account: contact.account,
     transaction_type:'sent'
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    async function getAccounts() {
-      try {
-        const response = await axios.get('http://127.0.0.1:5555/accounts');
-        console.log('Accounts fetched:', response.data);
-        setAccounts(response.data);
-      } catch (err) {
-        console.error('Error fetching accounts:', err);
-      }
-    }
-    getAccounts();
-    
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,7 +55,7 @@ function SendMoney({ onClose, isOpen, contact }) {
     console.log(formData)
   };
 
-  const filteredAccounts = accounts.filter(account => account.user_id === user.id);
+  const filteredAccounts = accounts?.filter(account => account.user_id === user.id);
 
   return (
     <div>
@@ -91,7 +76,7 @@ function SendMoney({ onClose, isOpen, contact }) {
                   required
                 >
                   <option value=''>Select Account</option>
-                  {filteredAccounts.map(account => (
+                  {filteredAccounts?.map(account => (
                     <option key={account.id} value={account.category}>{account.category}</option>
                   ))}
                 </select>
