@@ -3,13 +3,12 @@ import { Modal, ModalBody, ModalContent, Tooltip, ModalFooter, ModalCloseButton,
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '../../../features/auth/Authslice';
-
+import useFetch from '../../../hooks/UseFetch';
 function Send() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [values, setValues] = useState([]);
-    const [accounts, setAccounts] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+    const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/accounts');
+   
     const user = useSelector(selectUserData);
     const [formData, setFormData] = useState({
         account_name: '',
@@ -59,20 +58,9 @@ function Send() {
     };
     
 
-    useEffect(() => {
-        const fetchAccounts = async () => {
-            try {
-                const response = await axios.get('http://127.0.0.1:5555/accounts');
-                console.log('Accounts fetched:', response.data); // Log fetched accounts
-                setAccounts(response.data);
-            } catch (err) {
-                console.error('Error fetching accounts:', err);
-            }
-        };
-        fetchAccounts();
-    }, []);
+  
 
-    const filterAccount = accounts.filter(account => account.user_id === user.id);
+    const filterAccount = accounts?.filter(account => account.user_id === user.id);
 
     return (
         <div className="flex justify-center items-center h-full">
@@ -93,7 +81,7 @@ function Send() {
                                 <label className="mb-2 font-medium" htmlFor="account_name">Account Name</label>
                                 <select name="account_name" className="p-2 border border-gray-300 rounded-md" onChange={handleChange} value={formData.account_name} required>
                                     <option value=''>Select Account</option>
-                                    {filterAccount.map(account => (
+                                    {filterAccount?.map(account => (
                                         <option key={account.id} value={account.category}>{account.category}</option>
                                     ))}
                                 </select>
