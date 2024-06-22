@@ -172,7 +172,7 @@ class Transaction(db.Model, SerializerMixin):
 class Notification(db.Model, SerializerMixin):
     __tablename__ = 'notifications'
     serialize_rules = ()
-    serialize_only = ('id', 'message', 'transaction_id')
+    serialize_only = ('id', 'message', 'transaction_id', 'user_id')
     
     id = db.Column(db.Integer, primary_key=True)
     sender=db.Column(db.String(255), nullable=False)
