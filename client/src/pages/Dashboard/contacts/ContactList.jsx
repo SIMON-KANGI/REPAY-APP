@@ -6,31 +6,21 @@ import { FaChevronDown } from 'react-icons/fa';
 import { Menu, MenuButton, MenuItem, MenuList, Button } from '@chakra-ui/react';
 import SendMoney from './SendMoney';
 import { useDisclosure } from '@chakra-ui/react';
-
+import useFetch from '../../../hooks/UseFetch';
 function ContactList() {
-  const [contacts, setContacts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data:contacts, loading, error } = useFetch('http://127.0.0.1:5555/contacts');
   const { onOpen, isOpen, onClose } = useDisclosure();
   const [selectedContact, setSelectedContact] = useState(null);
   const user = useSelector(selectUserData);
 
-  useEffect(() => {
-    axios.get('http://127.0.0.1:5555/contacts')
-      .then(res => {
-        setContacts(res.data);
-        setLoading(false);
-        console.log(res.data);
-      }).catch(err => {
-        console.error(err);
-      });
-  }, []);
+ 
 
   const handleClick = useCallback((contact) => {
     setSelectedContact(contact);
     onOpen();
   }, [onOpen]);
 
-  const filteredContacts = contacts.filter(contact => contact.user_id === user.id);
+  const filteredContacts = contacts?.filter(contact => contact.user_id === user.id);
 
   return (
     <div className='justify-center items-center'>
@@ -44,7 +34,7 @@ function ContactList() {
           </tr>
         </thead>
         <tbody className='border-2 border-gray-900'>
-          {filteredContacts.map(contact => (
+          {filteredContacts?.map(contact => (
             <tr key={contact.id} className='border-2 border-gray-900'>
               <td className='border-2 border-gray-900 p-4'>{contact.name}</td>
               <td className='border-2 border-gray-900'>{contact.phone}</td>
