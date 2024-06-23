@@ -20,6 +20,7 @@ class User(db.Model, SerializerMixin):
     accounts = db.relationship('Account', back_populates='users' ,cascade="all, delete-orphan")
     contacts = db.relationship('Contact', back_populates='users', cascade="all, delete-orphan")
     notifications = db.relationship('Notification', back_populates='users', cascade="all, delete-orphan")
+    invoices=db.relationship('Invoice', back_populates='users', cascade="all, delete-orphan")
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     @validates('email')
@@ -172,7 +173,7 @@ class Transaction(db.Model, SerializerMixin):
 class Notification(db.Model, SerializerMixin):
     __tablename__ = 'notifications'
     serialize_rules = ()
-    serialize_only = ('id', 'message', 'transaction_id', 'user_id')
+    serialize_only = ('id','sender', 'message', 'transaction_id', 'user_id')
     
     id = db.Column(db.Integer, primary_key=True)
     sender=db.Column(db.String(255), nullable=False)
@@ -181,6 +182,15 @@ class Notification(db.Model, SerializerMixin):
     transaction_id = db.Column(db.Integer, db.ForeignKey('transactions.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     users = db.relationship('User', back_populates='notifications')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+           'sender': self.sender,
+           'message': self.message,
+            'transaction_id': self.transaction_id,
+            'user_id': self.user_id
+        }
 
 class Location(db.Model):
     __tablename__ = 'locations'
@@ -215,3 +225,22 @@ class Contact(db.Model):
             'email': self.email,
             'user_id': self.user_id
         }
+        
+class Invoice(db.Model):
+    __tablename__ = 'invoices'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(255), nullable=False)
+    email=db.Column(db.String(255), nullable=False)
+    phone=db.Column(db.Integer, nullable=False)
+    amount=db.Column(db.Integer, nullable=False)
+    total=db.Column(db.Integer, nullable=False)
+    CustomerPhone=db.Column(db.String(255), nullable=False)
+    CustomerEmail=db.Column(db.String(255), nullable=False)
+    account=db.Column(db.String(255), nullable=False)
+    description=db.Column(db.String(255), nullable=False)
+    amountWords=db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    user_id=db.Column(db.Integer, db.ForeignKey('users.id'))
+    users = db.relationship('User', back_populates='invoices')
+    
