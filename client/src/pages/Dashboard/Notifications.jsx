@@ -1,6 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import SideBar from './SideBar'
 import TopNav from './TopNav'
+import NotificationList from './notificationList'
 
 function Notifications() {
  
@@ -13,6 +14,7 @@ function Notifications() {
       <div>
 <h1 className='text-center text-2xl'>Notifications</h1>
       </div>
+      <NotificationList/>
     </section>
   </div>
   )
