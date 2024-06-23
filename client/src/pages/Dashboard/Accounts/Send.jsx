@@ -29,8 +29,8 @@ function Send() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setError('');
+        loading
+        error
     
         try {
             const response = await axios.post('http://127.0.0.1:5555/transactions', formData, {
@@ -50,10 +50,10 @@ function Send() {
             });
             onClose();
         } catch (err) {
-            setError('Transaction failed. Please try again.');
+            error('Transaction failed. Please try again.');
             console.error('Error:', err.response ? err.response.data : err.message);
         } finally {
-            setLoading(false);
+           loading;
         }
     };
     
