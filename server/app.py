@@ -465,7 +465,7 @@ class MakeTransaction(Resource):
         if request.content_type != 'application/json':
             return jsonify({"error": "Content-Type must be application/json"}), 415
 
-        data = request.json  # Change request.form to request.json
+        data = request.json
 
         # Required data from the front end
         required_keys = ['account_name', 'amount', 'password', 'account', 'sender_id']
@@ -474,7 +474,6 @@ class MakeTransaction(Resource):
         if missing_keys:
             return jsonify({"error": f"Missing keys: {', '.join(missing_keys)}"}), 400
 
-        # Received data
         try:
             account_name = data.get('account_name')
             amount = data.get('amount')
@@ -553,19 +552,22 @@ class MakeTransaction(Resource):
                 f"You have received {amount} from account {sender_account.number} on {current_time}."
                 f" Your new balance is {third_party_account.balance}."
             )
+            app.logger.info(f"Preparing to send notification to receiver: {third_party_account.user_id}")
             notification_receiver = Notification(
-                sender=third_party_account.category,
+                sender=third_party_account.category.name if hasattr(third_party_account.category, 'name') else str(third_party_account.category),
                 message=notification_receivedmessage,
                 transaction_id=transaction.id,
                 user_id=third_party_account.user_id
             )
             db.session.add(notification_receiver)
             db.session.commit()
+            app.logger.info(f"Notification to receiver sent successfully: {third_party_account.user_id}")
 
             return jsonify(sender_account.to_dict()), 200
 
         except Exception as e:
             app.logger.error(f"Error processing transaction: {e}")
+            db.session.rollback()  # Ensure any changes are rolled back on error
             return jsonify({"error": "An error occurred while processing the transaction"}), 500
 
 api.add_resource(MakeTransaction, '/transactions')
@@ -738,6 +740,14 @@ class Notifications(Resource):
 
 api.add_resource(Notifications, '/notifications')
 
+class NotificationId(Resource):
+    def delete(self,id):
+        notification = Notification.query.get(id)
+        db.session.delete(notification)
+        db.session.commit()
+        return jsonify(notification)
+    
+api.add_resource(NotificationId, '/notifications/<int:id>')
 class Categories(Resource):
     def get(self):
         categories = [category.to_dict() for category in Category.query.all()]
@@ -763,7 +773,9 @@ class Contacts(Resource):
         db.session.commit()
         return jsonify(contact)
 api.add_resource(Contacts, '/contacts')
-
+class CreateInvoice(Resource):
+    def post(self):
+        data=request.get_json()
 if __name__ == '__main__':
     with app.app_context():
         app.run(port=5555, debug=True)
