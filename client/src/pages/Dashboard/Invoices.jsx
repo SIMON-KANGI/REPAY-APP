@@ -1,10 +1,18 @@
 import React from 'react'
-
+import SideBar from './SideBar'
+import TopNav from './TopNav'
+import CreateInvoice from './CreateInvoice'
 function Invoices() {
   return (
-    <div>
-      
-    </div>
+    <div className='flex'>
+    <SideBar/>
+    <section className='w-full'>
+      <TopNav/>
+      <div>
+       <CreateInvoice/>
+      </div>
+      </section>
+      </div>
   )
 }
 
