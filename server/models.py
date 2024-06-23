@@ -233,14 +233,23 @@ class Invoice(db.Model):
     name=db.Column(db.String(255), nullable=False)
     email=db.Column(db.String(255), nullable=False)
     phone=db.Column(db.Integer, nullable=False)
-    amount=db.Column(db.Integer, nullable=False)
-    total=db.Column(db.Integer, nullable=False)
     CustomerPhone=db.Column(db.String(255), nullable=False)
-    CustomerEmail=db.Column(db.String(255), nullable=False)
     account=db.Column(db.String(255), nullable=False)
     description=db.Column(db.String(255), nullable=False)
-    amountWords=db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     user_id=db.Column(db.Integer, db.ForeignKey('users.id'))
     users = db.relationship('User', back_populates='invoices')
+    
+    def to_dict(self):
+        return{
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'phone': self.phone,
+            'CustomerPhone': self.CustomerPhone,
+            'account': self.account,
+            'description': self.description,
+            'created_at': self.created_at,
+            'user_id': self.user_id
+        }
     
