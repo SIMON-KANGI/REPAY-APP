@@ -14,7 +14,7 @@ import {
     Button
   } from '@chakra-ui/react'
 import LogOut from '../pages/authentication/LogOut'
-
+import { MdDashboard } from "react-icons/md";
 function NavBar() {
   const isAuthenticated = useAuth(['admin', 'user']);
   return (
@@ -40,7 +40,13 @@ function NavBar() {
    {isAuthenticated &&<LogOut/>}
     
    </MenuItem>
+   {isAuthenticated &&<MenuItem>
+    <Link to="my-dashboard" className='flex items-center font-bold text-xl'>
+    <MdDashboard/>
+    My Dashboard</Link>
+   </MenuItem>}
   </MenuList>
+   
 </Menu>
 </ul>
     </nav>
