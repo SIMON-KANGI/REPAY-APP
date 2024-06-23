@@ -1,7 +1,7 @@
 from config import create_app, db
 from flask_restful import Api, Resource
 from flask import request, jsonify, make_response, session, url_for, redirect
-from models import Transaction, Account, User, Notification, Location, Category,Contact
+from models import Transaction, Account, User, Notification, Location, Category,Contact,Invoice
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, unset_jwt_cookies
 import cloudinary
 from cloudinary import uploader
@@ -774,8 +774,78 @@ class Contacts(Resource):
         return jsonify(contact)
 api.add_resource(Contacts, '/contacts')
 class CreateInvoice(Resource):
+    def get(self):
+        invoice=[invoice.to_dict() for invoice in Invoice.query.all()]
+        return jsonify(invoice)
     def post(self):
-        data=request.get_json()
+        # Check if the request content type is multipart/form-data
+        if 'multipart/form-data' not in request.content_type:
+            return jsonify({"error": "Content-Type must be multipart/form-data"}), 415
+
+        # Get the form data and file
+        customer_email = request.form.get('customer_email')
+        customer_phone = request.form.get('customer_phone')
+        account = request.form.get('account')
+       
+        user_id = request.form.get('user_id')
+        file_to_upload = request.files.get('file')
+
+        # Log the form data and files
+        app.logger.info(f"Form Data: {request.form}")
+        app.logger.info(f"Files: {request.files}")
+
+        # Check if file is present
+        if not file_to_upload or file_to_upload.filename == '':
+            return jsonify({"error": "File not found"}), 404
+
+        # Retrieve company (user) information
+        company = User.query.filter_by(id=user_id).first()
+        if not company:
+            return jsonify({"error": "User not found"}), 404
+
+        # Log the received data
+        app.logger.info(
+            f"Received Data: Customer_email: {customer_email}, phone: {customer_phone}, account: {account}"
+        )
+
+        # Validate the required fields
+        if not customer_email or not customer_phone or not account:
+            return jsonify({"error": "Customer email, phone, account, and description are required"}), 400
+
+        try:
+            # Upload the file if it's a PDF
+            if file_to_upload.mimetype == 'application/pdf':
+                upload_result = uploader.upload(file_to_upload, resource_type='raw')
+            else:
+                return jsonify({"error": "Please upload a PDF file"}), 400
+        except Exception as e:
+            app.logger.error(f"Error uploading file: {e}")
+            return jsonify({"error": "An error occurred while uploading the file"}), 500
+
+        # Get the file URL from the upload result
+        file_url = upload_result.get('url')
+
+        # Create a new invoice object
+        new_invoice = Invoice(
+            name=company.username,
+            email=company.email,
+            phone=company.phone,
+            CustomerPhone=customer_phone,
+            account=account,
+            description=file_url,
+            user_id=user_id
+        )
+
+        # Add the new invoice to the database session and commit
+        db.session.add(new_invoice)
+        db.session.commit()
+
+        # Return a success response
+        return jsonify({"message": "Invoice created successfully"}), 201
+
+# Add the resource to the API
+
+api.add_resource(CreateInvoice, '/invoices')
 if __name__ == '__main__':
     with app.app_context():
         app.run(port=5555, debug=True)
