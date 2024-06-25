@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '../../../features/auth/Authslice';
 import useFetch from '../../../hooks/UseFetch';
+import { IoIosSend } from "react-icons/io";
 function Send() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [values, setValues] = useState([]);
@@ -65,7 +66,8 @@ function Send() {
     return (
         <div className="flex justify-center items-center h-full">
             <Tooltip label="Send Money" aria-label="Send Money Tooltip">
-                <button onClick={onOpen} className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300">
+                <button onClick={onOpen} className="px-4 py-2  text-white rounded-md shadow-md flex items-center w-full transition-colors duration-300">
+                <IoIosSend/>
                     Send Money
                 </button>
             </Tooltip>
