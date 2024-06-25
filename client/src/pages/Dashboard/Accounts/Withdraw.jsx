@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '../../../features/auth/Authslice';
 import useFetch from '../../../hooks/UseFetch';
-
+import { PiHandWithdrawFill } from "react-icons/pi";
 function Withdraw() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [values, setValues] = useState([]);
@@ -73,8 +73,9 @@ function Withdraw() {
       <Tooltip label="Withdraw Money" aria-label="withdraw Tooltip">
         <button
           onClick={onOpen}
-          className="px-4 py-2 bg-green-500 text-white rounded-md shadow-md hover:bg-green-600 transition-colors duration-300"
+          className="px-4 py-2  text-white rounded-md shadow-md flex items-center w-full my-4 transition-colors duration-300"
         >
+        <PiHandWithdrawFill/>
           Withdraw
         </button>
       </Tooltip>
