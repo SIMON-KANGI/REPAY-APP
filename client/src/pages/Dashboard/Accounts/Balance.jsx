@@ -3,7 +3,7 @@ import { Modal, ModalCloseButton, ModalBody, ModalContent, ModalOverlay, ModalHe
 import { selectUserData } from '../../../features/auth/Authslice';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-
+import { FaEye } from "react-icons/fa";
 function Balance() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [accounts, setAccounts] = useState([]);
@@ -44,7 +44,9 @@ function Balance() {
 
   return (
     <div>
-      <button onClick={onOpen} className='text-center bg-orange-700 text-white'>Check Balance</button>
+      <button onClick={onOpen} className='text-center flex items-center w-full  px-3 py-3 shadow-md text-white'>
+      <FaEye/>
+      Check Balance</button>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
