@@ -234,7 +234,9 @@ class Invoice(db.Model):
     email=db.Column(db.String(255), nullable=False)
     phone=db.Column(db.Integer, nullable=False)
     CustomerPhone=db.Column(db.String(255), nullable=False)
+    status=db.Column(db.String(255), nullable=False)
     account=db.Column(db.String(255), nullable=False)
+    amount=db.Column(db.String(255), nullable=False)
     description=db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     user_id=db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -248,6 +250,8 @@ class Invoice(db.Model):
             'phone': self.phone,
             'CustomerPhone': self.CustomerPhone,
             'account': self.account,
+            'amount': self.amount,
+            'status': self.status,
             'description': self.description,
             'created_at': self.created_at,
             'user_id': self.user_id
