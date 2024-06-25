@@ -90,7 +90,7 @@ function EditUser() {
 
     return (
         <div>
-            <button onClick={onOpen} className='bg-black rounded-full text-slate-200 px-6 py-2'>Edit Profile</button>
+            <button onClick={onOpen} className='p-3 w-full shadow-md items-center text-slate-200'>Edit Profile</button>
             <Drawer isOpen={isOpen} onClose={onClose} size={'lg'}>
                 <DrawerOverlay />
                 <DrawerContent>
