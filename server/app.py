@@ -783,9 +783,12 @@ class CreateInvoice(Resource):
             return jsonify({"error": "Content-Type must be multipart/form-data"}), 415
 
         # Get the form data and file
+        name=request.form.get('name')
         customer_email = request.form.get('customer_email')
         customer_phone = request.form.get('customer_phone')
         account = request.form.get('account')
+        amount=request.form.get('amount')
+        status = request.form.get('status')
        
         user_id = request.form.get('user_id')
         file_to_upload = request.files.get('file')
@@ -827,11 +830,13 @@ class CreateInvoice(Resource):
 
         # Create a new invoice object
         new_invoice = Invoice(
-            name=company.username,
-            email=company.email,
+            name=name,
+            email=customer_email,
             phone=company.phone,
             CustomerPhone=customer_phone,
             account=account,
+            amount=amount,
+            status=status,
             description=file_url,
             user_id=user_id
         )
@@ -846,6 +851,15 @@ class CreateInvoice(Resource):
 # Add the resource to the API
 
 api.add_resource(CreateInvoice, '/invoices')
+
+class InvoiceId(Resource):
+    def delete(self,id):
+        invoice = Invoice.query.get(id)
+        db.session.delete(invoice)
+        db.session.commit()
+        return jsonify(invoice)
+
+api.add_resource(InvoiceId, '/invoices/<int:id>')
 if __name__ == '__main__':
     with app.app_context():
         app.run(port=5555, debug=True)
