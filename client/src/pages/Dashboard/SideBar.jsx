@@ -16,12 +16,15 @@ import Send from './Accounts/Send';
 import Withdraw from './Accounts/Withdraw';
 import EditUser from '../Details/EditUser';
 import Balance from './Accounts/Balance';
+import useFetch from '../../hooks/UseFetch';
 
 
 function SideBar() {
   const user = useSelector(selectUserData);
   const [isCollapsed, setCollapsed] = useState(false);
-
+  const {data:invoices}= useFetch('http://127.0.0.1:5555/invoices')
+  const {data:notifications}= useFetch('http://127.0.0.1:5555/notifications')
+  const {data:contacts}= useFetch('http://127.0.0.1:5555/contacts')
   const handleCollapsed = () => {
     setCollapsed(!isCollapsed);
   };
@@ -69,7 +72,7 @@ function SideBar() {
             <Withdraw/>
              <Balance/>
              
-              <Link to='/accounts' className='flex items-center hover:bg-stone-300'>
+              <Link to='/accounts' className='flex items-center w-full shadow-md px-3 py-4 hover:bg-stone-300'>
                 <MdOutlineAccountTree className='mr-2' />
                 <span>Accounts</span>
               </Link>
@@ -87,11 +90,11 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              <Link to="/transactions" className='flex items-center hover:bg-stone-300 mb-2'>
+              <Link to="/transactions" className='flex items-center px-3 py-3 w-full shadow-md hover:bg-stone-300 mb-2'>
                 <MdSendToMobile className='mr-2' />
                 <span>My Transactions</span>
               </Link>
-              <Link to="/received" className='flex items-center hover:bg-stone-300 mb-2'>
+              <Link to="/received" className='flex items-center w-full px-3 py-4 hover:bg-stone-300 mb-2'>
                 <PiHandWithdrawFill className='mr-2' />
                 <span>Received</span>
               </Link>
@@ -111,15 +114,15 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              <Link to={`/user/${user.username}`} className='flex items-center hover:bg-stone-300 mb-2'>
+              <Link to={`/user/${user.username}`} className='flex items-center w-full shadow-md px-3 py-3 hover:bg-stone-300 mb-2'>
                 <ImProfile className='mr-2' />
                 <span>My Profile</span>
               </Link>
-              <div className='flex items-center hover:bg-stone-300 mb-2'>
+              <div className='flex items-center w-full hover:bg-stone-300 mb-2'>
                 <FaEdit className='mr-2' />
                <EditUser/>
               </div>
-              <Link to="/settings" className='flex items-center hover:bg-stone-300'>
+              <Link to="/settings" className='flex items-center w-full p-3 shadow-md hover:bg-stone-300'>
                 <IoMdSettings className='mr-2' />
                 <span>Settings</span>
               </Link>
@@ -130,18 +133,30 @@ function SideBar() {
           <Link to="/contacts" className='text-xl flex items-center mb-3 font-bold'>
             <MdContacts className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Contacts</span>
+            <span className='rounded-full text-center w-6 h-6 items-center bg-orange-600 mx-8'>{contacts?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
-          <Link to="/invoices" className='text-xl flex items-center mb-3 font-bold'>
+          <Link to="/invoices" className='text-xl flex justify-between items-center mb-3 font-bold'>
+          <div className='flex items-center'>
             <LiaFileInvoiceSolid className='mr-2' />
-            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Invoices</span>
+            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
+            
+            Invoices
+           
+            </span> 
+          </div>
+            
+            <span className='rounded-full text-center w-6 h-6 items-center bg-orange-600 mx-8'>{invoices?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
           <Link to="/notifications" className='text-xl flex items-center mb-3 font-bold'>
             <IoIosNotifications className='mr-2' />
-            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Notifications</span>
+            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
+            
+            Notifications</span>
+            <span className='rounded-full text-center w-6 h-6 items-center bg-orange-600 mx-8'>{notifications?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
