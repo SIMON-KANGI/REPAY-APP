@@ -853,9 +853,20 @@ class CreateInvoice(Resource):
 api.add_resource(CreateInvoice, '/invoices')
 
 class InvoiceId(Resource):
+    def get(self,id):
+        invoice = Invoice.query.filter_by(id=id).first()
+        return jsonify(invoice.to_dict())
     def delete(self,id):
         invoice = Invoice.query.get(id)
         db.session.delete(invoice)
+        db.session.commit()
+        return jsonify(invoice)
+    
+    def patch(self,id):
+        data = request.get_json()
+        invoice = Invoice.query.get(id)
+        invoice.status = data['status']
+        db.session.add(invoice)
         db.session.commit()
         return jsonify(invoice)
 
