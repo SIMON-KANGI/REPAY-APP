@@ -1,7 +1,7 @@
 from config import create_app, db
 from flask_restful import Api, Resource
 from flask import request, jsonify, make_response, session, url_for, redirect
-from models import Transaction, Account, User, Notification, Location, Category,Contact,Invoice
+from models import Transaction, Account, User, Notification, Location, Category,Contact,Invoice,Product
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity, unset_jwt_cookies
 import cloudinary
 from cloudinary import uploader
@@ -375,7 +375,7 @@ class Accounts(Resource):
             account = Account(number=account_number, password=password, category_id=category, user_id=user_id)
             db.session.add(account)
             db.session.commit()
-
+            print('account created successfully')
             # Create a notification
             notification_message = (
                 f"You have successfully created a {category.name} account. "
@@ -390,7 +390,7 @@ class Accounts(Resource):
             db.session.add(notification_sender)
             db.session.commit()
 
-            return jsonify(account.to_dict()), 201
+            return jsonify('message:''Account created successfully'), 201
         except ValueError as e:
             db.session.rollback()
             return {"error": str(e)}, 400
@@ -563,12 +563,12 @@ class MakeTransaction(Resource):
             db.session.commit()
             app.logger.info(f"Notification to receiver sent successfully: {third_party_account.user_id}")
 
-            return jsonify(sender_account.to_dict()), 200
+            return jsonify('Trnasaction successfull'), 200
 
         except Exception as e:
             app.logger.error(f"Error processing transaction: {e}")
-            db.session.rollback()  # Ensure any changes are rolled back on error
-            return jsonify({"error": "An error occurred while processing the transaction"}), 500
+            # db.session.rollback()  # Ensure any changes are rolled back on error
+            # return jsonify({"error": "An error occurred while processing the transaction"}), 500
 
 api.add_resource(MakeTransaction, '/transactions')
 
@@ -745,7 +745,7 @@ class NotificationId(Resource):
         notification = Notification.query.get(id)
         db.session.delete(notification)
         db.session.commit()
-        return jsonify(notification)
+        return 'notification deleted successfully'
     
 api.add_resource(NotificationId, '/notifications/<int:id>')
 class Categories(Resource):
@@ -871,6 +871,56 @@ class InvoiceId(Resource):
         return jsonify(invoice)
 
 api.add_resource(InvoiceId, '/invoices/<int:id>')
+
+class Products(Resource):
+    def get(self):
+        products=[product.to_dict() for product in Product.query.all()]
+        return jsonify(products)
+    
+    def post(self):
+        app.logger.info(f'Form data:{request.form}')
+        app.logger.info(f'Files:{request.files}')
+        
+        data=request.form
+        file_to_upload=request.files.get('file')
+        
+        if not file_to_upload or file_to_upload.filename=='':
+            return jsonify({'error':"file is required"})
+        
+        name=data.get('name')
+        description=data.get('description')
+        price=data.get('price')
+        category=data.get('category')
+        user_id=data.get('user_id')
+        profile=data.get('profile')
+        stock=data.get('stock')
+        
+        app.logger.info(
+            f"Received Data:name={name} ,description={description}, price={price} ,category={category}, user_id={user_id}, profile={profile}, stock={stock}"
+        )
+        try:
+            if profile =='image':
+                upload_result = uploader.upload(file_to_upload, resource_type='image')
+            else:
+                upload_result = uploader.upload(file_to_upload, resource_type='raw')
+        except Exception as e:
+            app.logger.error(f"Error uploading file: {e}")
+            return jsonify({"error": "An error occurred while uploading the file"}), 500
+        file_url=upload_result.get('url')
+        new_product=Product(
+            name=name,
+            description=description,
+            price=price,
+            category=category,
+            user_id=user_id,
+            profile=file_url,
+            stock=stock,
+         
+        )
+        db.session.add(new_product)
+        db.session.commit()
+        
+api.add_resource(Products, '/products') 
 if __name__ == '__main__':
     with app.app_context():
         app.run(port=5555, debug=True)
