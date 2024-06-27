@@ -17,12 +17,13 @@ import { selectUserData } from './features/auth/Authslice'
 import { useSelector } from'react-redux'
 import AccountDetails from './pages/Dashboard/Accounts/accountDetails'
 import Contacts from './pages/Dashboard/contacts/Contacts'
+import Products from './pages/Dashboard/Products/Products'
 function App() {
   const user = useSelector(selectUserData);
   return (
     <>
    {/* <NavBar/> */}
-   <main className='containers bg-sky-950 h-full'>
+   <main  className=' bg-sky-950 h-full' id="main">
     <Routes>
      <Route path="/" element={<Home/>} />
      <Route path="/how-it-works" element={<About/>} />
@@ -41,6 +42,7 @@ function App() {
       <Route path={'/accounts/:id'} element={<AccountDetails/>} />
       <Route path={'/my-dashboard/notifications'} element={<Notifications/>} />
       <Route path={'/invoices'} element={<Invoices/>} />
+      <Route path={'/my-products'} element={<Products/>} />
       <Route path={`/user/${user.username}`} element={<User/>} />
       <Route path="*" element={<h1>404</h1>} />
     </Routes>
