@@ -25,12 +25,13 @@ function SideBar() {
   const {data:invoices}= useFetch('http://127.0.0.1:5555/invoices')
   const {data:notifications}= useFetch('http://127.0.0.1:5555/notifications')
   const {data:contacts}= useFetch('http://127.0.0.1:5555/contacts')
+  const {data:products}= useFetch('http://127.0.0.1:5555/products')
   const handleCollapsed = () => {
     setCollapsed(!isCollapsed);
   };
 
   return (
-    <div className={`transition-width duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-80'} border-x text-white bg-stone-800 border-gray-500 h-screen`}>
+    <div className={`transition-width duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-80'} border-x  text-white bg-stone-800 border-gray-500 h-screen`}>
       <header className='h-40 p-4'>
         <div className='flex w-full justify-between'>
           <h1 className={`text-2xl font-bold ${isCollapsed ? 'hidden' : 'block'}`}>REPAY</h1>
@@ -133,7 +134,7 @@ function SideBar() {
           <Link to="/contacts" className='text-xl flex items-center mb-3 font-bold'>
             <MdContacts className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Contacts</span>
-            <span className='rounded-full text-center w-6 h-6 items-center bg-orange-600 mx-8'>{contacts?.length}</span>
+            <span className='rounded-full text-md text-center w-6 h-6 items-center bg-orange-600 mx-8'>{contacts?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
@@ -147,7 +148,7 @@ function SideBar() {
             </span> 
           </div>
             
-            <span className='rounded-full text-center w-6 h-6 items-center bg-orange-600 mx-8'>{invoices?.length}</span>
+            <span className='rounded-full text-center text-md w-6 h-6 items-center bg-orange-600 mx-8'>{invoices?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
@@ -156,7 +157,16 @@ function SideBar() {
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
             
             Notifications</span>
-            <span className='rounded-full text-center w-6 h-6 items-center bg-orange-600 mx-8'>{notifications?.length}</span>
+            <span className='rounded-full text-center text-sm w-6 h-6 items-center bg-orange-600 mx-8'>{notifications?.length}</span>
+          </Link>
+        </div>
+        <div className='mt-4 ml-3'>
+          <Link to="/my-products" className='text-xl flex items-center mb-3 font-bold'>
+            <IoIosNotifications className='mr-2' />
+            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
+            
+            Products</span>
+            <span className='rounded-full text-sm text-center w-6 h-6 items-center bg-orange-600 mx-8'>{products?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
