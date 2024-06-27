@@ -5,11 +5,13 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '../../../features/auth/Authslice';
 import useFetch from '../../../hooks/UseFetch';
 import { IoIosSend } from "react-icons/io";
+import { useToast } from '@chakra-ui/react';
+
 function Send() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [values, setValues] = useState([]);
     const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/accounts');
-   
+    const toast = useToast();
     const user = useSelector(selectUserData);
     const [formData, setFormData] = useState({
         account_name: '',
@@ -19,6 +21,7 @@ function Send() {
         transaction_type: 'sent',
         sender_id: user.id,
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,9 +33,8 @@ function Send() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        loading
-        error
-    
+        setIsSubmitting(true);
+
         try {
             const response = await axios.post('http://127.0.0.1:5555/transactions', formData, {
                 headers: {
@@ -49,25 +51,33 @@ function Send() {
                 transaction_type: 'sent',
                 sender_id: user.id,
             });
+            showToast('Transaction sent successfully', 'success');
             onClose();
         } catch (err) {
-            error('Transaction failed. Please try again.');
             console.error('Error:', err.response ? err.response.data : err.message);
+            showToast('Transaction error', 'error');
         } finally {
-           loading;
+            setIsSubmitting(false);
         }
     };
-    
 
-  
+    const showToast = (message, status) => {
+        toast({
+            title: message,
+            status: status,
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+        });
+    };
 
     const filterAccount = accounts?.filter(account => account.user_id === user.id);
 
     return (
         <div className="flex justify-center items-center h-full">
             <Tooltip label="Send Money" aria-label="Send Money Tooltip">
-                <button onClick={onOpen} className="px-4 py-2  text-white rounded-md shadow-md flex items-center w-full transition-colors duration-300">
-                <IoIosSend/>
+                <button onClick={onOpen} className="px-4 py-2 text-white rounded-md shadow-md flex items-center w-full transition-colors duration-300">
+                    <IoIosSend />
                     Send Money
                 </button>
             </Tooltip>
@@ -101,8 +111,8 @@ function Send() {
                                 <input type="password" name="password" placeholder="Enter your password" className="p-2 border border-gray-300 rounded-md" onChange={handleChange} value={formData.password} required />
                             </div>
                             <ModalFooter className="flex w-full justify-around p-4">
-                                <button type="submit" className={`px-4 py-2 mx-4 ${loading ? 'bg-gray-400' : 'bg-green-500'} text-white rounded-md shadow-md hover:${loading ? 'bg-gray-400' : 'bg-green-600'} transition-colors duration-300`} disabled={loading}>
-                                    {loading ? 'Sending...' : 'Send'}
+                                <button type="submit" className={`px-4 py-2 mx-4 ${isSubmitting ? 'bg-gray-400' : 'bg-green-500'} text-white rounded-md shadow-md hover:${isSubmitting ? 'bg-gray-400' : 'bg-green-600'} transition-colors duration-300`} disabled={isSubmitting}>
+                                    {isSubmitting ? 'Sending...' : 'Send'}
                                 </button>
                                 <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 transition-colors duration-300">
                                     Cancel
