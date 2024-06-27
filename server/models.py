@@ -15,6 +15,7 @@ class User(db.Model, SerializerMixin):
     location_id = db.Column(db.Integer, nullable=False)
     _password = db.Column(db.String(255), nullable=False)  # Changed column name to _password
     is_active = db.Column(db.Boolean, default=True)
+    subscribed=db.Column(db.Boolean, default=False)
     role = db.Column(db.String(255), nullable=False)
     account_type = db.Column(db.String(255), nullable=False)
     accounts = db.relationship('Account', back_populates='users' ,cascade="all, delete-orphan")
@@ -255,5 +256,30 @@ class Invoice(db.Model):
             'description': self.description,
             'created_at': self.created_at,
             'user_id': self.user_id
+        }
+        
+class Product(db.Model):
+    __tablename__ = 'products'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name=db.Column(db.String(255), nullable=False)
+    description=db.Column(db.String(255), nullable=False)
+    stock=db.Column(db.String(255), nullable=False)
+    category=db.Column(db.String(255), nullable=False)
+    price=db.Column(db.Integer, nullable=False)
+    user_id=db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    profile=db.Column(db.String(255), nullable=False)
+    
+    
+    def to_dict(self):
+        return{
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+           'stock': self.stock,
+            'price': self.price,
+            'user_id': self.user_id,
+            'profile': self.profile,
+            'category': self.category
         }
     
