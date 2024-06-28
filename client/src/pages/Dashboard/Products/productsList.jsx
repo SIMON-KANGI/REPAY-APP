@@ -10,7 +10,7 @@ const [stockQuantity, setStockQuantity]=useState(20)
       <table className='min-w-full table-auto'>
         <thead className='p-4'>
           <tr>
-          <th lcassName='px-4 py-2'>ProductId</th>
+          <th className='px-4 py-2'>ProductId</th>
           <th className='px-4 py-2'>Product</th>
             <th lassName='px-4 py-2'>Name</th>
           
