@@ -5,11 +5,12 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { IoMdAdd } from "react-icons/io";
 import useFetch from '../../../hooks/UseFetch';
-
+import { useToast } from '@chakra-ui/react';
 function CreateAccount() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const user = useSelector(selectUserData);
   const { data: categories, loading, error } = useFetch('http://127.0.0.1:5555/categories');
+  const toast=useToast()
   const [formData, setFormData] = useState({
     category: '',
     accountNumber: '',
@@ -28,11 +29,19 @@ function CreateAccount() {
       .then(res => {
         console.log(res.data);
         onClose();
+        showToast(`${formData.category} account created succssfully`)
       })
       .catch(err => console.error(err));
     console.log(formData);
   }
-
+const showToast=()=>{
+  toast({
+    title: "Account created successfully",
+    status: "success",
+    duration: 5000,
+    isClosable: true,
+  })
+}
   return (
     <div>
       <button onClick={onOpen} className='py-3 m-4 flex font-bold border border-stone-900 items-center float-end px-8 rounded-md text-stone-900'>
@@ -51,7 +60,7 @@ function CreateAccount() {
                 <select onChange={handleChange} value={formData.category} className="p-2 border border-gray-300 rounded-md" name="category">
                   <option value="">Select Bank</option>
                   {categories?.map(category => (
-                    <option key={category.id} value={category.id}>{category.name}</option>
+                    <option key={category.id} value={category.name}>{category.name}</option>
                   ))}
                 </select>
               </div>
