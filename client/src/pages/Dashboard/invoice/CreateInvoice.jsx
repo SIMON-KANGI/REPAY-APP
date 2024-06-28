@@ -8,11 +8,12 @@ import {
   import { useSelector } from 'react-redux';
   import axios from 'axios';
   import { IoIosCreate } from "react-icons/io";
-  
+  import { useToast } from '@chakra-ui/react';
   function CreateInvoice() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [file, setFile] = useState(null);
     const user = useSelector(selectUserData);
+    const toast=useToast()
     const [formData, setFormData] = useState({
       name:'',
       customer_email: '',
@@ -56,7 +57,12 @@ import {
   
         console.log(response.data);
         onClose();
-        alert('Invoice created successfully');
+        toast({
+          title: 'Invoice created successfully',
+          position: "top-right",
+          status: "success",
+          isClosable: true,
+        });
       } catch (e) {
         console.log(e);
         alert('An error occurred while creating the invoice');
