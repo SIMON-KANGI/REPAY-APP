@@ -18,6 +18,7 @@ import { useSelector } from'react-redux'
 import AccountDetails from './pages/Dashboard/Accounts/accountDetails'
 import Contacts from './pages/Dashboard/contacts/Contacts'
 import Products from './pages/Dashboard/Products/Products'
+import MyTransactions from './pages/Dashboard/transactions.jsx/MyTransactions'
 function App() {
   const user = useSelector(selectUserData);
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="invoices" element={<Invoices/>} />
         <Route path='/accounts' element={<Account/>} />
         <Route path='/contacts' element={<Contacts/>} />
+        <Route path='/my-transactions' element={<MyTransactions/>} />
         <Route path="*" element={<h1>404</h1>} />
     
       <Route path="/account-personal" element={<Personal/>} />
