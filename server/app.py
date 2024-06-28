@@ -114,7 +114,7 @@ class Users(Resource):
         # Validate missing fields
         missing_fields = [field for field in ["username", "email", "phone", "password", "location", "account_type", "profile"] if not data.get(field)]
         if missing_fields:
-            return jsonify({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
+            return ({"error": f"Missing fields: {', '.join(missing_fields)}"}), 400
 
         # Upload file to Cloudinary (or handle it appropriately in your context)
         try:
@@ -122,17 +122,17 @@ class Users(Resource):
                 # Ensure you have your uploader configured
                 upload_result = uploader.upload(file_to_upload, resource_type='image')
             else:
-                return jsonify({"error": "Profile must be an image"}), 400
+                return ({"error": "Profile must be an image"}), 400
         except Exception as e:
             app.logger.error(f"Error uploading file to Cloudinary: {e}")
-            return jsonify({"error": "File upload failed"}), 500
+            return ({"error": "File upload failed"}), 500
 
         file_url = upload_result.get('url')
 
         # Assuming your User model has the correct constructor and to_dict method
         location_obj = Location.query.filter(Location.name == location).first()
         if not location_obj:
-            return jsonify({"error": "Invalid location"}), 400
+            return ({"error": "Invalid location"}), 400
 
         new_user = User(
             username=username,
@@ -152,7 +152,7 @@ class Users(Resource):
         send_welcome_sms(new_user.phone)
         # response.headers.add('Access-Control-Allow-Origin', 'http://localhost:5173')
 
-        return jsonify({'message': 'User created successfully', 'user': new_user.to_dict()})
+        return ({'message': 'User created successfully', 'user': new_user.to_dict()})
 
 
 api.add_resource(Users, '/users')
@@ -302,11 +302,11 @@ class GoogleLogin(Resource):
                         'refresh_token': refresh_token
                     }), 200
                 else:
-                    return jsonify({'message': 'User not found'}), 404
+                    return ({'message': 'User not found'}), 404
             else:
-                return jsonify({'message': 'Nonce not found'}), 400
+                return ({'message': 'Nonce not found'}), 400
         else:
-            return jsonify({'message': 'Access token not provided'}), 400
+            return ({'message': 'Access token not provided'}), 400
 
 api.add_resource(GoogleLogin, '/login/authorized')
 
@@ -336,7 +336,7 @@ class Login(Resource):
             
             return response
         
-        return jsonify({"message": "Invalid username or password"}), 401
+        return ({"message": "Invalid username or password"}), 401
 
 api.add_resource(Login, '/login')
 
@@ -354,28 +354,29 @@ class Accounts(Resource):
     def get(self):
         accounts = [account.to_dict() for account in Account.query.all()]
         return accounts, 200
-
+#  
     def post(self):
         data = request.get_json()
-        category = data.get('category')
+        category_id = data.get('category')
         account_number = data.get('accountNumber')
         password = data.get('password')
         user_id = data.get('user_id')
 
-        if not all([category, account_number, password, user_id]):
+        if not all([category_id, account_number, password, user_id]):
             return {"error": "Missing data fields"}, 400
 
         try:
             # Verify if the category exists
-            
+            category = Category.query.filter(category_id ==Category.name).first()
             if not category:
                 return {"error": "Invalid category ID"}, 400
             
             # Create a new account
-            account = Account(number=account_number, password=password, category_id=category, user_id=user_id)
+            account = Account(number=account_number, password=password, category_id=category.id, user_id=user_id)
             db.session.add(account)
             db.session.commit()
-            print('account created successfully')
+            print('Account created successfully')
+            
             # Create a notification
             notification_message = (
                 f"You have successfully created a {category.name} account. "
@@ -384,22 +385,21 @@ class Accounts(Resource):
             notification_sender = Notification(
                 sender=category.name,
                 message=notification_message,
-                transaction_id=0,
                 user_id=user_id
             )
             db.session.add(notification_sender)
             db.session.commit()
+            print('Notification sent successfully')
 
-            return jsonify('message:''Account created successfully'), 201
+            return 'Account created successfully', 200
         except ValueError as e:
-            db.session.rollback()
+            print({"error": str(e)})
             return {"error": str(e)}, 400
         except Exception as e:
-            db.session.rollback()
+            print({"error": str(e)})
             return {"error": "An error occurred while processing your request"}, 500
 
 api.add_resource(Accounts, '/accounts')
-
 class AccountId(Resource):
     def patch(self, id):
         data = request.get_json()
@@ -491,26 +491,26 @@ class MakeTransaction(Resource):
             )
 
             if not account:
-                return jsonify({"error": "Account not found"}), 404
+                return ({"error": "Account not found"}), 404
 
             if not sender_account:
-                return jsonify({"error": "Sender account not found"}), 404
+                return ({"error": "Sender account not found"}), 404
 
             if not sender_account.check_password(password):
-                return jsonify({"error": "Invalid password"}), 401
+                return ({"error": "Invalid password"}), 401
 
             if not third_party_account:
-                return jsonify({"error": "Recipient account not found"}), 404
+                return ({"error": "Recipient account not found"}), 404
 
             if transaction_type not in ['received', 'sent']:
-                return jsonify({"error": "Invalid transaction type"}), 400
+                return ({"error": "Invalid transaction type"}), 400
 
             try:
                 amount = float(amount)
                 if amount <= 0:
                     return jsonify({"error": "Amount must be a positive number"}), 400
             except ValueError:
-                return jsonify({"error": "Amount must be a valid number"}), 400
+                return ({"error": "Amount must be a valid number"}), 400
 
             if transaction_type == 'received':
                 third_party_account.received(amount)
@@ -563,7 +563,7 @@ class MakeTransaction(Resource):
             db.session.commit()
             app.logger.info(f"Notification to receiver sent successfully: {third_party_account.user_id}")
 
-            return jsonify('Trnasaction successfull'), 200
+            return ('Transaction successfull'), 200
 
         except Exception as e:
             app.logger.error(f"Error processing transaction: {e}")
@@ -607,32 +607,32 @@ class MakeWithdrawal(Resource):
             )
 
             if not Fromaccount_name:
-                return jsonify({"error": "Account not found"}), 404
+                return ({"error": "Account not found"}), 404
 
             if not sender_account:
-                return jsonify({"error": "Sender account not found"}), 404
+                return ({"error": "Sender account not found"}), 404
 
             if not Fromaccount.check_password(password):
-                return jsonify({"error": "Invalid password"}), 401
+                return ({"error": "Invalid password"}), 401
 
             if not third_party_account:
-                return jsonify({"error": "Recipient account not found"}), 404
+                return ({"error": "Recipient account not found"}), 404
 
             if transaction_type not in ['withdrawal']:
-                return jsonify({"error": "Invalid transaction type"}), 400
+                return ({"error": "Invalid transaction type"}), 400
 
             try:
                 amount = float(amount)
                 if amount <= 0:
                     return jsonify({"error": "Amount must be a positive number"}), 400
             except ValueError:
-                return jsonify({"error": "Amount must be a valid number"}), 400
+                return ({"error": "Amount must be a valid number"}), 400
 
             if Fromaccount_name != Toaccount_name:
                 third_party_account.received(amount)
                 Fromaccount.withdraw(amount)
             else:
-                return jsonify({"error": "From and To accounts cannot be the same"}), 400
+                return ({"error": "From and To accounts cannot be the same"}), 400
 
 
             transaction = Transaction(
@@ -663,11 +663,11 @@ class MakeWithdrawal(Resource):
 
             # Notification for the receiver
             notification_receivedmessage = (
-                f"You have received {amount} from account {sender_account.number}. "
+                f"You have received {amount} from account {sender_account.category.name} of account number {sender_account.number}. "
                 f"Your new balance is {third_party_account.balance}."
             )
             notification_receiver = Notification(
-                sender=third_party_account.category,
+                sender=third_party_account.category.name,
                 message=notification_receivedmessage,
                 transaction_id=transaction.id,
                 user_id=third_party_account.user_id
@@ -675,11 +675,11 @@ class MakeWithdrawal(Resource):
             db.session.add(notification_receiver)
             db.session.commit()
 
-            return jsonify(sender_account.to_dict()), 200
+            return 'Widthdrawal made successfully', 200
 
         except Exception as e:
             app.logger.error(f"Error processing transaction: {e}")
-            return jsonify({"error": "An error occurred while processing the transaction"}), 500
+            return ({"error": "An error occurred while processing the transaction"}), 500
 
 api.add_resource(MakeWithdrawal, '/withdrawal')
 class CheckBalance(Resource):
@@ -711,9 +711,9 @@ class CheckBalance(Resource):
         except Exception as e:
             app.logger.error(f"An error occurred while processing the request: {e}")
             db.session.rollback()
-            return jsonify({"error": "An error occurred while processing your request"}), 500
+            return ({"error": "An error occurred while processing your request"}), 500
 
-        return jsonify({"message": notification_message}), 200
+        return ({"message": notification_message}), 200
 
 api.add_resource(CheckBalance, '/checkbalance')
 
@@ -799,12 +799,12 @@ class CreateInvoice(Resource):
 
         # Check if file is present
         if not file_to_upload or file_to_upload.filename == '':
-            return jsonify({"error": "File not found"}), 404
+            return ({"error": "File not found"}), 404
 
         # Retrieve company (user) information
         company = User.query.filter_by(id=user_id).first()
         if not company:
-            return jsonify({"error": "User not found"}), 404
+            return ({"error": "User not found"}), 404
 
         # Log the received data
         app.logger.info(
@@ -813,7 +813,7 @@ class CreateInvoice(Resource):
 
         # Validate the required fields
         if not customer_email or not customer_phone or not account:
-            return jsonify({"error": "Customer email, phone, account, and description are required"}), 400
+            return ({"error": "Customer email, phone, account, and description are required"}), 400
 
         try:
             # Upload the file if it's a PDF
@@ -823,7 +823,7 @@ class CreateInvoice(Resource):
                 return jsonify({"error": "Please upload a PDF file"}), 400
         except Exception as e:
             app.logger.error(f"Error uploading file: {e}")
-            return jsonify({"error": "An error occurred while uploading the file"}), 500
+            return ({"error": "An error occurred while uploading the file"}), 500
 
         # Get the file URL from the upload result
         file_url = upload_result.get('url')
@@ -846,7 +846,7 @@ class CreateInvoice(Resource):
         db.session.commit()
 
         # Return a success response
-        return jsonify({"message": "Invoice created successfully"}), 201
+        return ({"message": "Invoice created successfully"}), 201
 
 # Add the resource to the API
 
