@@ -62,7 +62,12 @@ function Invoices() {
     axios.patch(`http://127.0.0.1:5555/invoices/${updatedInvoice.id}`, updatedInvoice)
       .then(() => {
         // Handle successful update
-        alert('Invoice updated successfully!');
+        toast({
+          title: 'Invoice updated successfully',
+          position: "top-right",
+          status: "success",
+          isClosable: true,
+        });
         onClose();
         // Optionally, refetch invoices or update the local state
       })
