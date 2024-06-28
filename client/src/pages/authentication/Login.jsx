@@ -8,12 +8,14 @@ import { useLoginMutation } from '../../features/auth/Authapi';
 import { toast } from 'react-toastify'; // Ensure you have this library installed and configured
 import GoogleAuthProviderWrapper from './GoogleLogin';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { Spinner } from '@chakra-ui/react'
+import { Spinner, useToast } from '@chakra-ui/react'
 import { FcGoogle } from "react-icons/fc";
+
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
+    const toast=useToast();
     const from = location.state?.from?.pathname || '/my-dashboard';
     const [login, { isLoading }] = useLoginMutation();
     const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +41,7 @@ function Login() {
             dispatch(setCredentials({ accessToken: access_token, username:username, role:role, user: content }));
             toast.success(`Logged in as ${username}`, { position: 'top-right' });
             navigate(from, { replace: true });
+           
         } catch (error) {
             toast.error(error.data?.message || 'An unexpected error occurred');
         } finally {
