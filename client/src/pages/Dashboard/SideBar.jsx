@@ -68,7 +68,7 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-             <Send/>
+             
               
             <Withdraw/>
              <Balance/>
@@ -91,16 +91,12 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              <Link to="/transactions" className='flex items-center px-3 py-3 w-full shadow-md hover:bg-stone-300 mb-2'>
+              <Link to="/my-transactions" className='flex items-center px-3 py-3 w-full shadow-md hover:bg-stone-300 mb-2'>
                 <MdSendToMobile className='mr-2' />
                 <span>My Transactions</span>
               </Link>
-              <Link to="/received" className='flex items-center w-full px-3 py-4 hover:bg-stone-300 mb-2'>
-                <PiHandWithdrawFill className='mr-2' />
-                <span>Received</span>
-              </Link>
-              <Balance/>
-            
+              
+              <Send/>
             </AccordionPanel>
           </AccordionItem>
 
