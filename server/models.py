@@ -170,6 +170,22 @@ class Transaction(db.Model, SerializerMixin):
     thirdParty_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     account_id = db.Column(db.Integer, db.ForeignKey('accounts.id'))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
+    
+    def to_dict(self):
+        accountOne=Account.query.filter(self.account_id==Account.id).first()
+        reciever=User.query.filter(self.thirdParty_id==User.id).first()
+        return{
+            'id': self.id,
+            'amount': self.amount,
+            'date': self.date,
+            'type': self.type,
+            'user_id': self.user_id,
+            'thirdParty_id':self.thirdParty_id,
+            'account_id': self.account_id,
+            'accountOne': accountOne.number,
+            'accountTwo': reciever.username if reciever else None,
+            'accountTwoName': reciever.email if reciever else None,
+        }
 
 class Notification(db.Model, SerializerMixin):
     __tablename__ = 'notifications'
