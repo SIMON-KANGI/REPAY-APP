@@ -185,7 +185,7 @@ class UserId(Resource):
         file_to_upload = request.files.get('file')
 
         if not file_to_upload or file_to_upload.filename == '':
-            return jsonify({"error": "File is required"}), 400
+            return ({"error": "File is required"}), 400
 
         username = data.get('username', user.username)
         email = data.get('email', user.email)
@@ -201,21 +201,21 @@ class UserId(Resource):
 
         location_obj = Location.query.filter(Location.name == location).first()
         if not location_obj:
-            return jsonify({"error": "Invalid location"}), 400
+            return ({"error": "Invalid location"}), 400
 
         # Check if the email already exists (excluding the current user)
         existing_user = User.query.filter(User.email == email).first()
         if existing_user and existing_user.id != user.id:
-            return jsonify({"error": "Email already exists"}), 400
+            return ({"error": "Email already exists"}), 400
 
         try:
             if file_to_upload.content_type.startswith('image/'):
                 upload_result = uploader.upload(file_to_upload, resource_type='image')
             else:
-                return jsonify({"error": "Profile must be an image"}), 400
+                return ({"error": "Profile must be an image"}), 400
         except Exception as e:
             app.logger.error(f"Error uploading file to Cloudinary: {e}")
-            return jsonify({"error": "File upload failed"}), 500
+            return ({"error": "File upload failed"}), 500
 
         file_url = upload_result.get('url')
 
@@ -234,9 +234,9 @@ class UserId(Resource):
         except Exception as e:
             app.logger.error(f"Error updating user: {e}")
             db.session.rollback()
-            return jsonify({"error": "An error occurred while updating the user"}), 500
+            return ({"error": "An error occurred while updating the user"}), 500
 
-        return jsonify(user.to_dict()), 200
+        return (user.to_dict()), 200
 
 
 
@@ -860,7 +860,7 @@ class InvoiceId(Resource):
         invoice = Invoice.query.get(id)
         db.session.delete(invoice)
         db.session.commit()
-        return jsonify(invoice)
+        return ({'message': 'Delete Invoice'})
     
     def patch(self,id):
         data = request.get_json()
@@ -868,7 +868,7 @@ class InvoiceId(Resource):
         invoice.status = data['status']
         db.session.add(invoice)
         db.session.commit()
-        return jsonify(invoice)
+        return 'invoice updated'
 
 api.add_resource(InvoiceId, '/invoices/<int:id>')
 
