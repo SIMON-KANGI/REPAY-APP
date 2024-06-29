@@ -39,11 +39,16 @@ function Login() {
             localStorage.setItem('access', access_token);
             localStorage.setItem('username', username);
             dispatch(setCredentials({ accessToken: access_token, username:username, role:role, user: content }));
-            toast.success(`Logged in as ${username}`, { position: 'top-right' });
+            toast({
+              title: `Welcome back ${username}`,
+              position: "top-center",
+              status: "info",
+              isClosable: true,
+            });
             navigate(from, { replace: true });
            
         } catch (error) {
-            toast.error(error.data?.message || 'An unexpected error occurred');
+            console.log(error)
         } finally {
             setSubmitting(false);
         }
