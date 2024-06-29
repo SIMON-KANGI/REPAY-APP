@@ -6,7 +6,7 @@ import useFetch from '../../../hooks/UseFetch';
 import { Link } from 'react-router-dom';
 import { IoMdDownload } from "react-icons/io";
 import { pdfjs } from 'react-pdf';
-import { Tooltip, useDisclosure } from '@chakra-ui/react';
+import { Tooltip, useDisclosure, useToast } from '@chakra-ui/react';
 import SearchInvoice from './SearchInvoice';
 import FilterInvoice from './FilterInvoice';
 import { MdDelete } from "react-icons/md";
@@ -25,7 +25,7 @@ function Invoices() {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
   const { onOpen, onClose, isOpen } = useDisclosure();
-
+const toast= useToast()
   const handleClick = useCallback((invoice) => {
     setSelectedInvoice(invoice);
     onOpen();
