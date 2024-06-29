@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '../../features/auth/Authslice';
 import useFetch from '../../hooks/UseFetch';
+import { Badge } from '@chakra-ui/react'
 function TopNav() {
     const user = useSelector(selectUserData);
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -40,9 +41,9 @@ function TopNav() {
                                 <Link className='relative flex' to='/notifications'>
                                     <IoNotifications fontSize='1.5rem' />
                                     {filteredNotifications?.length > 0 && (
-                                        <span className='rounded-full bg-rose-800 p-1 w-5 h-5 flex items-center justify-center text-white'>
+                                        <Badge variant='solid' borderRadius='full' fontSize='1rem' width='5' height='5' alignItems='center' justifyContent='center' colorScheme='red' className='rounded-full'>
                                             {filteredNotifications.length}
-                                        </span>
+                                        </Badge>
                                     )}
                                 </Link>
                             </div>
