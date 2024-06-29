@@ -4,11 +4,12 @@ import { selectUserData } from '../../features/auth/Authslice';
 import { useSelector } from 'react-redux';
 import useAuth from '../../hooks/UseAuth';
 import axios from 'axios';
-
+import { useToast } from '@chakra-ui/react';
 function EditUser() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const user = useSelector(selectUserData);
     const [locations, setLocations] = useState([]);
+    const toast=useToast()
     const { isUser } = useAuth('user');
     const [file, setFile] = useState(null);
     const [values, setValues] = useState({
@@ -79,6 +80,12 @@ function EditUser() {
                 }
             });
             console.log('Response:', response.data);
+            toast({
+                title: 'Profile updated successfully',
+                position: 'top-right',
+                duration: 5000,
+                isClosable: true,
+            })
             onClose();
         } catch (err) {
             setError('Failed to update profile. Please try again.');
