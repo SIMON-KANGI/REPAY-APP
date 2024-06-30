@@ -29,7 +29,10 @@ function SideBar() {
   const handleCollapsed = () => {
     setCollapsed(!isCollapsed);
   };
-
+  const filteredNotifications = notifications?.filter(notification => notification.user_id === user.id);
+  const filteredContacts = contacts?.filter(contact => contact.user_id === user.id);
+  const filteredInvoices = invoices?.filter(invoice => invoice.user_id === user.id);
+  const filteredProducts = products?.filter(product => product.user_id === user.id);
   return (
     <div className={`transition-width duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-80'} border-x  text-white bg-stone-800 border-gray-500 h-screen`}>
       <header className='h-40 p-4'>
@@ -130,7 +133,7 @@ function SideBar() {
           <Link to="/contacts" className='text-xl flex items-center mb-3 font-bold'>
             <MdContacts className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>Contacts</span>
-            <span className='rounded-full text-md text-center w-6 h-6 items-center bg-orange-600 mx-8'>{contacts?.length}</span>
+            <span className='rounded-full text-md text-center w-6 h-6 items-center bg-orange-600 mx-8'>{filteredContacts?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
@@ -144,7 +147,7 @@ function SideBar() {
             </span> 
           </div>
             
-            <span className='rounded-full text-center text-md w-6 h-6 items-center bg-orange-600 mx-8'>{invoices?.length}</span>
+            <span className='rounded-full text-center text-md w-6 h-6 items-center bg-orange-600 mx-8'>{filteredInvoices?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
@@ -153,7 +156,7 @@ function SideBar() {
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
             
             Notifications</span>
-            <span className='rounded-full text-center text-sm w-6 h-6 items-center bg-orange-600 mx-8'>{notifications?.length}</span>
+            <span className='rounded-full text-center text-sm w-6 h-6 items-center bg-orange-600 mx-8'>{filteredNotifications?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
@@ -162,7 +165,7 @@ function SideBar() {
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
             
             Products</span>
-            <span className='rounded-full text-sm text-center w-6 h-6 items-center bg-orange-600 mx-8'>{products?.length}</span>
+            <span className='rounded-full text-sm text-center w-6 h-6 items-center bg-orange-600 mx-8'>{filteredProducts?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
