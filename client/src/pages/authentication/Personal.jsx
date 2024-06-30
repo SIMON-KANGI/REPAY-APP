@@ -9,12 +9,14 @@ import { toast } from 'react-toastify';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import { setCredentials } from '../../features/auth/Authslice';
-
+import { Spinner,useToast } from '@chakra-ui/react';
 function Personal() {
   const [file, setFile] = useState(null);
   const [locations, setLocations] = useState([]);
+  const [isLoading, setLoading] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const toast=useToast()
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -63,28 +65,46 @@ function Personal() {
       formData.append('profile', 'image');
       if (file) {
         formData.append('file', file);
+        setLoading(true)
       } else {
         setSubmitting(false);
-        return toast.error('File is required');
+        setLoading(false)
+        toast({
+          title: 'Registration Failed',
+          position: 'top-right',
+          status:"error"
+        })
       }
 
       const response = await axios.post('http://127.0.0.1:5555/users', formData);
+      setLoading(true)
 
       if (response.status !== 200) {
-        return toast.error(response.data.error || "An error occurred. Please try again later.");
+         toast({
+          title: 'Registration Failed',
+          position: 'top-right',
+          status:"error"
+        })
+        setLoading(false)
       }
 
-      const { access_token, username, role, content } = response.data;
-
-      localStorage.setItem('access', access_token);
-      localStorage.setItem('username', username);
+      // const { access_token, username, role, content } = response.data;
+      // dispatch(setCredentials({ accessToken: access_token, username: username, role: role, user: content }));
+      toast({
+        title: `Welcome ${values.username}`,
+        position: 'top-center',
+        status:"success"
+      })
+      setLoading(false)
+      navigate('/login')
       
-      dispatch(setCredentials({ accessToken: access_token, username: username, role: role, user: content }));
-
-      navigate('/login', { replace: true });
     } catch (error) {
       console.error("Error posting data:", error);
-      toast.error(error.response?.data?.message || 'An unexpected error occurred');
+      toast({
+        title: 'Registration Failed',
+        position: 'top-center',
+        status:"error"
+      })
     } finally {
       setSubmitting(false);
     }
@@ -175,7 +195,8 @@ function Personal() {
               </div>
 
               <button type="submit" disabled={isSubmitting} className="p-2 mt-3 w-full bg-green-900 text-white">
-                Create Account
+              {isLoading?<span className='items-center justify-center flex'><Spinner size="lg" speed="0.85s"/>Loading</span>:'Create Account'}
+                
               </button>
             </Form>
           )}
