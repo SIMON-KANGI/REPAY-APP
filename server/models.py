@@ -22,6 +22,7 @@ class User(db.Model, SerializerMixin):
     contacts = db.relationship('Contact', back_populates='users', cascade="all, delete-orphan")
     notifications = db.relationship('Notification', back_populates='users', cascade="all, delete-orphan")
     invoices=db.relationship('Invoice', back_populates='users', cascade="all, delete-orphan")
+    products = db.relationship('Product', back_populates='users' ,cascade="all, delete-orphan")
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     @validates('email')
@@ -285,6 +286,8 @@ class Product(db.Model):
     price=db.Column(db.Integer, nullable=False)
     user_id=db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     profile=db.Column(db.String(255), nullable=False)
+    users = db.relationship('User', back_populates='products')
+    
     
     
     def to_dict(self):
