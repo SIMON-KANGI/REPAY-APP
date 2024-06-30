@@ -8,11 +8,13 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
-
+import { useToast, Spinner } from '@chakra-ui/react';
 function Business() {
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
   const [locations, setLocations] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const toast = useToast();
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchLocations = async () => {
@@ -60,33 +62,46 @@ function Business() {
       formData.append('profile', 'image');
       if (file) {
         formData.append('file', file);
+        setLoading(true)
       } else {
         setSubmitting(false);
         return toast.error('File is required');
       }
 
       const response = await axios.post('http://127.0.0.1:5555/users', formData);
+      setLoading(true)
       
-      if (!response.ok) {
-        const errorMessage = await response.json();
-        console.log(formData);
-        setError(
-          errorMessage.error || "An error occurred. Please try again later."
-        );
-      }
+      if (response.status !== 200) {
+        toast({
+         title: 'Registration Failed',
+         position: 'top-right',
+         status:"error"
+       })
+       setLoading(false)
+     }
 
-      const { access_token, username, role, content } = response.data;
+      // const { access_token, username, role, content } = response.data;
 
-      localStorage.setItem('access', access_token);
-      localStorage.setItem('username', username);
+      // localStorage.setItem('access', access_token);
+      // localStorage.setItem('username', username);
       
-      dispatch(setCredentials({ accessToken: access_token, username: username, role: role, user: content }));
+      // dispatch(setCredentials({ accessToken: access_token, username: username, role: role, user: content }));
 
-      toast.success(`Logged in as ${username}`, { position: 'top-right' });
-      navigate('/login', { replace: true });
+      toast({
+        title: `Welcome ${values.username}`,
+        position: 'top-center',
+        status:"success"
+      })
+      setLoading(false)
+      navigate('/login')
+     
     } catch (error) {
       console.error("Error posting data:", error);
-      toast.error(error.response?.data?.message || 'An unexpected error occurred');
+    toast({
+        title: 'Registration Failed',
+        position: 'top-center',
+        status:"error"
+      })
     } finally {
       setSubmitting(false);
     }
@@ -180,8 +195,9 @@ function Business() {
             </div>
 
             <button type="submit" disabled={isSubmitting} className="p-2 mt-3 w-full bg-green-900 text-white">
-              Create Account
-            </button>
+              {isLoading?<span className='items-center text-md justify-center flex'><Spinner size="sm" speed="0.85s"/> loading</span>:'Create Account'}
+                
+              </button>
           </Form>
         )}
       </Formik>
