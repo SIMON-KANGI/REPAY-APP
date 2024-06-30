@@ -166,10 +166,10 @@ class UserId(Resource):
     def delete(self, id):
         user = User.query.filter_by(id=id).first()
         if not user:
-            return jsonify({"error": "User not found"}), 404
+            return ({"error": "User not found"}), 404
         db.session.delete(user)
         db.session.commit()
-        return jsonify({'message': 'User deleted successfully'})
+        return ({'message': 'User deleted successfully'})
     
    
     
@@ -222,8 +222,7 @@ class UserId(Resource):
         # Update user fields
         user.username = username
         user.email = email
-        if password:  # Only update password if provided
-            user.set_password(password)
+        if password: user.set_password(password)
         user.location_id = location_obj.id
         user.phone = phone
         user.account_type = account_type
