@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import useAuth from '../../hooks/UseAuth';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
+import DeleteAccount from './DeleteAccount';
 function EditUser() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const user = useSelector(selectUserData);
@@ -187,6 +188,7 @@ function EditUser() {
                                     </select>
                                 </div>
                         </form>
+                        <DeleteAccount />
                     </DrawerBody>
                 </DrawerContent>
             </Drawer>
