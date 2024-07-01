@@ -14,6 +14,7 @@ import UpdateInvoice from './UpdateInvoice';
 import { selectUserData } from '../../../features/auth/Authslice';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import Pagination from '../../../components/Pagination';
 
 // Configure the worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -22,6 +23,8 @@ function Invoices() {
   const { data: invoices, isLoading, error } = useFetch('http://127.0.0.1:5555/invoices');
   const [input, setInput] = useState('');
   const user = useSelector(selectUserData);
+  const [pageNumber, setPageNumber]= useState(10)
+  const [currentPage, setCurrentPage] = useState(1)
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -76,6 +79,10 @@ const toast= useToast()
       });
   }, [onClose]);
 
+  const indexOfLast= currentPage * pageNumber
+  const indexOfFirst=indexOfLast-pageNumber
+  const PaginateInvoices= filteredInvoices.slice(indexOfFirst, indexOfLast)
+  const paginate=(pageNumber)=>setCurrentPage(pageNumber)
   return (
     <div className='flex'>
       <SideBar />
@@ -104,7 +111,7 @@ const toast= useToast()
               </tr>
             </thead>
             <tbody>
-              {filteredInvoices?.map((invoice) => (
+              {PaginateInvoices?.map((invoice) => (
                 <tr key={invoice.id} className='bg-white border-b items-center'>
                   <td className='px-4 py-2 text-center'>{invoice.id}</td>
                   <td className='px-4 py-2 text-center'>{invoice.created_at.slice(0, 16)}</td>
@@ -142,6 +149,7 @@ const toast= useToast()
               handleChange={(e) => setSelectedInvoice({ ...selectedInvoice, status: e.target.value })}
             />
           )}
+          <Pagination numberPerpage={pageNumber} totalItems={filteredInvoices.length} paginate={paginate}/>
         </div>
       </section>
     </div>
