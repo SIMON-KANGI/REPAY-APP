@@ -8,7 +8,7 @@ function AccountDetails() {
    const account=currAccount.state?.account
 
    function ChangeCurrency(){
-    axios.patch(`http://127.0.0.1:5555/account/${account.id}/currency`)
+    axios.patch(`https://repay-app.onrender.com/account/${account.id}/currency`)
    }
   return (
     <div className='flex'>
