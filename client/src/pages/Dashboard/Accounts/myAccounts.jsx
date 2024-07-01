@@ -8,7 +8,7 @@ import useFetch from '../../../hooks/UseFetch'
 function MyAccounts() {
     
     const user = useSelector(selectUserData);
-    const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/accounts');
+    const { data: accounts, loading, error } = useFetch('https://repay-app.onrender.com/accounts');
   const FilterAccount=accounts?.filter(account=>account.user_id===user.id)
   return (
    
