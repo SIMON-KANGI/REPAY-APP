@@ -8,7 +8,7 @@ function DeleteAccount() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const user = useSelector(selectUserData);
     function handleDelete(id){
-        const response=axios.delete(`http://127.0.0.1:5555/users/${user.id}`)
+        const response=axios.delete(`https://repay-app.onrender.com/users/${user.id}`)
         if(response.ok){
           console.log('user deleted successfully')
         
