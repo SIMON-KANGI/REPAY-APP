@@ -47,7 +47,7 @@ function AddProducts() {
                 throw new Error("No image selected.");
             }
 
-            const response = await axios.post('http://127.0.0.1:5555/products', formDataWithFile, {
+            const response = await axios.post('https://repay-app.onrender.com/products', formDataWithFile, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
