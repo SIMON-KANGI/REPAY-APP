@@ -11,6 +11,7 @@ import { ImProfile } from 'react-icons/im';
 import { IoMdSettings } from 'react-icons/io';
 import { LiaFileInvoiceSolid } from 'react-icons/lia';
 import { selectUserData } from '../../features/auth/Authslice';
+import { MdOutlineProductionQuantityLimits } from "react-icons/md"
 import LogOut from '../authentication/LogOut';
 import Send from './Accounts/Send';
 import Withdraw from './Accounts/Withdraw';
@@ -147,7 +148,7 @@ function SideBar() {
             </span> 
           </div>
             
-            <span className='rounded-full text-center text-md w-6 h-6 items-center bg-orange-600 mx-8'>{filteredInvoices?.length}</span>
+            <span className='rounded-full text-center text-sm w-6 h-6 items-center bg-orange-600 mx-8'>{filteredInvoices?.length}</span>
           </Link>
         </div>
         <div className='mt-4 ml-3'>
@@ -161,7 +162,7 @@ function SideBar() {
         </div>
         <div className='mt-4 ml-3'>
           <Link to="/my-products" className='text-xl flex items-center mb-3 font-bold'>
-            <IoIosNotifications className='mr-2' />
+            <MdOutlineProductionQuantityLimits className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
             
             Products</span>
