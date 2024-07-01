@@ -76,7 +76,7 @@ function Personal() {
         })
       }
 
-      const response = await axios.post('http://127.0.0.1:5555/users', formData);
+      const response = await axios.post('https://repay-app.onrender.com/users', formData);
       setLoading(true)
 
       if (response.status !== 200) {
@@ -194,7 +194,7 @@ function Personal() {
                 <ErrorMessage name="confirmPassword" component="div" className="text-red-600" />
               </div>
 
-              <button type="submit" disabled={isSubmitting} className="p-2 mt-3 w-full bg-green-900 text-white">
+              <button type="submit" disabled={isLoading} className="p-2 mt-3 w-full bg-green-900 text-white">
               {isLoading?<span className='items-center justify-center flex'><Spinner size="lg" speed="0.85s"/>Loading</span>:'Create Account'}
                 
               </button>
