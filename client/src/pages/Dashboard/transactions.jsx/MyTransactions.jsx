@@ -3,7 +3,7 @@ import SideBar from '../SideBar'
 import TopNav from '../TopNav'
 import useFetch from '../../../hooks/UseFetch'
 function MyTransactions() {
-    const {data:transactions, loading}= useFetch('http://127.0.0.1:5555/transactions')
+    const {data:transactions, loading}= useFetch('https://repay-app.onrender.com/transactions')
   return (
     <div className='flex'>
       <SideBar/>
