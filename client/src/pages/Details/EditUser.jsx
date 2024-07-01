@@ -29,7 +29,7 @@ function EditUser() {
     useEffect(() => {
         const fetchLocations = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:5555/locations');
+                const response = await axios.get('https://repay-app.onrender.com/locations');
                 setLocations(response.data);
             } catch (error) {
                 console.error("Error fetching locations:", error);
@@ -80,7 +80,7 @@ function EditUser() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log('Response:', response.data);
+           
             toast({
                 title: 'Profile updated successfully',
                 position: 'top-right',
