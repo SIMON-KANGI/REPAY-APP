@@ -28,12 +28,12 @@ import {
     const handleFileChange = (e) => {
       const selectedFile = e.target.files[0];
       setFile(selectedFile);
-      setFormData({ ...formData, file: selectedFile });
+      setFormData({  ...formData, file: selectedFile });
     };
   
     const handleChange = (e) => {
       const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
+      setFormData({...formData, [name]: value  });
     };
   
     const handleSubmit = async (e) => {
