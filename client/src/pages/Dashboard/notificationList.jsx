@@ -14,7 +14,7 @@ const user=useSelector(selectUserData)
         reFetch(); // Refresh the notifications list after deletion
       })
       .catch(err => {
-        console.error('Error deleting notification:', err);
+        return err
       });
   }
 
