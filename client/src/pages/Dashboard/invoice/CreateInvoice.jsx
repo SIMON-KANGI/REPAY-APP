@@ -55,7 +55,7 @@ import {
           }
         });
   
-        console.log(response.data);
+       
         onClose();
         toast({
           title: 'Invoice created successfully',
@@ -64,7 +64,7 @@ import {
           isClosable: true,
         });
       } catch (e) {
-        console.log(e);
+       
         alert('An error occurred while creating the invoice');
       }
     };
