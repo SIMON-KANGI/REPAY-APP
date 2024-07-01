@@ -28,7 +28,7 @@ function Balance() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsLoading(true);
-    axios.post('http://127.0.0.1:5555/checkbalance', formData)
+    axios.post('https://repay-app.onrender.com/checkbalance', formData)
       .then(res => {
         const message=res.data
         onClose();
@@ -52,7 +52,7 @@ function Balance() {
   };
 
   useEffect(() => {
-    axios.get('http://127.0.0.1:5555/accounts')
+    axios.get('https://repay-app.onrender.com/accounts')
       .then(res => setAccounts(res.data))
       .catch(err => {
         console.error(err);
