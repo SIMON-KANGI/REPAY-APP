@@ -49,7 +49,7 @@ import {
         submissionData.append('file', formData.file);
         submissionData.append('user_id', formData.user_id);
   
-        const response = await axios.post('http://127.0.0.1:5555/invoices', submissionData, {
+        const response = await axios.post('https://repay-app.onrender.com/invoices', submissionData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
