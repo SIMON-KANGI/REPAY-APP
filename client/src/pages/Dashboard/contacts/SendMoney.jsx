@@ -36,7 +36,7 @@ function SendMoney({ onClose, isOpen, contact }) {
           'Content-Type': 'application/json'
         }
       });
-      console.log('Response:', response.data);
+     
       setFormData({
         account_name:"",
         amount: '',
@@ -52,7 +52,7 @@ function SendMoney({ onClose, isOpen, contact }) {
     } finally {
       setLoading(false);
     }
-    console.log(formData)
+    
   };
 
   const filteredAccounts = accounts?.filter(account => account.user_id === user.id);
