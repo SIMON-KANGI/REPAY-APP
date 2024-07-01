@@ -10,7 +10,7 @@ import { useToast } from '@chakra-ui/react';
 function Send() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [values, setValues] = useState([]);
-    const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/accounts');
+    const { data: accounts, loading, error } = useFetch('https://repay-app.onrender.com/accounts');
     const toast = useToast();
     const user = useSelector(selectUserData);
     const [formData, setFormData] = useState({
@@ -41,7 +41,7 @@ function Send() {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log('Response:', response.data);
+            
             setValues([...values, formData]);
             setFormData({
                 account_name: '',
@@ -54,8 +54,8 @@ function Send() {
             showToast('Transaction sent successfully', 'success');
             onClose();
         } catch (err) {
-            console.error('Error:', err.response ? err.response.data : err.message);
             showToast('Transaction error', 'error');
+            return err
         } finally {
             setIsSubmitting(false);
         }
