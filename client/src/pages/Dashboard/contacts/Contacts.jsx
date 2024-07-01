@@ -7,8 +7,10 @@ import axios from 'axios'
 import { selectUserData } from '../../../features/auth/Authslice'
 import { useSelector } from'react-redux'
 import ContactList from './ContactList'
+import { useToast } from '@chakra-ui/react'
 function Contacts() {
   const user=useSelector(selectUserData)
+  const toast=useToast()
   const [formData, setFormData]= useState(
     {
       name:'',
@@ -36,6 +38,13 @@ event.preventDefault();
           .then(res=>{
             console.log(res.data);
             setLoading(false);
+            toast({
+              title:"Contact list updated",
+              position: 'top-center',
+              status:'success',
+              isClosable: true,
+
+            })
           })
     }catch(e){
       console.error(e);
