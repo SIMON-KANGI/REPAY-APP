@@ -20,7 +20,7 @@ import Pagination from '../../../components/Pagination';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function Invoices() {
-  const { data: invoices, isLoading, error } = useFetch('http://127.0.0.1:5555/invoices');
+  const { data: invoices, isLoading, error } = useFetch('https://repay-app.onrender.com/invoices');
   const [input, setInput] = useState('');
   const user = useSelector(selectUserData);
   const [pageNumber, setPageNumber]= useState(10)
@@ -35,7 +35,7 @@ const toast= useToast()
   }, [onOpen]);
 
   const handleDelete = useCallback((id) => {
-    axios.delete(`http://127.0.0.1:5555/invoices/${id}`)
+    axios.delete(`https://repay-app.onrender.com/invoices/${id}`)
       .then(() => {
         // Handle successful deletion
         alert('Invoice deleted successfully!');
@@ -62,7 +62,7 @@ const toast= useToast()
   }
 
   const handleUpdate = useCallback((updatedInvoice) => {
-    axios.patch(`http://127.0.0.1:5555/invoices/${updatedInvoice.id}`, updatedInvoice)
+    axios.patch(`https://repay-app.onrender.com/invoices/${updatedInvoice.id}`, updatedInvoice)
       .then(() => {
         // Handle successful update
         toast({
