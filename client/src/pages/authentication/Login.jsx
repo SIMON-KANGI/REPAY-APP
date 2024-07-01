@@ -80,7 +80,7 @@ function Login() {
                             <label className="absolute -top-2 left-2">Password<span className='text-rose-600'>*</span></label>
                             <Field type={showPassword ? "text" : "password"} name="password" placeholder="Password" className="w-96 text-black relative rounded-md p-2 border-gray-700 border" />
                             <ErrorMessage name="password" component="div" className="text-red-600" />
-                            <button type="button" className='absolute right-2 top-2 ' onClick={handleShowPassword}>
+                            <button type="button" className='absolute right-6 top-6 ' onClick={handleShowPassword}>
                                 {showPassword ? <FaEye /> : <FaEyeSlash />}
                             </button>
                         </div>
