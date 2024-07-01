@@ -770,12 +770,14 @@ class Contacts(Resource):
                           phone=data['phone'],account=data['account'], user_id=data['user_id'])
         db.session.add(contact)
         db.session.commit()
-        return jsonify(contact)
+        return ({"message": "Contact created successfully"})
 api.add_resource(Contacts, '/contacts')
 class CreateInvoice(Resource):
     def get(self):
-        invoice=[invoice.to_dict() for invoice in Invoice.query.all()]
-        return jsonify(invoice)
+        
+        invoices = Invoice.query.order_by(Invoice.created_at.desc()).all()
+        invoice_list = [invoice.to_dict() for invoice in invoices]
+        return jsonify(invoice_list)
     def post(self):
         # Check if the request content type is multipart/form-data
         if 'multipart/form-data' not in request.content_type:
