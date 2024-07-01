@@ -23,10 +23,10 @@ import useFetch from '../../hooks/UseFetch';
 function SideBar() {
   const user = useSelector(selectUserData);
   const [isCollapsed, setCollapsed] = useState(false);
-  const {data:invoices}= useFetch('http://127.0.0.1:5555/invoices')
-  const {data:notifications}= useFetch('http://127.0.0.1:5555/notifications')
-  const {data:contacts}= useFetch('http://127.0.0.1:5555/contacts')
-  const {data:products}= useFetch('http://127.0.0.1:5555/products')
+  const {data:invoices}= useFetch('https://repay-app.onrender.com/invoices')
+  const {data:notifications}= useFetch('https://repay-app.onrender.com/notifications')
+  const {data:contacts}= useFetch('https://repay-app.onrender.com/contacts')
+  const {data:products}= useFetch('https://repay-app.onrender.com/products')
   const handleCollapsed = () => {
     setCollapsed(!isCollapsed);
   };
