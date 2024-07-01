@@ -68,7 +68,7 @@ function Business() {
         return toast.error('File is required');
       }
 
-      const response = await axios.post('http://127.0.0.1:5555/users', formData);
+      const response = await axios.post('https://repay-app.onrender.com/users', formData);
       setLoading(true)
       
       if (response.status !== 200) {
