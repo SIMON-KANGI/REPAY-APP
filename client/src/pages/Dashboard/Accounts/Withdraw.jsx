@@ -8,7 +8,7 @@ import { PiHandWithdrawFill } from "react-icons/pi";
 function Withdraw() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [values, setValues] = useState([]);
-  const { data: accounts, loading: accountsLoading, error: accountsError } = useFetch('http://127.0.0.1:5555/accounts');
+  const { data: accounts, loading: accountsLoading, error: accountsError } = useFetch('https://repay-app.onrender.com/accounts');
   const user = useSelector(selectUserData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
