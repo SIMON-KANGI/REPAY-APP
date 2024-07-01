@@ -12,7 +12,7 @@ function LogOut() {
       
      
         dispatch(logout())
-        window.location.href = '/login';  
+        window.location.href = '/';  
        
       },3000)
      showToast('You have been logged out')
