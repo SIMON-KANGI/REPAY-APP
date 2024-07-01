@@ -16,7 +16,7 @@ const LoginGoogle = () => {
       onSuccess: async (response) => {
         try {
           // const { access_token } = response;
-          const res = await axios.get('http://127.0.0.1:5555/login/authorized');
+          const res = await axios.get('https://repay-app.onrender.com/login/authorized');
   
           const { data } = res;
           const { access_token: access_token, refresh_token, user } = data;
