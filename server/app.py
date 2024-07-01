@@ -922,8 +922,8 @@ class Products(Resource):
         db.session.commit()
         
 api.add_resource(Products, '/products') 
-if __name__ == '__main__':
-    with app.app_context():
-        app.run(port=5555, debug=True)
+
+if __name__ == "__main__":
+    app.run(port=5555, debug=True)
 
     
