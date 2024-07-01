@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { setCredentials, logout } from './Authslice';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'https://repay-app.onrender.com/', // URL for the API
+    baseUrl: 'https://repay-app.onrender.com', // URL for the API
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
         const accessToken = getState().auth.accessToken; // Access token when login is successful
