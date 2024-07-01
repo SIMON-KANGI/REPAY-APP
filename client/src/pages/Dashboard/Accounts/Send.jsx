@@ -36,7 +36,7 @@ function Send() {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('http://127.0.0.1:5555/transactions', formData, {
+            const response = await axios.post('https://repay-app.onrender.com/transactions', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
