@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '../../features/auth/Authslice';
 
 function Dashbord() {
-  const { data: transactions } = useFetch('http://127.0.0.1:5555/transactions');
+  const { data: transactions } = useFetch('https://repay-app.onrender.com/transactions');
   const user = useSelector(selectUserData);
   const filteredTransactions = transactions?.filter(transaction => transaction.user_id === user.id) || [];
 
