@@ -7,7 +7,7 @@ import axios from 'axios';
 function SendMoney({ onClose, isOpen, contact }) {
   const user = useSelector(selectUserData);
 
-  const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/accounts');
+  const { data: accounts, loading, error } = useFetch('https://repay-app.onrender.com/accounts');
   const [formData, setFormData] = useState({
     account_name:'',
     amount: '',
@@ -31,7 +31,7 @@ function SendMoney({ onClose, isOpen, contact }) {
     setError('');
 
     try {
-      const response = await axios.post('http://127.0.0.1:5555/transactions', formData, {
+      const response = await axios.post('https://repay-app.onrender.com/transactions', formData, {
         headers: {
           'Content-Type': 'application/json'
         }
