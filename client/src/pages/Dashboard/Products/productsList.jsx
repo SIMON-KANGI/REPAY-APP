@@ -3,7 +3,7 @@ import useFetch from '../../../hooks/UseFetch'
 import { FaCheck } from "react-icons/fa";
 import { CgDanger } from "react-icons/cg";
 function ProductsList() {
-  const {data:products}=useFetch('http://127.0.0.1:5555/products')
+  const {data:products}=useFetch('https://repay-app.onrender.com/products')
 const [stockQuantity, setStockQuantity]=useState(20)
   return (
     <div className='p-4'>
