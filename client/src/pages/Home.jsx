@@ -5,13 +5,15 @@ import { useNavigate } from 'react-router-dom'
 import ReactRotatingText from 'react-rotating-text';
 import FAQ from '../components/Faq';
 import Footer from '../components/Footer';
+import SideNav from '../components/SideNav';
 function Home() {
   const navigate = useNavigate();
   return (
     <div className=''>
     <NavBar/>
+  
     <div className='flex w-full flex-col justify-center'>
-         <h1 className='text-center leading-loose mt-16  text-4xl text-stone-950 font-bold'>
+         <h1 className='text-center leading-loose mt-16  lg:text-4xl text-2xl text-stone-950 font-bold'>
         MAKE ALL YOUR TRANSACTIONS IN ONE APP.<br/>
         RECEIVE, SEND , DEPOSIT and TRACK<br/>
         <span className='text-green-600'>TRY REPAY</span>
@@ -22,8 +24,8 @@ function Home() {
     </p>
     </div>
    <div className='text-center my-4'>
-    <button onClick={()=>navigate('/account')} className="bg-gradient-to-r from-stone-600 to-stone-950 text-slate-200 font-bold rounded-full mx-3 px-20 py-3">Start Now</button>
-    <button onClick={()=>navigate('/login')} className="bg-transparent  text-stone-900 rounded-full px-20 py-3 border border-stone-900 font-bold ">Member Area</button>
+    <button onClick={()=>navigate('/account')} className="bg-gradient-to-r from-stone-600 to-stone-950 my-3 text-slate-200 lg:w-fit w-full font-bold rounded-md lg:rounded-full mx-3 px-20 py-3">Start Now</button>
+    <button onClick={()=>navigate('/login')} className="bg-transparent  text-stone-900 lg:rounded-full rounded-md px-20 py-3 border lg:w-fit w-full border-stone-900 font-bold ">Member Area</button>
    </div>
    <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
              <ReactRotatingText items={['Make Transactions', 'Receive Money', 'Withdraw Money','Pay Online']}/>
