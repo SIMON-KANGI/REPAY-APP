@@ -5,6 +5,7 @@ import { HiMenuAlt3 } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 import { IoIosHome } from "react-icons/io";
 import { BsPersonWorkspace } from "react-icons/bs";
+import { IoLogIn } from "react-icons/io5";
 function SideNav() {
     const {isOpen, onOpen, onClose}=useDisclosure()
   return (
@@ -17,16 +18,22 @@ function SideNav() {
       <DrawerContent backgroundColor={'stone.900'} className='py-6'>
       <DrawerCloseButton/>
          <DrawerBody>
-<div>
-<Link to="/" className='flex text-2xl text-white justify-center'>
+<div className='my-6'>
+<Link to="/" className='flex text-2xl text-white'>
 <IoIosHome/>
   <span className='mx-4'>Home</span>
 </Link>
 </div>
-<div>
-<Link to="/how-it-works" className='flex text-2xl text-white justify-center'>
+<div className='my-6'>
+<Link to="/how-it-works" className='flex text-2xl text-white '>
 <BsPersonWorkspace/>
   <span className='mx-4'>How it works</span>
+</Link>
+</div>
+<div>
+<Link to="/login" className='flex text-2xl text-white'>
+<IoLogIn/>
+  <span className='mx-4'>Login</span>
 </Link>
 </div>
         </DrawerBody>
