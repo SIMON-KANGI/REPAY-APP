@@ -49,6 +49,13 @@ event.preventDefault();
     }catch(e){
       console.error(e);
       setLoading(false);
+      toast({
+        title:"Error occured",
+        position: 'top-center',
+        status:'error',
+        isClosable: true,
+
+      })
       
     }
 
