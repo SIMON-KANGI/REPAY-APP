@@ -24,7 +24,7 @@ function SideNav() {
 </Link>
 </div>
 <div>
-<Link to="/" className='flex text-2xl text-white justify-center'>
+<Link to="/how-it-works" className='flex text-2xl text-white justify-center'>
 <BsPersonWorkspace/>
   <span className='mx-4'>How it works</span>
 </Link>
