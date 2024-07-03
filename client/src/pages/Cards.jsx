@@ -27,7 +27,7 @@ function Cards() {
     Make Transactions</h1>
 </CardHeader>
 <CardBody className=''>
-    <p className='text-md leading-loose'>Make Transactions across all networks for free.<br/>
+    <p className='lg:text-md text-center leading-loose'>Make Transactions across all networks for free.<br/>
     View your transactions history. Buy products</p>
 </CardBody>
       </Card>
@@ -40,7 +40,7 @@ function Cards() {
     Receive</h1>
 </CardHeader>
 <CardBody>
-    <p>Make withrawals according to your account</p>
+    <p className='text-center'>Make withrawals according to your account</p>
 </CardBody>
       </Card>
       <Card background={'stone.950'} margin={'1rem'} textColor={'white'}>
@@ -52,16 +52,16 @@ function Cards() {
     Withdrawals</h1>
 </CardHeader>
 <CardBody>
-    <p>Make withrawals according to your account</p>
+    <p className='text-center'>Make withrawals according to your account</p>
 </CardBody>
       </Card>
       
     </Box> 
     <h1 className='text-center text-slate-200 text-4xl'>Manage Your Funds On Repay</h1>
-    <Box className='lg:flex justify-center'>
+    <Box className='lg:flex justify-center w-full'>
         <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-right" className='hover:border hover:shadow-md'>
-            <CardBody>
-                <img src="money.png" alt="app" className='lg:rounded-full rounded-md lg:w-80 lg:h-80' />
+            <CardBody className=''>
+                <img src="money.png" alt="app" className='lg:rounded-full rounded-md lg:w-80 lg:h-80 w-full h-80' />
                 <h1 className='font-bold text-2xl mt-4'>REPAY Mobile App</h1>
             <p>
                 Download the REPAY mobile app.<br/>Manage all your accounts on one <br/>
