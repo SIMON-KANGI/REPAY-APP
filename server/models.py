@@ -227,7 +227,7 @@ class Contact(db.Model):
     __tablename__ = 'contacts'
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.Integer, nullable=False, unique=True)
     account=db.Column(db.Integer, nullable=False, unique=True)
     email = db.Column(db.String(20), nullable=True)
