@@ -215,7 +215,7 @@ class Location(db.Model):
     serialize_rule=()
     serialize_only={'id', 'name'}
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), unique=True)
+    name = db.Column(db.String(255), unique=True)
     
     def to_dict(self):
         return {
