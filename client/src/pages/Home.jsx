@@ -13,7 +13,7 @@ function Home() {
     <NavBar/>
   
     <div className='flex w-full flex-col justify-center'>
-         <h1 className='text-center mt-16 leading-loose  lg:text-6xl text-2xl text-stone-950 font-bold'>
+         <h1 className='text-center mt-16 leading-loose  lg:text-6xl text-3xl text-stone-950 font-bold'>
         MAKE ALL <span className='bg-rose-300 p mb-2'>YOUR TRANSACTIONS </span>IN ONE APP.<br/>
         RECEIVE, SEND , DEPOSIT and TRACK<br/>
         <span className='text-green-600'>TRY REPAY</span>
