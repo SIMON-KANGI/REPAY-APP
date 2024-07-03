@@ -69,7 +69,7 @@ function Cards() {
             </p>
             </CardBody>
         </Card>
-        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-up" className='hover:border-r-2 hover:border-b-2 hover:border-green-600 hover:shadow-md'>
+        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-up" className='hover:border-r-2 hover:border-b-2 hover:border-yellow-600 hover:shadow-md'>
             <CardBody>
                 <img src="bank.jpg" alt="app" className='lg:rounded-full rounded-md lg:h-80 lg:w-80'/>
                 <h1 className='font-bold text-2xl mt-4'>BANK to BANK<br/>Transfers</h1>
@@ -79,7 +79,7 @@ function Cards() {
             </p>
             </CardBody>
         </Card>
-        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-left" className='hover:border-r-2 hover:border-b-2 hover:border-green-600 hover:shadow-md'>
+        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-left" className='hover:border-r-2 hover:border-b-2 hover:border-rose-600 hover:shadow-md'>
             <CardBody>
                 <img src="free.jpg" alt="app" className='lg:rounded-full rounded-md lg:w-80 xl:w-72 xl:h-72 lg:h-80'/>
                 <h1 className='font-bold text-2xl mt-4'>REPAY is Free to use</h1>
