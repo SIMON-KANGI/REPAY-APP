@@ -24,7 +24,7 @@ const [stockQuantity, setStockQuantity]=useState(20)
             <tr className='bg-white border-b items-center'>
             <td className='px-4 py-2 text-center'>{product.id}</td>
               <td className='px-4 py-2 justify-center'>
-              <img src={product.profile} className='justify-center rounded-full w-32 h-32' alt={product.name} />
+              <img src={product.profile} className='justify-center rounded-full w-16 h-16' alt={product.name} />
               </td>
               <td className='px-4 py-2 text-center'>{product.name}</td>
               <td className='px-4 py-2 text-center'>{product.price}</td>
