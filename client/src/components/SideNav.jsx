@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { IoIosHome } from "react-icons/io";
 import { BsPersonWorkspace } from "react-icons/bs";
 import { IoLogIn } from "react-icons/io5";
+import { SiGnuprivacyguard } from "react-icons/si";
+import { IoMdClose } from "react-icons/io";
 function SideNav() {
     const {isOpen, onOpen, onClose}=useDisclosure()
   return (
@@ -16,7 +18,10 @@ function SideNav() {
       <Drawer isOpen={isOpen} onClose={onClose} size={"md"} className="bg-stone-900">
       <DrawerOverlay/>
       <DrawerContent backgroundColor={'stone.900'} className='py-6'>
-      <DrawerCloseButton/>
+      {/* <DrawerCloseButton color="stone.200" className='flex-start' fontSize={'1.3rem'}/> */}
+      <button onClick={onClose} className='flex-start text-3xl px-4 text-stone-200 '>
+        <IoMdClose/>
+      </button>
          <DrawerBody>
 <div className='my-6'>
 <Link to="/" className='flex text-2xl text-white'>
@@ -24,16 +29,22 @@ function SideNav() {
   <span className='mx-4'>Home</span>
 </Link>
 </div>
-<div className='my-6'>
+<div className='my-6 border-t p-2 border-stone-600'>
 <Link to="/how-it-works" className='flex text-2xl text-white '>
 <BsPersonWorkspace/>
   <span className='mx-4'>How it works</span>
 </Link>
 </div>
-<div>
+<div className='border-t p-2 border-stone-600'>
 <Link to="/login" className='flex text-2xl text-white'>
 <IoLogIn/>
   <span className='mx-4'>Login</span>
+</Link>
+</div>
+<div className='my-6 border-t p-2 border-stone-600'>
+<Link to="/account" className='flex text-2xl text-white'>
+<SiGnuprivacyguard/>
+  <span className='mx-4'>Register</span>
 </Link>
 </div>
         </DrawerBody>
