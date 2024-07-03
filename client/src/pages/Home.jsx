@@ -13,19 +13,19 @@ function Home() {
     <NavBar/>
   
     <div className='flex w-full flex-col justify-center'>
-         <h1 className='text-center leading-loose mt-16  lg:text-4xl text-2xl text-stone-950 font-bold'>
-        MAKE ALL YOUR TRANSACTIONS IN ONE APP.<br/>
+         <h1 className='text-center mt-16 leading-loose  lg:text-6xl text-2xl text-stone-950 font-bold'>
+        MAKE ALL <span className='bg-rose-300 p mb-2'>YOUR TRANSACTIONS </span>IN ONE APP.<br/>
         RECEIVE, SEND , DEPOSIT and TRACK<br/>
         <span className='text-green-600'>TRY REPAY</span>
     </h1>
-    <p className='text-center leading-loose text-stone-900'>Enjoy easy and instant money transactions. Pay your bills faster and secure <br/>
+    <p className='text-center text-2xl leading-loose text-stone-900'>Enjoy easy and instant money transactions. Pay your bills faster and secure <br/>
      <span className='text-green-600'> enjoy free transaction </span>
    costs across all networks
     </p>
     </div>
    <div className='text-center my-4'>
     <button onClick={()=>navigate('/account')} className="bg-gradient-to-r from-stone-600 to-stone-950 my-3 text-slate-200 lg:w-fit w-full font-bold rounded-md lg:rounded-full mx-3 px-20 py-3">Start Now</button>
-    <button onClick={()=>navigate('/login')} className="bg-transparent  text-stone-900 lg:rounded-full rounded-md px-20 py-3 border lg:w-fit w-full border-stone-900 font-bold ">Member Area</button>
+    <button onClick={()=>navigate('/login')} className="bg-transparent  text-stone-900 lg:rounded-full rounded-md px-20 py-3 border lg:w-fit w-full border-green-600 font-bold ">Member Area</button>
    </div>
    <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
              <ReactRotatingText items={['Make Transactions', 'Receive Money', 'Withdraw Money','Pay Online']}/>
