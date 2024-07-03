@@ -195,7 +195,7 @@ function Personal() {
               </div>
 
               <button type="submit" disabled={isLoading} className="p-2 mt-3 w-full bg-green-900 text-white">
-              {isLoading?<span className='items-center justify-center flex'><Spinner size="lg" speed="0.85s"/>Loading</span>:'Create Account'}
+              {isLoading?<span className='items-center justify-center flex'>Loading.<Spinner size="lg" speed="0.85s"/></span>:'Create Account'}
                 
               </button>
             </Form>
