@@ -51,7 +51,7 @@ function NavBar() {
 </Menu>
 </ul>
     </nav>
-    <div className='visible lg:invisible'> <SideNav/></div>
+    <div className='w-fit lg:w-0'> <SideNav/></div>
    
     </header>
   )
