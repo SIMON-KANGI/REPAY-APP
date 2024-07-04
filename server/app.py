@@ -648,7 +648,7 @@ class MakeWithdrawal(Resource):
 
             # Notification for the sender
             notification_sendmessage = (
-                f"Withdarwal of {amount} {transaction_type} to account {third_party_account.number}. "
+                f"Withdrawal of {amount} {transaction_type} to account {third_party_account.number}. "
                 f"Your new balance is {sender_account.balance}."
             )
             notification_sender = Notification(
