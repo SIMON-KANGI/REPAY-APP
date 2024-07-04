@@ -2,8 +2,13 @@ import React from 'react'
 import SideBar from '../SideBar'
 import TopNav from '../TopNav'
 import useFetch from '../../../hooks/UseFetch'
+import { useSelector } from 'react-redux'
+import { selectUserData } from '../../../features/auth/Authslice'
 function MyTransactions() {
     const {data:transactions, loading}= useFetch('https://repay-app.onrender.com/transactions')
+    const user = useSelector(selectUserData);
+    const filterTransactions=transactions.filter(transaction=>transaction.user_id==user.id)
+
   return (
     <div className='flex'>
       <SideBar/>
@@ -21,7 +26,7 @@ function MyTransactions() {
         <th className='px-4 py-2'>Receiver</th>
     </thead>
     <tbody>
-        {transactions.map(transaction=>(
+        {filterTransactions.map(transaction=>(
             <tr className='bg-white border-b items-center' key={transaction.id}>
                 <td className='px-4 py-2 text-center'>{transaction.id}</td>
                 <td className='px-4 py-2 text-center'>{transaction.date.slice(0,16)}</td>
