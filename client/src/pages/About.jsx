@@ -28,24 +28,24 @@ function About() {
     </section>
     <section>
       <h1 className='text-center mt-5 text-5xl font-bold'>How Repay Works</h1>
-      <div className='flex m-8 p-4 justify-center  rounded-md shadow-md'>
-      <div className='mx-8'>
+      <div className='lg:flex m-8 p-4 justify-center  rounded-md shadow-md'>
+      <div className='mx-8 order-2'>
          <h1 className='font-bold text-xl'>Step 1</h1>
         <h2 className='font-bold text-4xl text-rose-500'>Create a Repay Account</h2>
         <p className='text-xl'>
 Get started by enrolling your email or mobile number through <br/>your mobile banking app or with the Repay® app.</p>
       </div>
        
-        <div>
-          <img src='money.png' className=' w-96 h-96' alt=""/>
+        <div className='order-1'>
+          <img src='money.png' className=' lg:w-96 lg:h-96 w-3/4 h-96' alt=""/>
         </div>
       </div>
-      <div className='flex m-8 p-6  justify-center rounded-md shadow-md'>
-      <div>
-          <img src='money.png' className=' rounded-full w-96 h-96' data-aos='fade-right' alt=""/>
+      <div className='lg:flex m-8 p-6  justify-center rounded-md shadow-md'>
+      <div className='order-1 lg:order-2'>
+          <img src='money.png' className=' rounded-full w-96 h-96 ' data-aos='fade-right' alt=""/>
         </div>
       <div className='mx-8' data-aos='fade-up'>
-         <h1 className='font-bold text-xl'>Step 1</h1>
+         <h1 className='font-bold text-xl'>Step 2</h1>
         <h2 className='font-bold text-4xl text-rose-500'>Create a Repay Account</h2>
         <p className='text-xl'>
 Get started by enrolling your email or mobile number through your mobile <br/>banking app or with the Repay® app.</p>
@@ -53,16 +53,16 @@ Get started by enrolling your email or mobile number through your mobile <br/>ba
        
         
       </div>
-      <div className='flex m-8 p-6  justify-center rounded-md shadow-md'>
-      <div className='mx-8' data-aos='fade-up'>
-         <h1 className='font-bold text-xl'>Step 1</h1>
+      <div className='lg:flex m-8 p-6  justify-center rounded-md shadow-md'>
+      <div className='mx-8 order-2 lg:order-1' data-aos='fade-up'>
+         <h1 className='font-bold text-xl'>Step 3</h1>
         <h2 className='font-bold text-4xl text-rose-500'>Create a Repay Account</h2>
         <p className='text-xl'>
 Get started by enrolling your email or mobile number through your  <br/>mobile banking app or with the Repay® app.</p>
       </div>
        
         <div>
-          <img src='money.png' className='rounded-full w-96 h-96' data-aos='fade-left' alt=""/>
+          <img src='money.png' className='rounded-full order-1 lg:order-2 w-96 h-96' data-aos='fade-left' alt=""/>
         </div>
       </div>
     </section>
