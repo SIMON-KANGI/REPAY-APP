@@ -59,7 +59,7 @@ function Cards() {
     </Box> 
     <h1 className='text-center text-slate-200 text-4xl'>Manage Your Funds On Repay</h1>
     <Box className='lg:flex justify-center w-full'>
-        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-right" className='hover:border-r-2 hover:border-b-2 hover:border-green-600 hover:shadow-md'>
+        <Card background={'transparent'} margin={'2rem'} textColor={'black'} width={'400px'} data-aos="fade-right" className='hover:border-r-2 hover:border-b-2  hover:border-green-600 hover:shadow-md'>
             <CardBody className=''>
                 <img src="money.png" alt="app" className='lg:rounded-full rounded-md lg:w-80 lg:h-80 w-full h-80' />
                 <h1 className='font-bold text-2xl mt-4'>REPAY Mobile App</h1>
