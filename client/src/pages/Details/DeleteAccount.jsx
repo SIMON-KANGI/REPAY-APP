@@ -18,7 +18,7 @@ function DeleteAccount() {
     setTimeout(()=>{
         onClose()
         handleDelete(user.id)  // replace user.id with the actual user id to delete it.
-    }, 5000)
+    }, 10000)
   return (
     <div>
     <button onClick={onOpen} className='p-3 w-full shadow-md items-center bg-red-800 font-bold text-slate-200'>Delete account</button>
