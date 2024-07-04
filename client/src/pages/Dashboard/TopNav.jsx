@@ -31,7 +31,7 @@ function TopNav() {
 
     return (
         <div className='w-full flex justify-between items-center h-fit p-4 bg-stone-200 shadow-md'>
-            <h1 className='text-xl text-emerald-900 font-bold'>{user.account_type} Account</h1>
+            <h1 className='text-xl bg-emerald-600 rounded-xl px-2 text-stone-200 font-bold'>{user.account_type} Account</h1>
             <h1 className='text-xl text-stone-950 font-bold'>{formatTime(currentTime)}</h1>
             <nav className='text-right mx-4'>
                 <ul>
