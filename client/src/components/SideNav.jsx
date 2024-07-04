@@ -8,8 +8,12 @@ import { BsPersonWorkspace } from "react-icons/bs";
 import { IoLogIn } from "react-icons/io5";
 import { SiGnuprivacyguard } from "react-icons/si";
 import { IoMdClose } from "react-icons/io";
+import { MdDashboard } from 'react-icons/md';
+import useAuth from '../hooks/UseAuth';
+import LogOut from '../pages/authentication/LogOut';
 function SideNav() {
     const {isOpen, onOpen, onClose}=useDisclosure()
+    const isAuthenticated = useAuth(['user', 'admin']);
   return (
     <div>
     <button className='mx-4' onClick={onOpen}>
@@ -47,6 +51,24 @@ function SideNav() {
   <span className='mx-4'>Register</span>
 </Link>
 </div>
+{isAuthenticated &&
+(<div className='my-6 border-t p-2 border-stone-600'>
+<Link to="/my-dashboard" className='flex text-2xl text-white'>
+<MdDashboard/>
+  <span className='mx-4'>My Dashboard</span>
+</Link>
+</div>
+
+)}
+{isAuthenticated &&
+(<div className='my-6 border-t p-2 border-stone-600'>
+<LogOut/>
+</div>
+
+)
+
+}
+
         </DrawerBody>
       </DrawerContent>
        
