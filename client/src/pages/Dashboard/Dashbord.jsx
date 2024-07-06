@@ -1,19 +1,24 @@
-import { Card, CardBody, Box, Button } from '@chakra-ui/react'
-import React from 'react'
+import React, { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { selectUserData } from '../../features/auth/Authslice';
+import useFetch from '../../hooks/UseFetch';
+import { Card, CardBody, Box, Button } from '@chakra-ui/react';
 import { AiOutlineTransaction } from "react-icons/ai";
 import { PiHandWithdraw, PiHandWithdrawFill } from "react-icons/pi";
 import { RiFolderReceivedFill } from "react-icons/ri";
 import { MdAccountBalanceWallet, MdContacts } from "react-icons/md";
 import { IoIosSend } from "react-icons/io";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
-import useFetch from '../../hooks/UseFetch';
-import { useSelector } from 'react-redux';
-import { selectUserData } from '../../features/auth/Authslice';
 
-function Dashbord() {
+function Dashboard() {
   const { data: transactions } = useFetch('https://repay-app.onrender.com/transactions');
+  const { data: users } = useFetch('https://repay-app.onrender.com/users');
   const user = useSelector(selectUserData);
   const filteredTransactions = transactions?.filter(transaction => transaction.user_id === user.id) || [];
+
+  const sumOfTransactions = useMemo(() => {
+    return filteredTransactions.reduce((acc, transaction) => acc + transaction.amount, 0);
+  }, [filteredTransactions]);
 
   return (
     <div className='p-8'>
@@ -22,8 +27,8 @@ function Dashbord() {
           <CardBody>
             <h1>Total Users</h1>
             <div>
-              <h1 className='text-4xl font-extrabold'>80,000</h1>
-              <p><span className='text-rose-600'>-2000 </span>from last week</p>
+              <h1 className='text-4xl font-extrabold'>{users?.length}</h1>
+              <p><span className='text-rose-600'>-20 </span>from last week</p>
             </div>
           </CardBody>
         </Card>
@@ -34,7 +39,7 @@ function Dashbord() {
               Amount Transacted
             </h1>
             <div>
-              <h1 className='text-4xl font-extrabold'>50,000</h1>
+              <h1 className='text-4xl font-extrabold'>${sumOfTransactions}</h1>
               <p><span className='text-green-600'>+2000 </span>from last week</p>
             </div>
           </CardBody>
@@ -168,7 +173,7 @@ function Dashbord() {
         </Box>
       </section>
     </div>
-  )
+  );
 }
 
-export default Dashbord;
+export default Dashboard;
