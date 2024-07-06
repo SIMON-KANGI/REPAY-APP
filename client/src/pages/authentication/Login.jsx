@@ -10,7 +10,7 @@ import GoogleAuthProviderWrapper from './GoogleLogin';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Spinner, useToast } from '@chakra-ui/react'
 import { FcGoogle } from "react-icons/fc";
-
+import instance from '../../features/api/axios';
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
