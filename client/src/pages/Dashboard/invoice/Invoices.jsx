@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import SideBar from '../SideBar';
 import TopNav from '../TopNav';
 import CreateInvoice from './CreateInvoice';
@@ -20,15 +20,23 @@ import Pagination from '../../../components/Pagination';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function Invoices() {
-  const { data: invoices, isLoading, error } = useFetch('https://repay-app.onrender.com/invoices');
+  const { data: fetchedInvoices, isLoading, error } = useFetch('https://repay-app.onrender.com/invoices');
+  const [invoices, setInvoices] = useState([]);
   const [input, setInput] = useState('');
   const user = useSelector(selectUserData);
-  const [pageNumber, setPageNumber]= useState(10)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [pageNumber, setPageNumber] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
   const { onOpen, onClose, isOpen } = useDisclosure();
-const toast= useToast()
+  const toast = useToast();
+
+  useEffect(() => {
+    if (fetchedInvoices) {
+      setInvoices(fetchedInvoices);
+    }
+  }, [fetchedInvoices]);
+
   const handleClick = useCallback((invoice) => {
     setSelectedInvoice(invoice);
     onOpen();
@@ -38,13 +46,18 @@ const toast= useToast()
     axios.delete(`https://repay-app.onrender.com/invoices/${id}`)
       .then(() => {
         // Handle successful deletion
-        alert('Invoice deleted successfully!');
-        // Optionally, refetch invoices or filter them locally
+        setInvoices(invoices.filter(invoice => invoice.id !== id));
+        toast({
+          title: 'Invoice deleted successfully',
+          position: "top-right",
+          status: "success",
+          isClosable: true,
+        });
       })
       .catch(error => {
         console.error("There was an error deleting the invoice!", error);
       });
-  }, []);
+  }, [invoices, toast]);
 
   const filteredInvoices = invoices?.filter(invoice => {
     const userInvoice = invoice.user_id === user.id;
@@ -65,6 +78,7 @@ const toast= useToast()
     axios.patch(`https://repay-app.onrender.com/invoices/${updatedInvoice.id}`, updatedInvoice)
       .then(() => {
         // Handle successful update
+        setInvoices(invoices.map(invoice => invoice.id === updatedInvoice.id ? updatedInvoice : invoice));
         toast({
           title: 'Invoice updated successfully',
           position: "top-right",
@@ -72,17 +86,17 @@ const toast= useToast()
           isClosable: true,
         });
         onClose();
-        // Optionally, refetch invoices or update the local state
       })
       .catch(error => {
         console.error("There was an error updating the invoice!", error);
       });
-  }, [onClose]);
+  }, [invoices, toast, onClose]);
 
-  const indexOfLast= currentPage * pageNumber
-  const indexOfFirst=indexOfLast-pageNumber
-  const PaginateInvoices= filteredInvoices.slice(indexOfFirst, indexOfLast)
-  const paginate=(pageNumber)=>setCurrentPage(pageNumber)
+  const indexOfLast = currentPage * pageNumber;
+  const indexOfFirst = indexOfLast - pageNumber;
+  const PaginateInvoices = filteredInvoices.slice(indexOfFirst, indexOfLast);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className='flex'>
       <SideBar />
@@ -149,7 +163,7 @@ const toast= useToast()
               handleChange={(e) => setSelectedInvoice({ ...selectedInvoice, status: e.target.value })}
             />
           )}
-          <Pagination numberPerpage={pageNumber} totalItems={filteredInvoices.length} paginate={paginate}/>
+          <Pagination numberPerpage={pageNumber} totalItems={filteredInvoices.length} paginate={paginate} />
         </div>
       </section>
     </div>
