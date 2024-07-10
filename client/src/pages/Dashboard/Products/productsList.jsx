@@ -23,13 +23,13 @@ const [stockQuantity, setStockQuantity]=useState(20)
           {products?.map(product=>(
             <tr className='bg-white border-b items-center'>
             <td className='px-4 py-2 text-center'>{product.id}</td>
-              <td className='px-4 py-2 justify-center'>
+              <td className='px-4 py-2 justify-center items-center flex'>
               <img src={product.profile} className='justify-center rounded-full w-16 h-16' alt={product.name} />
               </td>
               <td className='px-4 py-2 text-center'>{product.name}</td>
               <td className='px-4 py-2 text-center'>{product.price}</td>
               <td className='px-4 py-2 text-center'>{product.category}</td>
-              <td className='px-4 py-2 flex text-center '>
+              <td className='px-4 py-2 flex items-center justify-center '>
                   {product.stock}
                   <span className='px-2'>
                     {product.stock<stockQuantity?<CgDanger color='red'/>:<FaCheck color="green"/>} 
