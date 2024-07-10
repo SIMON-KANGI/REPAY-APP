@@ -48,7 +48,13 @@ function Login() {
             navigate(from, { replace: true });
            
         } catch (error) {
-            console.log(error)
+            toast({
+                title: "Login error",
+                description:"Wrong username or password",
+                position: "top-center",
+                status: "error",
+                isClosable: true,
+              });
         } finally {
             setSubmitting(false);
         }
