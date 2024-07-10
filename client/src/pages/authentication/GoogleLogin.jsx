@@ -8,15 +8,20 @@ import { toast } from 'react-toastify';
 import { GoogleLogin } from '@react-oauth/google';
 import { useLoginMutation } from '../../features/auth/Authapi';
 import { FcGoogle } from "react-icons/fc";
+import { useToast } from '@chakra-ui/react';
+
 const LoginGoogle = () => {
+  const toast=useToast()
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [login, { isLoading }] = useLoginMutation();
     const googleLogin = useGoogleLogin({
       onSuccess: async (response) => {
+        console.log('login success',response.profileObj)
+        const {email,name,googleId, imageUrl}= response.profileObj
         try {
           // const { access_token } = response;
-          const res = await axios.get('https://repay-app.onrender.com/login/authorized');
+          const res = await axios.post('https://repay-app.onrender.com/login/authorized',{token:access_token});
   
           const { data } = res;
           const { access_token: access_token, refresh_token, user } = data;
@@ -26,14 +31,29 @@ const LoginGoogle = () => {
   
           dispatch(setCredentials({ accessToken:access_token, user }));
   
-          toast.success(`Logged in as ${user.username}`, { position: 'top-right' });
+          toast({
+            title: `Welcome ${user.username}`,
+            position: "top-center",
+            status: "success",
+            isClosable: true,
+          })
           navigate('/my-dashboard', { replace: true });
         } catch (error) {
-          toast.error('Login failed. Please try again.');
+          toast({
+            title: `An error occured ${error}`,
+            position: "top-center",
+            status: "success",
+            isClosable: true,
+          })
         }
       },
       onError: () => {
-        toast.error('Login failed. Please try again.');
+        toast({
+          title: `An error occured ${error}`,
+          position: "top-center",
+          status: "success",
+          isClosable: true,
+        })
       },
     });
   
