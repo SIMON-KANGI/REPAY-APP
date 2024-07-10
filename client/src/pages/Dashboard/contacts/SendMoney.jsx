@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ModalHeader, ModalOverlay, ModalContent, ModalBody, ModalCloseButton } from '@chakra-ui/react';
+import { Modal, ModalHeader, ModalOverlay, ModalContent, ModalBody, ModalCloseButton, useToast } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { selectUserData } from '../../../features/auth/Authslice';
 import axios from 'axios';
 import useFetch from '../../../hooks/UseFetch';
 function SendMoney({ onClose, isOpen, contact }) {
   const user = useSelector(selectUserData);
-
+const toast=useToast()
   const { data: accounts, loading, error } = useFetch('https://repay-app.onrender.com/accounts');
   const [formData, setFormData] = useState({
     account_name:'',
@@ -27,8 +27,8 @@ function SendMoney({ onClose, isOpen, contact }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
+    loading;
+    !error;
 
     try {
       const response = await axios.post('https://repay-app.onrender.com/transactions', formData, {
@@ -45,12 +45,26 @@ function SendMoney({ onClose, isOpen, contact }) {
         account: contact.account,
         transaction_type:'sent'
       });
+      if(response.ok){
+        toast({
+          title: `Trabsaction  Successfull`,
+          position: "top-center",
+          status: "info",
+          isClosable: true,
+        });
+      }
       onClose();
     } catch (err) {
-      setError('Transaction failed. Please try again.');
+      toast({
+        title: `transaction failed`,
+        position: "top-center",
+        status: "error",
+        isClosable: true,
+      });
+      error
       console.error('Error:', err.response ? err.response.data : err.message);
     } finally {
-      setLoading(false);
+     !loading;
     }
     
   };
