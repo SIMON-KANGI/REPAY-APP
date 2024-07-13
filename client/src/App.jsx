@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react'
 import Login from './pages/authentication/Login'
 import { Route, Routes } from 'react-router-dom'
 import About from './pages/About'
@@ -13,14 +13,22 @@ import Invoices from './pages/Dashboard/invoice/Invoices'
 import MainDash from './pages/Dashboard/MainDash'
 import Account from './pages/Dashboard/Accounts/Account'
 import User from './pages/Details/User'
-import { selectUserData } from './features/auth/Authslice'
-import { useSelector } from'react-redux'
+import { selectUserData, selectCurrentToken } from './features/auth/Authslice'
+import { useDispatch, useSelector } from'react-redux'
 import AccountDetails from './pages/Dashboard/Accounts/accountDetails'
 import Contacts from './pages/Dashboard/contacts/Contacts'
 import Products from './pages/Dashboard/Products/Products'
 import MyTransactions from './pages/Dashboard/transactions.jsx/MyTransactions'
 function App() {
   const user = useSelector(selectUserData);
+  const dispatch= useDispatch()
+  useEffect(()=>{
+    const token =localStorage.getItem('access_token')
+    if(token){
+      dispatch(selectCurrentToken(token))
+    }
+  
+  },[dispatch])
   return (
     <>
    {/* <NavBar/> */}
