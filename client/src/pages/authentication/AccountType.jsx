@@ -24,9 +24,31 @@ function AccountType() {
 
   return (
     <section className="flex w-full h-screen">
-      <div className="bg-gray-200 lg:w-3/4 w-0 lg:flex lg:flex-col justify-center items-center overflow-hidden">
-        <img src="/Money-Transfer.png" alt="placeholder" className="max-w-full max-h-full object-cover" />
-      </div>
+     <div
+  style={{
+    backgroundImage: "url(/Money-Transfer.png)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover"
+  }}
+  className="lg:w-3/4 w-0 lg:flex lg:flex-col justify-center items-center overflow-hidden"
+>
+  <div className='bg-stone-800 opacity-75 w-full h-full flex justify-center items-center'>
+    <div className='text-center'>
+      <h1 className='text-6xl font-extrabold text-white'>Great! Let's Start!</h1>
+      <p className='text-slate-200 text-lg'>Follow the easy steps</p>
+      <br />
+      <button
+        onClick={() => navigate('/')}
+        className='py-3 my-6 rounded-md shadow-md text-slate-100 bg-emerald-700 w-32 font-bold'
+      >
+        Home
+      </button>
+    </div>
+  </div>
+</div>
+
+        
+      
       <div className="lg:w-fit w-full lg:flex lg:flex-col px-12 justify-center h-full bg-white">
         {/* <Center height="50px">
           <Divider orientation="vertical" />
