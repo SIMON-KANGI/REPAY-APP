@@ -5,63 +5,10 @@ import { useSelector } from 'react-redux';
 import { selectUserData } from '../../../features/auth/Authslice';
 import axios from 'axios';
 import ProductsList from './productsList';
-function AddProducts({handleChange, handleFileChange, handleSubmit, formData, file}) {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+function AddProducts({handleChange, handleFileChange, handleSubmit, formData, file, onClose, onOpen, isOpen}) {
+    
     const user = useSelector(selectUserData);
-    // const [file, setFile] = useState(null);
-    // const [formData, setFormData] = useState({
-    //     name: '',
-    //     description: "",
-    //     stock: "",
-    //     price: "",
-    //     user_id: user.id,
-    //     category: "",
-    //     profile: 'image'
-    // });
-
-    // const handleChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setFormData({ ...formData, [name]: value });
-    // };
-
-    // const handleFileChange = (e) => {
-    //     const selectedFile = e.target.files[0];
-    //     setFile(selectedFile);
-    // };
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const formDataWithFile = new FormData();
-    //         formDataWithFile.append('name', formData.name);
-    //         formDataWithFile.append('description', formData.description);
-    //         formDataWithFile.append('stock', formData.stock);
-    //         formDataWithFile.append('price', formData.price);
-    //         formDataWithFile.append('user_id', formData.user_id);
-    //         formDataWithFile.append('category', formData.category);
-    //         formDataWithFile.append('profile', 'image');
-
-    //         if (file) {
-    //             formDataWithFile.append('file', file);
-    //         } else {
-    //             throw new Error("No image selected.");
-    //         }
-
-    //         const response = await axios.post('https://repay-app.onrender.com/products', formDataWithFile, {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data'
-    //             }
-    //         });
-
-    //         console.log(response.data); // Log or handle successful response
-
-    //         onClose(); // Close modal after successful submission
-    //     } catch (error) {
-    //         console.error("Error adding product:", error.message);
-    //         // Handle error state or display error message to user
-    //     }
-    // };
-
+   
     return (
         <div>
             <button onClick={onOpen} style={{ backgroundColor: 'midnightblue' }}  className='bg-gradient-to-r from-sky-800 to-blue-500 text-white flex items-center font-bold float-end rounded-md px-6 m-6 py-3'>Add Products</button>
