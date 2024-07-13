@@ -922,6 +922,25 @@ class Products(Resource):
         db.session.commit()
         
 api.add_resource(Products, '/products') 
+class ProductId(Resource):
+    def get(self, id):
+        product = Product.query.get(id)
+        return jsonify(product.to_dict())
+    
+    def patch(self, id):
+        data=request.get_json()
+        product=Product.query.get(id)
+        product.stock=data.get('stock')
+        db.session.add(product)
+        db.session.commit()
+        
+    def delete(self, id):
+        product=Product.query.get(id)
+        db.session.delete(product)
+        db.session.commit()
+        
+api.add_resource(ProductId, '/products/<int:id>')
+        
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
