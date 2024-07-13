@@ -12,6 +12,7 @@ import {
   FormControl,
   FormLabel
 } from '@chakra-ui/react';
+import { MdOutlineUpdate } from "react-icons/md";
 
 function UpdateStock({ handleChange, handleUpdate, stock, product }) {
   const { onClose, onOpen, isOpen } = useDisclosure();
@@ -24,7 +25,9 @@ function UpdateStock({ handleChange, handleUpdate, stock, product }) {
 
   return (
     <div>
-      <Button onClick={onOpen}>Update Stock</Button>
+      <button className="items-center flex font-bold justify-center" onClick={onOpen}>
+      <MdOutlineUpdate/>{""}
+      Update Stock</button>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
