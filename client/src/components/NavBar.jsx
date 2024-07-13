@@ -42,7 +42,7 @@ function NavBar() {
     
    </MenuItem>
    {isAuthenticated &&<MenuItem>
-    <Link to="my-dashboard" className='flex items-center font-bold text-xl'>
+    <Link to="/my-dashboard" className='flex items-center font-bold text-xl'>
     <MdDashboard/>
     My Dashboard</Link>
    </MenuItem>}
