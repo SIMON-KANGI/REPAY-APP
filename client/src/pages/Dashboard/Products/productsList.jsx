@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import axios from 'axios';
 import { FaCheck } from "react-icons/fa";
 import { CgDanger } from "react-icons/cg";
@@ -10,7 +10,7 @@ import DeleteProduct from './DeleteProduct';
 function ProductsList({ products, onClose, onOpen, isOpen }) {
   const [submitting, setSubmitting] = useState(false);
   const [stock, setStock] = useState({ id: null, stock: '' });
-  const [productsList, setProductsList] = useState([]);
+  const [productsList, setProductsList] = useState(products || []);
 
   useMemo(() => {
     setProductsList(products);
@@ -24,7 +24,7 @@ function ProductsList({ products, onClose, onOpen, isOpen }) {
     try {
       setSubmitting(true);
       const result = await axios.patch(`https://repay-app.onrender.com/products/${updatedProduct.id}`, updatedProduct);
-      if (result) {
+      if (result.status === 200) {
         setSubmitting(false);
         setProductsList(productsList.map(product => product.id === updatedProduct.id ? updatedProduct : product));
       }
@@ -32,6 +32,19 @@ function ProductsList({ products, onClose, onOpen, isOpen }) {
       console.log(error);
     }
   };
+
+  const handleDelete = useCallback(async (id) => {
+    try {
+      const response = await axios.delete(`https://repay-app.onrender.com/products/${id}`);
+      if (response.status === 200) {
+        console.log('Product deleted successfully');
+        setProductsList(productsList.filter(p => p.id !== id));
+        onClose();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [productsList, onClose]);
 
   return (
     <div className='p-4'>
@@ -78,7 +91,7 @@ function ProductsList({ products, onClose, onOpen, isOpen }) {
                       />
                     </MenuItem>
                     <MenuItem>
-                      <DeleteProduct onClose={onClose} onOpen={onOpen} isOpen={isOpen} />
+                      <DeleteProduct handleDelete={() => handleDelete(product.id)} />
                     </MenuItem>
                   </MenuList>
                 </Menu>
