@@ -20,7 +20,7 @@ const user=useSelector(selectUserData)
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-const filterNotifications=notifications.filter(notification=>notification.user_id===user.id)
+const filterNotifications=notifications.filter(notification=>notification.user_id===user?.id)
   return (
     <div className='overflow-y-scroll'>
       {filterNotifications?.map(notification => (
