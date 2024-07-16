@@ -20,7 +20,7 @@ function Products() {
         description: '',
         stock: '',
         price: '',
-        user_id: user.id,
+        user_id: user?.id,
         category: '',
         profile: 'image',
     });
