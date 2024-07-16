@@ -19,7 +19,7 @@ function Withdraw() {
     Toaccount_name: '',
     password: '',
     transaction_type: 'withdrawal',
-    sender_id: user.id,
+    sender_id: user?.id,
   });
 
   const handleChange = (e) => {
@@ -50,7 +50,7 @@ function Withdraw() {
           Toaccount_name: '',
           password: '',
           transaction_type: 'withdrawal',
-          sender_id: user.id,
+          sender_id: user?.id,
         });
         onClose();
       } catch (err) {
@@ -66,7 +66,7 @@ function Withdraw() {
     console.log(formData);
   };
 
-  const filterAccount = accounts?.filter((account) => account.user_id === user.id);
+  const filterAccount = accounts?.filter((account) => account.user_id === user?.id);
 
   return (
     <div className="flex justify-center items-center h-full">
