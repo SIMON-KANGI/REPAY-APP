@@ -30,10 +30,10 @@ function SideBar() {
   const handleCollapsed = () => {
     setCollapsed(!isCollapsed);
   };
-  const filteredNotifications = notifications?.filter(notification => notification.user_id === user.id);
-  const filteredContacts = contacts?.filter(contact => contact.user_id === user.id);
-  const filteredInvoices = invoices?.filter(invoice => invoice.user_id === user.id);
-  const filteredProducts = products?.filter(product => product.user_id === user.id);
+  const filteredNotifications = notifications?.filter(notification => notification.user_id === user?.id);
+  const filteredContacts = contacts?.filter(contact => contact.user_id === user?.id);
+  const filteredInvoices = invoices?.filter(invoice => invoice.user_id === user?.id);
+  const filteredProducts = products?.filter(product => product.user_id === user?.id);
   return (
     <div className={`transition-width duration-300 ease-in-out ${isCollapsed ? 'w-20' : 'w-80'} border-x  text-white bg-stone-800 border-gray-500 h-screen`}>
       <header className='h-40 p-4'>
@@ -43,12 +43,12 @@ function SideBar() {
         </div>
         <div className='flex items-center mt-4'>
           <div className={`w-20 h-20 border-4 border-stone-300 rounded-full overflow-hidden ${isCollapsed ? 'hidden' : 'block'}`}>
-            <img src={user.profile} alt={user.username} className='w-full h-full object-cover' />
+            <img src={user?.profile} alt={user?.username} className='w-full h-full object-cover' />
           </div>
           {!isCollapsed && (
             <div className='ml-4'>
               <h1>Welcome</h1>
-              <h1 className='font-bold text-xl'>{user.username}</h1>
+              <h1 className='font-bold text-xl'>{user?.username}</h1>
             </div>
           )}
         </div>
@@ -115,7 +115,7 @@ function SideBar() {
               </AccordionButton>
             </h2>
             <AccordionPanel className={`text-stone-50 p-4 ${isCollapsed ? 'hidden' : 'block'}`}>
-              <Link to={`/user/${user.username}`} className='flex items-center w-full shadow-md px-3 py-3 hover:bg-stone-300 mb-2'>
+              <Link to={`/user/${user?.username}`} className='flex items-center w-full shadow-md px-3 py-3 hover:bg-stone-300 mb-2'>
                 <ImProfile className='mr-2' />
                 <span>My Profile</span>
               </Link>
