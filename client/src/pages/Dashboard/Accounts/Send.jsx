@@ -19,7 +19,7 @@ function Send() {
         account: '',
         password: '',
         transaction_type: 'sent',
-        sender_id: user.id,
+        sender_id: user?.id,
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -49,7 +49,7 @@ function Send() {
                 account: '',
                 password: '',
                 transaction_type: 'sent',
-                sender_id: user.id,
+                sender_id: user?.id,
             });
             showToast('Transaction sent successfully', 'success');
             onClose();
@@ -71,7 +71,7 @@ function Send() {
         });
     };
 
-    const filterAccount = accounts?.filter(account => account.user_id === user.id);
+    const filterAccount = accounts?.filter(account => account.user_id === user?.id);
 
     return (
         <div className="flex justify-center items-center h-full">
