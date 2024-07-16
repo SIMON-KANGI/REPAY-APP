@@ -27,11 +27,11 @@ function TopNav() {
         return `${today.slice(0, 16)}-${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    const filteredNotifications = notifications?.filter(notification => notification.user_id === user.id);
+    const filteredNotifications = notifications?.filter(notification => notification.user_id === user?.id);
 
     return (
         <div className='w-full flex justify-between items-center h-fit p-4 bg-stone-200 shadow-md'>
-            <h1 className='text-xl bg-emerald-600 rounded-xl px-2 text-stone-200 font-bold'>{user.account_type} Account</h1>
+            <h1 className='text-xl bg-emerald-600 rounded-xl px-2 text-stone-200 font-bold'>{user?.account_type} Account</h1>
             <h1 className='text-xl text-stone-950 font-bold'>{formatTime(currentTime)}</h1>
             <nav className='text-right mx-4'>
                 <ul>
@@ -49,9 +49,9 @@ function TopNav() {
                             </div>
                         </Tooltip>
                         <div className='w-10 h-10 border-4 mx-4 border-stone-300 rounded-full overflow-hidden'>
-                            <img src={user.profile} alt={user.username} className='rounded-full w-10 h-10' />
+                            <img src={user?.profile} alt={user?.username} className='rounded-full w-10 h-10' />
                         </div>
-                        <h1 className='text-xl font-bold'>{user.username}</h1>
+                        <h1 className='text-xl font-bold'>{user?.username}</h1>
                     </div>
                 </ul>
             </nav>
