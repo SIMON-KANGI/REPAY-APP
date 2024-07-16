@@ -14,7 +14,7 @@ function Balance() {
   const [formData, setFormData] = useState({
     account: '',
     password: '',
-    user_id: user.id
+    user_id: user?.id
   });
 
   const handleChange = (e) => {
@@ -65,7 +65,7 @@ function Balance() {
       });
   }, [toast]);
 
-  const filteredAccounts = accounts.filter(account => account.user_id === user.id);
+  const filteredAccounts = accounts.filter(account => account.user_id === user?.id);
 
   return (
     <div>
