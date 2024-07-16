@@ -14,14 +14,14 @@ function EditUser() {
     const { isUser } = useAuth('user');
     const [file, setFile] = useState(null);
     const [values, setValues] = useState({
-        username: user.username,
-        email: user.email,
-        phone:user.phone,
-        location: user.location,
+        username: user?.username,
+        email: user?.email,
+        phone:user?.phone,
+        location: user?.location,
         password:'',
         confirmPassword: '',
-        account_type: user.account_type,
-        profile: user.profile
+        account_type: user?.account_type,
+        profile: user?.profile
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -182,7 +182,7 @@ function EditUser() {
                             <div className='p-3 shadow-md mt-3'>
                                     <h1 className='font-bold'>Change Account Type</h1>
                                     <select name="account_type" onChange={handleChange} value={values.account_type} className="px-6 py-2">
-                                        <option value=''>{user.account_type}</option>
+                                        <option value=''>{user?.account_type}</option>
                                         <option value="Personal">Personal</option>
                                         <option value="Business">Business</option>
                                     </select>
