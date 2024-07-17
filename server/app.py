@@ -156,6 +156,7 @@ class Users(Resource):
 
 
 api.add_resource(Users, '/users')
+
 class UserId(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
@@ -321,7 +322,7 @@ class Login(Resource):
         user = User.query.filter_by(email=email).first()
 
         if user and user.check_password(password):
-            access_token = create_access_token(identity={"email": user.email, "role": user.role, "id": user.id})
+            access_token = create_access_token(identity={"email": user.email, "role": user.role, "id": user.id, "username": user.username, "content": user.to_dict()})
             refresh_token = create_refresh_token(identity={"email": user.email, "role": user.role, "id": user.id})
             
             response = make_response(jsonify({
@@ -338,7 +339,21 @@ class Login(Resource):
         return ({"message": "Invalid username or password"}), 401
 
 api.add_resource(Login, '/login')
-
+class UserToken(Resource):
+    @jwt_required()
+    def get(self):
+        current_user = get_jwt_identity()
+        if current_user:
+             response = make_response(jsonify({
+                'access_token':current_user,
+                
+            }), 200)
+            
+        return response
+            
+            
+    
+api.add_resource(UserToken, '/user/token')
 class Logout(Resource):
     @jwt_required()
     def delete(self):
