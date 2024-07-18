@@ -345,7 +345,7 @@ class UserToken(Resource):
         current_user = get_jwt_identity()
         if current_user:
              response = make_response(jsonify({
-                'access_token':current_user,
+                'token':current_user,
                 
             }), 200)
             
