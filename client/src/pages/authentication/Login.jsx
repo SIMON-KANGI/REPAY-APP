@@ -5,16 +5,17 @@ import { useDispatch } from 'react-redux';
 import { setCredentials } from '../../features/auth/Authslice';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLoginMutation } from '../../features/auth/Authapi';
-import { toast } from 'react-toastify'; // Ensure you have this library installed and configured
+
 import GoogleAuthProviderWrapper from './GoogleLogin';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Spinner, useToast } from '@chakra-ui/react'
-import { FcGoogle } from "react-icons/fc";
-import instance from '../../features/api/axios';
+import { useGlobalContext } from '../../context/GlobalProvider';
+
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
+    const {setUserData,setLoggedIn}= useGlobalContext()
     const toast=useToast();
     const from = location.state?.from?.pathname || '/my-dashboard';
     const [login, { isLoading }] = useLoginMutation();
@@ -38,6 +39,8 @@ function Login() {
             const { access_token, username, role, content } = response.data;
             localStorage.setItem('access', access_token);
             localStorage.setItem('username', username);
+            setLoggedIn(true)
+            setUserData(content)
             dispatch(setCredentials({ accessToken: access_token, username:username, role:role, user: content }));
             toast({
               title: `Welcome back ${username}`,
