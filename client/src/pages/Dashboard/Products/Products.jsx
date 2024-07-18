@@ -77,6 +77,7 @@ function Products() {
         }
     };
     
+    const filterProducts=productsData.filter(product=>product.user_id === user?.id)
 
     return (
         <div className='flex'>
@@ -94,7 +95,7 @@ function Products() {
                     onOpen={onOpen}
                 />
                 <h1>Products</h1>
-                <ProductsList products={productsData}
+                <ProductsList products={filterProducts}
                  onClose={onClose}
                     isOpen={isOpen}
                     onOpen={onOpen}
