@@ -22,7 +22,7 @@ import {
       amount:'',
       status:'',
       file: null,
-      user_id: user.id
+      user_id: user?.id
     });
   
     const handleFileChange = (e) => {
