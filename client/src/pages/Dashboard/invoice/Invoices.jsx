@@ -60,7 +60,7 @@ function Invoices() {
   }, [invoices, toast]);
 
   const filteredInvoices = invoices?.filter(invoice => {
-    const userInvoice = invoice.user_id === user.id;
+    const userInvoice = invoice.user_id === user?.id;
     const setInput = input === '' || invoice?.name.toUpperCase().startsWith(input.toUpperCase());
     const SelectedStatus = selectedStatus === null || invoice.status === selectedStatus;
     return userInvoice && setInput && SelectedStatus;
