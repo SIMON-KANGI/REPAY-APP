@@ -14,7 +14,7 @@ function Dashboard() {
   const { data: transactions } = useFetch('https://repay-app.onrender.com/transactions');
   const { data: users } = useFetch('https://repay-app.onrender.com/users');
   const user = useSelector(selectUserData);
-  const filteredTransactions = transactions?.filter(transaction => transaction.user_id === user.id) || [];
+  const filteredTransactions = transactions?.filter(transaction => transaction.user_id === user?.id) || [];
 
   const sumOfTransactions = useMemo(() => {
     return filteredTransactions.reduce((acc, transaction) => acc + transaction.amount, 0);
