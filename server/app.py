@@ -717,7 +717,7 @@ class CheckBalance(Resource):
             return jsonify({"error": "Invalid password"}), 401
 
         notification_message = f"Your {category.name} balance is ${account.balance}"
-        notification = Notification(sender=account_name,message=notification_message, user_id=user_id, transaction_id=0)
+        notification = Notification(sender=account_name,message=notification_message, user_id=user_id, transaction_id=1)
         db.session.add(notification)
         
         try:
