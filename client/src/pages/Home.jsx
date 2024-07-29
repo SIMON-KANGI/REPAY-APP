@@ -9,27 +9,54 @@ import SideNav from '../components/SideNav';
 function Home() {
   const navigate = useNavigate();
   return (
-    <div className=''>
-    <NavBar/>
+    <div>
   
-    <div className='flex w-full flex-col justify-center'>
-         <h1 className='text-center mt-16 leading-loose  lg:text-6xl text-3xl text-stone-950 font-bold'>
-        MAKE ALL <span className='bg-rose-300 p mb-2'>YOUR TRANSACTIONS </span>IN ONE APP.<br/>
-        RECEIVE, SEND , DEPOSIT and TRACK<br/>
-        <span className='text-green-600'>TRY REPAY</span>
-    </h1>
-    <p className='text-center text-2xl leading-loose text-stone-900'>Enjoy easy and instant money transactions. Pay your bills faster and secure <br/>
-     <span className='text-green-600'> enjoy free transaction </span>
-   costs across all networks
-    </p>
+  <section
+  className=" h-screen bg-cover bg-no-repeat"
+  style={{
+    backgroundImage: "url(/bg.jpg)",
+  }}
+>
+  <NavBar />
+  <div className="flex px-4  lg:flex-row items-center  lg:justify-between">
+    <div className="flex flex-col items-center lg:items-start lg:w-1/2 justify-center text-center lg:text-left">
+      <h1 className="mt-16 leading-loose text-3xl lg:text-5xl text-stone-50 font-bold">
+        MAKE ALL <span className="bg-rose-300 p-2 mb-2 inline-block">YOUR TRANSACTIONS</span> IN ONE APP. RECEIVE, SEND, DEPOSIT
+      </h1>
+      <p className="text-2xl leading-loose text-stone-200 mt-4">
+        Enjoy easy and instant money transactions. Pay your bills faster and secure <br />
+        <span className="text-green-600">enjoy free transaction</span> costs across all networks.
+      </p>
+      <div className="flex flex-col lg:flex-row justify-center lg:justify-start items-center lg:items-start my-4">
+        <button
+          onClick={() => navigate('/account')}
+          className="bg-gradient-to-r from-stone-600 to-stone-950 my-3 text-slate-200 lg:w-auto w-full font-bold rounded-md lg:rounded-full mx-3 px-20 py-3 transition-transform transform hover:scale-105"
+        >
+          Start Now
+        </button>
+        <button
+          onClick={() => navigate('/login')}
+          className="bg-transparent text-stone-100 lg:rounded-full rounded-md px-20 py-3 border lg:w-auto w-full border-green-600 font-bold transition-transform transform hover:scale-105"
+        >
+          Member Area
+        </button>
+      </div>
     </div>
-   <div className='text-center my-4'>
-    <button onClick={()=>navigate('/account')} className="bg-gradient-to-r from-stone-600 to-stone-950 my-3 text-slate-200 lg:w-fit w-full font-bold rounded-md lg:rounded-full mx-3 px-20 py-3">Start Now</button>
-    <button onClick={()=>navigate('/login')} className="bg-transparent  text-stone-900 lg:rounded-full rounded-md px-20 py-3 border lg:w-fit w-full border-green-600 font-bold ">Member Area</button>
-   </div>
-   <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
+    <div
+     className="w-1/2 items-center h-1/2 lg:w-1/2 flex justify-center mt-8 lg:mt-0">
+      <img src="/person.png" alt="person" className=""height="500px" width="500px"   />
+    </div>
+  </div>
+  <div className='w-screen mt-8 bg-stone-800'>
+     <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
              <ReactRotatingText items={['Make Transactions', 'Receive Money', 'Withdraw Money','Pay Online']}/>
           </h2>
+  </div>
+ 
+</section>
+
+  
+  
       <Cards/>
       <div className='flex justify-center'>
          <button onClick={()=>navigate('/how-it-works')} className="bg-transparent border-stone-900 text-rose-600 font-bold rounded-md px-20 py-3 border-2 ">How it Works</button>
