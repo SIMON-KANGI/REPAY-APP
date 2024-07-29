@@ -94,7 +94,7 @@ function Products() {
                     isOpen={isOpen}
                     onOpen={onOpen}
                 />
-                <h1>Products</h1>
+                <h1 className='text-center text-3xl'>Products Store</h1>
                 <ProductsList products={filterProducts}
                  onClose={onClose}
                     isOpen={isOpen}
