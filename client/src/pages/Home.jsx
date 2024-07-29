@@ -21,7 +21,7 @@ function Home() {
   <div className="flex px-4  lg:flex-row items-center  lg:justify-between">
     <div className="flex flex-col items-center lg:items-start lg:w-1/2 justify-center text-center lg:text-left">
       <h1 className="mt-16 leading-loose text-3xl lg:text-5xl text-stone-50 font-bold">
-        MAKE ALL <span className="bg-rose-300 p-2 mb-2 inline-block">YOUR TRANSACTIONS</span> IN ONE APP. RECEIVE, SEND, DEPOSIT
+        MAKE ALL <span className="bg-rose-700 p-2 mb-2 inline-block">YOUR TRANSACTIONS</span> IN ONE APP. RECEIVE, SEND, DEPOSIT
       </h1>
       <p className="text-2xl leading-loose text-stone-200 mt-4">
         Enjoy easy and instant money transactions. Pay your bills faster and secure <br />
