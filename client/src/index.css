@@ -12,3 +12,26 @@
 .try{
     color:rgb(112, 175, 49)
 }
+.navbar {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .navbar:hover {
+    background-color: #f5f5f5; /* Change the background color when hovered */
+  }
+  
+  .nav-link {
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .nav-link:hover {
+    color: black; /* Change the text color to black when hovered */
+  }
+  
+  .nav-button {
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .nav-button:hover {
+    transform: scale(1.05); /* Add a scale effect when the button is hovered */
+  }
