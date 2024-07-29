@@ -1,60 +1,47 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { FaChevronDown } from 'react-icons/fa'
-import useAuth from '../hooks/UseAuth'
-import SideNav from './SideNav'
-import {
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuItemOption,
-    MenuGroup,
-    MenuOptionGroup,
-    MenuDivider,
-    Button
-  } from '@chakra-ui/react'
-import LogOut from '../pages/authentication/LogOut'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import useAuth from '../hooks/UseAuth';
+import SideNav from './SideNav';
+import LogOut from '../pages/authentication/LogOut';
 import { MdDashboard } from "react-icons/md";
+
+
 function NavBar() {
   const isAuthenticated = useAuth(['admin', 'user']);
+
   return (
-    <header className='w-screen bg-transparent flex py-6 shadow-md  justify-around items-center'>
-    <h1 className='text-lime-700 text-4xl lg:text-3xl font-bold'>RE<span className='text-rose-600'>PAY</span></h1>
-    <nav className='text-white lg:visible invisible'>
-<ul className='text-black'>
-    <Link className='px-4 text-white font-bold text-xl' to="/">Home</Link>
-    <Link className='px-4 text-white font-bold text-xl' to="/how-it-works">How it Works</Link>
-    <Menu>
-  <MenuButton as={Button} rightIcon={<FaChevronDown />}>
-    Account
-  </MenuButton>
-  <MenuList>
-    <MenuItem>
-    {!isAuthenticated &&<Link to="/login">Login</Link>}
-    </MenuItem>
-    <MenuItem>
-    {!isAuthenticated &&<Link to="/account">Register</Link>}
-    
-    </MenuItem>
-   <MenuItem>
-   {isAuthenticated &&<LogOut/>}
-    
-   </MenuItem>
-   {isAuthenticated &&<MenuItem>
-    <Link to="/my-dashboard" className='flex items-center font-bold text-xl'>
-    <MdDashboard/>
-    My Dashboard</Link>
-   </MenuItem>}
-  </MenuList>
-   
-</Menu>
-</ul>
-    </nav>
-    <div className='w-fit lg:invisible'> <SideNav/></div>
-   
+    <header className="navbar w-screen bg-transparent flex py-6 shadow-md justify-center items-center text-white hover:text-black hover:bg-stone-100">
+      <h1 className="text-lime-700 mx-8 text-4xl lg:text-6xl font-bold">
+        RE<span className="text-rose-600">PAY</span>
+      </h1>
+      <nav className="text-white hover:text-black lg:visible invisible w-full">
+        <ul className="flex justify-around">
+          <div>
+            <Link className="nav-link px-4 font-bold text-xl" to="/">Home</Link>
+            <Link className="nav-link px-4 font-bold text-xl" to="/how-it-works">How it Works</Link>
+          </div>
+          <div className="flex justify-end">
+            {!isAuthenticated && (
+              <>
+                <Link className="nav-button rounded-full px-8 py-3 bg-green-600 mx-2" to="/login">Login</Link>
+                <Link className="nav-button rounded-full px-8 py-3 bg-rose-800 text-white" to="/account">Register</Link>
+              </>
+            )}
+            {isAuthenticated && (
+              <>
+                <LogOut />
+                <Link to="/my-dashboard" className="flex items-center font-bold text-xl nav-link">
+                  <MdDashboard className="mr-2" />
+                  My Dashboard
+                </Link>
+              </>
+            )}
+          </div>
+        </ul>
+      </nav>
+      <div className="w-fit lg:invisible"><SideNav /></div>
     </header>
-  )
+  );
 }
 
-export default NavBar
+export default NavBar;
