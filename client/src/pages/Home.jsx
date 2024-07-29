@@ -17,7 +17,8 @@ function Home() {
     backgroundImage: "url(/bg.jpg)",
   }}
 >
-  <NavBar />
+  <NavBar
+  navStyles="bg-transparent hover:text-black hover:bg-stone-100"/>
   <div className="flex px-4  lg:flex-row items-center  lg:justify-between">
     <div className="flex flex-col items-center lg:items-start lg:w-1/2 justify-center text-center lg:text-left">
       <h1 className="mt-16 leading-loose text-3xl lg:text-5xl text-stone-50 font-bold">
