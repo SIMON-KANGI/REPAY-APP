@@ -19,12 +19,12 @@ import { MdDashboard } from "react-icons/md";
 function NavBar() {
   const isAuthenticated = useAuth(['admin', 'user']);
   return (
-    <header className='w-screen bg-stone-950 flex py-6 shadow-md  justify-around items-center'>
+    <header className='w-screen bg-transparent flex py-6 shadow-md  justify-around items-center'>
     <h1 className='text-lime-700 text-4xl lg:text-3xl font-bold'>RE<span className='text-rose-600'>PAY</span></h1>
     <nav className='text-white lg:visible invisible'>
 <ul className='text-black'>
-    <Link className='px-4 text-stone-200 font-bold text-xl' to="/">Home</Link>
-    <Link className='px-4 text-stone-200 font-bold text-xl' to="/how-it-works">How it Works</Link>
+    <Link className='px-4 text-white font-bold text-xl' to="/">Home</Link>
+    <Link className='px-4 text-white font-bold text-xl' to="/how-it-works">How it Works</Link>
     <Menu>
   <MenuButton as={Button} rightIcon={<FaChevronDown />}>
     Account
