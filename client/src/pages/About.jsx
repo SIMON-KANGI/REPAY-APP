@@ -15,7 +15,9 @@ function About() {
   }, []);
   return (
     <div>
-    <NavBar/>
+    <NavBar
+      navStyles="bg-stone-950 text-white"
+    />
     <section className='bg-stone-950 p-10 text-stone-200'>
       <h1 className=' text-5xl font-bold '>Safely send money to friends and <br/>family, no matter where they bank!1</h1>
       <p className=' text-xl mt-6'>
