@@ -20,7 +20,7 @@ function ContactList() {
     onOpen();
   }, [onOpen]);
 
-  const filteredContacts = contacts?.filter(contact => contact.user_id === user.id);
+  const filteredContacts = contacts?.filter(contact => contact.user_id === user?.id);
 
   return (
     <div className='justify-center items-center'>
