@@ -22,15 +22,16 @@ import MyTransactions from './pages/Dashboard/transactions.jsx/MyTransactions';
 import ErrorBoundary from './ErrorBoundary';
 
 function App() {
-  const { loading, isLoggedIn } = useGlobalContext();
+  const { isLoading, isLoggedIn } = useGlobalContext();
   const user = useSelector(selectUserData);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!loading && !isLoggedIn) {
-  //     navigate('/login');
-  //   }
-  // }, [loading, isLoggedIn, navigate]);
+  useEffect(() => {
+    console.log('isLoading:', isLoading, 'isLoggedIn:', isLoggedIn); // Debugging line
+    if (!isLoading && isLoggedIn) {
+      navigate('/my-dashboard');
+    }
+  }, [isLoading, isLoggedIn, navigate]);
 
   return (
     <ErrorBoundary>
