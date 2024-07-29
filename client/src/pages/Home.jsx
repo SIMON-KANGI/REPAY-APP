@@ -17,7 +17,7 @@ function Home() {
     backgroundImage: "url(/bg.jpg)",
   }}
 >
-<div  className=" bg-gradient-to-r from-stone-950 to-transparent">
+<div  className="h-full bg-gradient-to-r from-stone-950 to-transparent">
   <NavBar
   navStyles="bg-transparent hover:text-black hover:bg-stone-100"/>
   <div className="w-screen flex px-4  lg:flex-row items-center  lg:justify-center">
@@ -50,14 +50,15 @@ function Home() {
      className="w-1/2 items-center h-1/2 lg:w-1/2 flex justify-center mt-8 lg:mt-0">
       <img src="/person.png" alt="person" className=""height="500px" width="500px"   />
     </div>
-  </div> 
-</div>
-
+  </div>  
   <div className='w-screen mt-8 bg-stone-900'>
      <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
              <ReactRotatingText items={['Make Transactions', 'Receive Money', 'Withdraw Money','Pay Online']}/>
           </h2>
   </div>
+</div>
+
+ 
  
 </section>
 
