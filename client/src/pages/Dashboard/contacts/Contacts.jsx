@@ -17,7 +17,7 @@ function Contacts() {
       phone:'',
       email:'',
       account:'',
-      user_id:user.id
+      user_id:user?.id
     }
   )
   const [loading, setLoading] = useState(false);
