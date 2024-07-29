@@ -23,7 +23,7 @@ function NavBar({navStyles}) {
           <div className="flex justify-end">
             {!isAuthenticated && (
               <>
-                <Link className="nav-button rounded-full px-8 py-3 bg-green-600 mx-2" to="/login">Login</Link>
+                <Link className="nav-button rounded-full px-8 py-3  mx-2" to="/login" style={{backgroundColor:'#399918'}}>Login</Link>
                 <Link className="nav-button rounded-full px-8 py-3 bg-rose-800 text-white" to="/account">Register</Link>
               </>
             )}
