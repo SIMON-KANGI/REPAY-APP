@@ -6,11 +6,11 @@ import LogOut from '../pages/authentication/LogOut';
 import { MdDashboard } from "react-icons/md";
 
 
-function NavBar() {
+function NavBar({navStyles}) {
   const isAuthenticated = useAuth(['admin', 'user']);
 
   return (
-    <header className="navbar w-screen bg-transparent flex flex-row py-6 shadow-md justify-center items-center text-white hover:text-black hover:bg-stone-100">
+    <header className={`navbar w-screen  flex flex-row py-6 shadow-md justify-center items-center text-white ${navStyles}` }>
       <h1 className="text-lime-700 mx-8 text-4xl lg:text-5xl font-bold">
         RE<span className="text-rose-600">PAY</span>
       </h1>
