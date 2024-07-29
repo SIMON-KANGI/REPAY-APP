@@ -27,27 +27,28 @@ function Home() {
         Enjoy easy and instant money transactions. Pay your bills faster and secure <br />
         <span className="text-green-600">enjoy free transaction</span> costs across all networks.
       </p>
-      <div className="flex flex-col lg:flex-row justify-center lg:justify-start items-center lg:items-start my-4">
-        <button
-          onClick={() => navigate('/account')}
-          className="bg-gradient-to-r from-stone-600 to-stone-950 my-3 text-slate-200 lg:w-auto w-full font-bold rounded-md lg:rounded-full mx-3 px-20 py-3 transition-transform transform hover:scale-105"
-        >
-          Start Now
-        </button>
-        <button
-          onClick={() => navigate('/login')}
-          className="bg-transparent text-stone-100 lg:rounded-full rounded-md px-20 py-3 border lg:w-auto w-full border-green-600 font-bold transition-transform transform hover:scale-105"
-        >
-          Member Area
-        </button>
-      </div>
+      <div className="flex flex-col lg:flex-row justify-center items-center lg:items-center my-4 space-y-3 lg:space-y-0 lg:space-x-6">
+  <button
+    onClick={() => navigate('/account')}
+    className="bg-gradient-to-r from-stone-600 to-stone-950 text-slate-200 font-bold rounded-md lg:rounded-full px-20 py-3 transition-transform transform hover:scale-105 w-full lg:w-auto"
+  >
+    Start Now
+  </button>
+  <button
+    onClick={() => navigate('/login')}
+    className="bg-transparent text-stone-100 border border-green-600 font-bold rounded-md lg:rounded-full px-20 py-3 transition-transform transform hover:scale-105 w-full lg:w-auto"
+  >
+    Member Area
+  </button>
+</div>
+
     </div>
     <div
      className="w-1/2 items-center h-1/2 lg:w-1/2 flex justify-center mt-8 lg:mt-0">
       <img src="/person.png" alt="person" className=""height="500px" width="500px"   />
     </div>
   </div>
-  <div className='w-screen mt-8 bg-stone-800'>
+  <div className='w-screen mt-8 bg-stone-900'>
      <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
              <ReactRotatingText items={['Make Transactions', 'Receive Money', 'Withdraw Money','Pay Online']}/>
           </h2>
