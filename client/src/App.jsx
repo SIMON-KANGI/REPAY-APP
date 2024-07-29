@@ -26,12 +26,12 @@ function App() {
   const user = useSelector(selectUserData);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log('isLoading:', isLoading, 'isLoggedIn:', isLoggedIn); // Debugging line
-    if (!isLoading && isLoggedIn) {
-      navigate('/my-dashboard');
-    }
-  }, [isLoading, isLoggedIn, navigate]);
+  // useEffect(() => {
+  //   console.log('isLoading:', isLoading, 'isLoggedIn:', isLoggedIn); // Debugging line
+  //   if (!isLoading && isLoggedIn) {
+  //     navigate('/my-dashboard');
+  //   }
+  // }, [isLoading, isLoggedIn, navigate]);
 
   return (
     <ErrorBoundary>
