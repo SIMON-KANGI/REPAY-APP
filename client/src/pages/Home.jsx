@@ -12,7 +12,7 @@ function Home() {
     <div>
   
   <section
-  className=" h-screen bg-cover bg-no-repeat"
+  className=" h-screen mb-5 bg-cover bg-no-repeat"
   style={{
     backgroundImage: "url(/bg.jpg)",
   }}
