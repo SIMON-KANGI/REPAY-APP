@@ -28,7 +28,7 @@ const Partners = () => {
       <RotatingLogos duration={60}>
         {logos.map((logo, index) => (
           
-          <img src={logo} key={index} width="100px" height="100px" alt={`Partner ${index + 1}`} className="rounded-full mx-3" />
+          <img src={logo} key={index} width="90px" height="90px" alt={`Partner ${index + 1}`} className="rounded-full bg-stone-200 mx-3" />
         ))}
       </RotatingLogos>
     </div>
