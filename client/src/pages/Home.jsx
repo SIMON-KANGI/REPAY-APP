@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import NavBar from '../components/NavBar'
 import Cards from './Cards'
 import { useNavigate } from 'react-router-dom'
@@ -6,8 +6,17 @@ import ReactRotatingText from 'react-rotating-text';
 import FAQ from '../components/Faq';
 import Footer from '../components/Footer';
 import SideNav from '../components/SideNav';
+import AOS from 'aos';
+import Partners from '../components/Partners';
 function Home() {
   const navigate = useNavigate();
+  useEffect(() => {
+    AOS.init({
+      duration: 500,
+      easing: 'ease-in-out',
+      once: false
+    });
+  }, []);
   return (
     <div>
   
@@ -47,14 +56,19 @@ function Home() {
 
     </div>
     <div
-     className="w-1/2 items-center h-1/2 lg:w-1/2 flex justify-center mt-8 lg:mt-0">
+     className="w-1/2 items-center h-1/2 lg:w-1/2 flex justify-center mt-8 lg:mt-0" data-aos="fade-left">
       <img src="/person.png" alt="person" className=""height="500px" width="500px"   />
     </div>
   </div>  
-  <div className='w-screen mt-8 bg-stone-900'>
-     <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
+  <div className='w-screen h-fit mt-8 bg-stone-900'>
+     {/* <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
              <ReactRotatingText items={['Make Transactions', 'Receive Money', 'Withdraw Money','Pay Online']}/>
-          </h2>
+             
+          </h2> */}
+          
+              <Partners/>
+            
+          
   </div>
 </div>
 
