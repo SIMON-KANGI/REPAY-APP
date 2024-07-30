@@ -13,7 +13,10 @@
     color:rgb(112, 175, 49)
 }
 .navbar {
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.5s ease-in-out;
+    position: sticky;
+  top: 0;
+  z-index: 1000;
   }
   
   .navbar:hover {
@@ -35,3 +38,29 @@
   .nav-button:hover {
     transform: scale(1.05); /* Add a scale effect when the button is hovered */
   }
+  .navbar-glassmorphism {
+    background: rgba(30, 30, 30, 0.45);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(30, 30, 30, 0.225);
+  }
+  .rotating-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+    width: 100%;
+  }
+  
+  .rotating-content {
+    display: flex;
+    gap: 20px; 
+  }
+  
+ 
+  .scrolling-content {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  
