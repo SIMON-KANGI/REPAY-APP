@@ -14,14 +14,7 @@ const RotatingLogos = ({ children, duration }) => {
         {children} 
         {children}
         {children}
-        {children} 
-        {children}
-        {children}
-        {children} 
-        {children}
-        {children}
-        {children} 
-        {children} {/* Duplicating children for seamless scrolling */}
+         {/* Duplicating children for seamless scrolling */}
       </motion.div>
     </div>
   );
