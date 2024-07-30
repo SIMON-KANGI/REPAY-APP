@@ -11,6 +11,16 @@ const RotatingLogos = ({ children, duration }) => {
         transition={{ repeat: Infinity, duration, ease: 'linear' }}
       >
         {children}
+        {children} 
+        {children}
+        {children}
+        {children} 
+        {children}
+        {children}
+        {children} 
+        {children}
+        {children}
+        {children} 
         {children} {/* Duplicating children for seamless scrolling */}
       </motion.div>
     </div>
