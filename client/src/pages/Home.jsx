@@ -60,7 +60,7 @@ function Home() {
       <img src="/person.png" alt="person" className=""height="500px" width="500px"   />
     </div>
   </div>  
-  <div className='w-screen h-fit mt-8 bg-stone-900'>
+  <div className='w-screen h-fit mt-8 bg-stone-100'>
      {/* <h2 className="lg:text-4xl  text-center   text-xl py-6 text-primary font-semibold text-rose-600">
              <ReactRotatingText items={['Make Transactions', 'Receive Money', 'Withdraw Money','Pay Online']}/>
              
