@@ -22,7 +22,7 @@
     "dotenv": "^16.4.5",
     "dotenv-webpack": "^8.1.0",
     "formik": "^2.4.6",
-    "framer-motion": "^11.2.10",
+    "framer-motion": "^11.3.19",
     "gapi-script": "^1.2.0",
     "lucide-react": "^0.390.0",
     "pdfjs-dist": "^4.3.136",
