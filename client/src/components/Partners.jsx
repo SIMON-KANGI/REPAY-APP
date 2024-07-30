@@ -25,7 +25,7 @@ const Partners = () => {
 
   return (
     <div className="partners flex">
-      <RotatingLogos duration={60}>
+      <RotatingLogos duration={90}>
         {logos.map((logo, index) => (
           <div className="p-8 bg-stone-300 m-2 rounded-md items-center justify-center" key={index}>
             <img  src={logo} alt={`Partner ${index + 1}`} className="logo p-3 rounded-full" />
