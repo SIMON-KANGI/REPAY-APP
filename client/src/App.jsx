@@ -34,8 +34,9 @@ function App() {
   // }, [isLoading, isLoggedIn, navigate]);
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary> 
       <main className="bg-sky-950 h-full" id="main">
+     
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/how-it-works" element={<About />} />
