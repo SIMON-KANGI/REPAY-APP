@@ -14,7 +14,7 @@ function Cards() {
         });
       }, []);
   return (
-    <div className='my-4'>
+    <div className='my-16'>
        <Box className='lg:flex justify-center' data-aos='fade-up'>
 
       <Card background={'stone.800'} margin={'1rem'}textColor={'white'}>
