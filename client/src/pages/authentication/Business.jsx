@@ -115,7 +115,9 @@ function Business() {
 
   return (
     <section>
-    <NavBar/>
+    <NavBar
+        navStyles="bg-black hover:text-black hover:bg-stone-100"
+      />
        <div className='flex justify-center my-8 text-stone-900'>
       <Formik
         initialValues={initialValues}
