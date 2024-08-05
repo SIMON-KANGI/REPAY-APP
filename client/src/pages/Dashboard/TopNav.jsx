@@ -9,7 +9,7 @@ import { Badge } from '@chakra-ui/react'
 function TopNav() {
     const user = useSelector(selectUserData);
     const [currentTime, setCurrentTime] = useState(new Date());
-    const { data:notifications, loading, error } = useFetch('https://repay-app.onrender.com/notifications');
+    const { data:notifications, loading, error } = useFetch('http://127.0.0.1:5555/notifications');
 
     useEffect(() => {
         const timer = setInterval(() => {
