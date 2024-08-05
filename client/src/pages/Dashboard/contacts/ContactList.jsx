@@ -8,7 +8,7 @@ import SendMoney from './SendMoney';
 import { useDisclosure } from '@chakra-ui/react';
 import useFetch from '../../../hooks/UseFetch';
 function ContactList() {
-  const { data:contacts, loading, error } = useFetch('https://repay-app.onrender.com/contacts');
+  const { data:contacts, loading, error } = useFetch('http://127.0.0.1:5555/contacts');
   const { onOpen, isOpen, onClose } = useDisclosure();
   const [selectedContact, setSelectedContact] = useState(null);
   const user = useSelector(selectUserData);
