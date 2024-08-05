@@ -9,7 +9,7 @@ import { useToast } from '@chakra-ui/react';
 function CreateAccount() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const user = useSelector(selectUserData);
-  const { data: categories, loading, error } = useFetch('https://repay-app.onrender.com/categories');
+  const { data: categories, loading, error } = useFetch('http://127.0.0.1:5555/categories');
   const toast=useToast()
   const [formData, setFormData] = useState({
     category: '',
@@ -25,7 +25,7 @@ function CreateAccount() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    axios.post('https://repay-app.onrender.com/accounts', formData)
+    axios.post('http://127.0.0.1:5555/accounts', formData)
       .then(res => {
         console.log(res.data);
         onClose();
