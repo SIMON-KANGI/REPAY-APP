@@ -301,4 +301,8 @@ class Product(db.Model):
             'profile': self.profile,
             'category': self.category
         }
+        
+class Message(db.Model):
+    __tablename__ ='messages'
+    
     

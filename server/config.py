@@ -16,12 +16,13 @@ bcrypt = Bcrypt()
 def create_app():
     app = Flask(__name__)
     CORS(app, supports_credentials=True)
+    # resources={r"/*": {"origins": "http://localhost:8081"}}
     
     app.config['SECRET_KEY'] = 'v3DqpM9dN_IhDaD0zNrPybgwgoF5zQnx0NNPXZfZvVQ' # secret key
     app.config['JWT_SECRET_KEY'] = '1TZTcxUSuWa_D1afcqD4c9soQdR3ogR3BkPT9vZFUxY' # secret key
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 600
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", 'sqlite:///repay.db')
-    print("Database URI:", app.config["SQLALCHEMY_DATABASE_URI"])
+    # print("Database URI:", app.config["SQLALCHEMY_DATABASE_URI"])
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     
     jwt = JWTManager(app)  # create a JWT token
