@@ -7,7 +7,7 @@ import useFetch from '../../../hooks/UseFetch';
 function SendMoney({ onClose, isOpen, contact }) {
   const user = useSelector(selectUserData);
 const toast=useToast()
-  const { data: accounts, loading, error } = useFetch('https://repay-app.onrender.com/accounts');
+  const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/account/accounts');
   const [formData, setFormData] = useState({
     account_name:'',
     amount: '',
@@ -31,7 +31,7 @@ const toast=useToast()
     !error;
 
     try {
-      const response = await axios.post('https://repay-app.onrender.com/transactions', formData, {
+      const response = await axios.post('http://127.0.0.1:5555/transaction/transactions', formData, {
         headers: {
           'Content-Type': 'application/json'
         }
@@ -47,7 +47,7 @@ const toast=useToast()
       });
       if(response.ok){
         toast({
-          title: `Trabsaction  Successfull`,
+          title: `Transaction  Successfull`,
           position: "top-center",
           status: "info",
           isClosable: true,
