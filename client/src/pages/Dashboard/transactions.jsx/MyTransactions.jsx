@@ -5,7 +5,7 @@ import useFetch from '../../../hooks/UseFetch'
 import { useSelector } from 'react-redux'
 import { selectUserData } from '../../../features/auth/Authslice'
 function MyTransactions() {
-    const {data:transactions, loading}= useFetch('https://repay-app.onrender.com/transactions')
+    const {data:transactions, loading}= useFetch('http://127.0.0.1:5555/transaction/transactions')
     const user = useSelector(selectUserData);
     const filterTransactions=transactions.filter(transaction=>transaction.user_id==user.id)
 
