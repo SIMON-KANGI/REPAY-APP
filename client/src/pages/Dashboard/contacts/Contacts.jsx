@@ -34,7 +34,7 @@ function Contacts() {
 event.preventDefault();
     setLoading(true);
     try{
-          axios.post('https://repay-app.onrender.com/contacts', formData)
+          axios.post('http://127.0.0.1:5555/contacts', formData)
           .then(res=>{
             console.log(res.data);
             setLoading(false);
