@@ -29,7 +29,7 @@ function EditUser() {
     useEffect(() => {
         const fetchLocations = async () => {
             try {
-                const response = await axios.get('https://repay-app.onrender.com/locations');
+                const response = await axios.get('http://127.0.0.1:5555/locations');
                 setLocations(response.data);
             } catch (error) {
                 console.error("Error fetching locations:", error);
@@ -75,7 +75,7 @@ function EditUser() {
         if (file) formData.append('file', file);
 
         try {
-            const response = await axios.put(`https://repay-app.onrender.com/users/${user.id}`, formData, {
+            const response = await axios.put(`http://127.0.0.1:5555/users/${user.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
