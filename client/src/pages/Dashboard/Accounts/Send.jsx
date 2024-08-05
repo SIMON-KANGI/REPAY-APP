@@ -10,7 +10,7 @@ import { useToast } from '@chakra-ui/react';
 function Send() {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [values, setValues] = useState([]);
-    const { data: accounts, loading, error } = useFetch('https://repay-app.onrender.com/accounts');
+    const { data: accounts, loading, error } = useFetch('http://127.0.0.1:5555/account/accounts');
     const toast = useToast();
     const user = useSelector(selectUserData);
     const [formData, setFormData] = useState({
@@ -36,7 +36,7 @@ function Send() {
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('https://repay-app.onrender.com/transactions', formData, {
+            const response = await axios.post('http://127.0.0.1:5555/transaction/transactions', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
