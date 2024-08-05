@@ -21,7 +21,7 @@ const LoginGoogle = () => {
         const {email,name,googleId, imageUrl}= response.profileObj
         try {
           // const { access_token } = response;
-          const res = await axios.post('https://repay-app.onrender.com/login/authorized',{token:access_token});
+          const res = await axios.post('http://127.0.0.1:5555/auth/login/authorized',{token:access_token});
   
           const { data } = res;
           const { access_token: access_token, refresh_token, user } = data;
@@ -59,7 +59,7 @@ const LoginGoogle = () => {
   
     return (
         <div className="block w-full mt-4 relative p-4">
-            <button onClick={() => googleLogin()} className=" py-3 flex justify-center w-96 text-center text-stone-900 border border-gray-700 rounded-md">
+            <button onClick={() => googleLogin()} className=" py-3 flex justify-center shadow-sm w-96 text-center bg-stone-100 text-stone-900 border border-gray-700 rounded-md">
             <FcGoogle fontSize={'1.3rem'}/>
         Sign with Google
       
