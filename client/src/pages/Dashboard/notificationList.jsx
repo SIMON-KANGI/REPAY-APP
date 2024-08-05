@@ -6,10 +6,10 @@ import axios from 'axios';
 import { selectUserData } from '../../features/auth/Authslice';
 import { useSelector } from'react-redux';
 function NotificationList() {
-  const { data: notifications, loading, error, reFetch } = useFetch('https://repay-app.onrender.com/notifications');
+  const { data: notifications, loading, error, reFetch } = useFetch('http://127.0.0.1:5555/notifications');
 const user=useSelector(selectUserData)
   function handleDelete(id) {
-    axios.delete(`https://repay-app.onrender.com/notifications/${id}`)
+    axios.delete(`http://127.0.0.1:5555/notifications/${id}`)
       .then(() => {
         reFetch(); // Refresh the notifications list after deletion
       })
