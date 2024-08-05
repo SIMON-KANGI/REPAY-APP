@@ -9,10 +9,11 @@ import { RiFolderReceivedFill } from "react-icons/ri";
 import { MdAccountBalanceWallet, MdContacts } from "react-icons/md";
 import { IoIosSend } from "react-icons/io";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
+import CalculateBalance from '../../components/CalculateBalance';
 
 function Dashboard() {
-  const { data: transactions } = useFetch('https://repay-app.onrender.com/transactions');
-  const { data: users } = useFetch('https://repay-app.onrender.com/users');
+  const { data: transactions } = useFetch('http://127.0.0.1:5555/transaction/transactions');
+  const { data: users } = useFetch('http://127.0.0.1:5555/users');
   const user = useSelector(selectUserData);
   const filteredTransactions = transactions?.filter(transaction => transaction.user_id === user?.id) || [];
 
@@ -75,7 +76,7 @@ function Dashboard() {
               Total Balance
             </h1>
             <div>
-              <h1 className='text-4xl font-extrabold'>700,000</h1>
+              <CalculateBalance/>
               <p><span className='text-emerald-600'>+20000 </span>from last week</p>
             </div>
           </CardBody>
