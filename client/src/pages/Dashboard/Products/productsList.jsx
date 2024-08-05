@@ -23,7 +23,7 @@ function ProductsList({ products, onClose, onOpen, isOpen }) {
   const handleUpdate = async (updatedProduct) => {
     try {
       setSubmitting(true);
-      const result = await axios.patch(`https://repay-app.onrender.com/products/${updatedProduct.id}`, updatedProduct);
+      const result = await axios.patch(`http://127.0.0.1:5555/products/${updatedProduct.id}`, updatedProduct);
       if (result.status === 200) {
         setSubmitting(false);
         setProductsList(productsList.map(product => product.id === updatedProduct.id ? updatedProduct : product));
@@ -35,7 +35,7 @@ function ProductsList({ products, onClose, onOpen, isOpen }) {
 
   const handleDelete = useCallback(async (id) => {
     try {
-      const response = await axios.delete(`https://repay-app.onrender.com/products/${id}`);
+      const response = await axios.delete(`http://127.0.0.1:5555/products/${id}`);
       if (response.status === 200) {
         console.log('Product deleted successfully');
         setProductsList(productsList.filter(p => p.id !== id));
