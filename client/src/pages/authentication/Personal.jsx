@@ -21,7 +21,7 @@ function Personal() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get('https://repay-app.onrender.com/locations');
+        const response = await axios.get('http://127.0.0.1:5555/locations');
         setLocations(response.data);
       } catch (error) {
         console.error("Error fetching locations:", error);
@@ -76,7 +76,7 @@ function Personal() {
         })
       }
 
-      const response = await axios.post('https://repay-app.onrender.com/users', formData);
+      const response = await axios.post('http://127.0.0.1:5555/user/users', formData);
       setLoading(true)
 
       if (response.status !== 200) {
@@ -117,7 +117,9 @@ function Personal() {
 
   return (
     <section>
-      <NavBar/>
+      <NavBar
+        navStyles="bg-black hover:text-black hover:bg-stone-100"
+      />
       <div className='flex justify-center my-8 text-stone-900'>
         <Formik
           initialValues={initialValues}
