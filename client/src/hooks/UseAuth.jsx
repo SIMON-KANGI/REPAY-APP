@@ -6,8 +6,8 @@ const useAuth = (allowedRoles) => {
   const user = useSelector(selectUserData);
   if (!user) return false; // Not authenticated
 
-  const { role } = user;
-  return allowedRoles.includes(role);
+  const { role} = user;
+  return allowedRoles.includes(role) 
 };
 
 export default useAuth;
