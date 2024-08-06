@@ -21,7 +21,9 @@ const LoginGoogle = () => {
         const {email,name,googleId, imageUrl}= response.profileObj
         try {
           // const { access_token } = response;
-          const res = await axios.post('http://127.0.0.1:5555/auth/login/authorized',{token:access_token});
+          const res = await axios.post('http://127.0.0.1:5555/auth/login/authorized',{
+            headers: { Authorization: `Bearer ${access_token}` },
+          });
   
           const { data } = res;
           const { access_token: access_token, refresh_token, user } = data;
