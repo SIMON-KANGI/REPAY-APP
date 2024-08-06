@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import NavBar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import { useToast, Spinner } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 function Business() {
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Business() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await axios.get('https://repay-app.onrender.com/locations');
+        const response = await axios.get('http://127.0.0.1:5555/locations');
         setLocations(response.data);
       } catch (error) {
         console.error("Error fetching locations:", error);
@@ -68,7 +69,7 @@ function Business() {
         return toast.error('File is required');
       }
 
-      const response = await axios.post('https://repay-app.onrender.com/users', formData);
+      const response = await axios.post('http://127.0.0.1:5555/user/users', formData);
       setLoading(true)
       
       if (response.status !== 200) {
@@ -118,20 +119,25 @@ function Business() {
     <NavBar
         navStyles="bg-black hover:text-black hover:bg-stone-100"
       />
-       <div className='flex justify-center my-8 text-stone-900'>
+      <section className='flex w-full'>
+     
+      <div className="lg:w-1/2 w-0 lg:flex lg:flex-col justify-center items-center overflow-hidden">
+                {/* <Link to='/' className='text-green-700 text-4xl font-bold'>RE<span className='text-rose-600'>PAY</span></Link> */}
+                <img src="/Money-Transfer.png" alt="placeholder" className="w-full max-h-full object-cover" />
+            </div>
+      
+        <div className='flex justify-center my-8 text-stone-900 w-1/2'>
       <Formik
         initialValues={initialValues}
         validationSchema={formSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
-          <Form className='border border-slate-600 p-4 lg:w-1/2 w-full'>
+          <Form className=' border-slate-600 shadow-lg p-8 lg:w-fit w-full'>
             <div>
              <h1 className='text-center text-2xl font-bold'>Business Account</h1>
             </div>
-
-            
-      <div className="flex p-4 border-dotted border-2 relative rounded-full border-stone-800 my-3 justify-center items-center h-40 w-40 overflow-hidden">
+<div className="flex p-4 border-dotted border-2 relative rounded-full border-stone-800 my-3 justify-center items-center h-40 w-40 overflow-hidden">
         <label className="drop-area cursor-pointer w-full h-full flex justify-center items-center">
           <input
             type="file"
@@ -154,20 +160,24 @@ function Business() {
         
         </label>
       </div>
+        <div className='flex'>
+ 
 
             <div className="flex flex-col w-full relative p-4">
               <label className='font-bold'>Full Name</label>
               <Field name="username" placeholder="Full Name" className="w-full  p-2  rounded-md border-gray-700 border" />
               <ErrorMessage name="username" component="div" className="text-red-600" />
-            </div>
-
+            </div> 
             <div className="flex flex-col w-full  relative p-4">
               <label className='font-bold'>Email</label>
               <Field type="email" name="email" placeholder="Email" className="w-full p-2  rounded-md border-gray-700 border" />
               <ErrorMessage name="email" component="div" className="text-red-600" />
             </div>
 
-            <div className="flex flex-col w-full font-bold  relative p-4">
+        </div>    
+     
+<div className='flex'>
+ <div className="flex flex-col w-full font-bold  relative p-4">
               <label className='font-bold'>Phone Number</label>
               <Field type="text" name="phone" placeholder="phone number" className="w-full p-2 rounded-md border-gray-700 border" />
               <ErrorMessage name="phone" component="div" className="text-red-600" />
@@ -183,6 +193,9 @@ function Business() {
               </Field>
               <ErrorMessage name="location" component="div" className="text-red-600" />
             </div>
+</div>
+           
+           
 
             <div className="flex flex-col w-full relative p-4">
               <label className='font-bold'>Password</label>
@@ -204,6 +217,8 @@ function Business() {
         )}
       </Formik>
     </div>
+      </section>
+       
     <Footer/>
     </section>
    
