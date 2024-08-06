@@ -12,17 +12,19 @@ import { IoMdSettings } from 'react-icons/io';
 import { LiaFileInvoiceSolid } from 'react-icons/lia';
 import { selectUserData } from '../../features/auth/Authslice';
 import { MdOutlineProductionQuantityLimits } from "react-icons/md"
+import { FaShop } from "react-icons/fa6";
 import LogOut from '../authentication/LogOut';
 import Send from './Accounts/Send';
 import Withdraw from './Accounts/Withdraw';
 import EditUser from '../Details/EditUser';
 import Balance from './Accounts/Balance';
 import useFetch from '../../hooks/UseFetch';
-
+ import useAuth from '../../hooks/UseAuth';
 
 function SideBar() {
   const user = useSelector(selectUserData);
   const [isCollapsed, setCollapsed] = useState(false);
+ const isBusiness= useAuth('Business')
   const {data:invoices}= useFetch('http://127.0.0.1:5555/invoices')
   const {data:notifications}= useFetch('http://127.0.0.1:5555/notifications')
   const {data:contacts}= useFetch('http://127.0.0.1:5555/contacts')
@@ -137,7 +139,7 @@ function SideBar() {
             <span className='rounded-full text-md text-center w-6 h-6 items-center bg-orange-600 mx-8'>{filteredContacts?.length}</span>
           </Link>
         </div>
-        <div className='mt-4 ml-3'>
+        {user.account_type==="Business" && <div className='mt-4 ml-3'>
           <Link to="/invoices" className='text-xl flex justify-between items-center mb-3 font-bold'>
           <div className='flex items-center'>
             <LiaFileInvoiceSolid className='mr-2' />
@@ -150,7 +152,8 @@ function SideBar() {
             
             <span className='rounded-full text-center text-sm w-6 h-6 items-center bg-orange-600 mx-8'>{filteredInvoices?.length}</span>
           </Link>
-        </div>
+        </div>}
+       
         <div className='mt-4 ml-3'>
           <Link to="/notifications" className='text-xl flex items-center mb-3 font-bold'>
             <IoIosNotifications className='mr-2' />
@@ -160,7 +163,7 @@ function SideBar() {
             <span className='rounded-full text-center text-sm w-6 h-6 items-center bg-orange-600 mx-8'>{filteredNotifications?.length}</span>
           </Link>
         </div>
-        <div className='mt-4 ml-3'>
+        {user.account_type==="Business" &&   <div className='mt-4 ml-3'>
           <Link to="/my-products" className='text-xl flex items-center mb-3 font-bold'>
             <MdOutlineProductionQuantityLimits className='mr-2' />
             <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
@@ -168,7 +171,16 @@ function SideBar() {
             Products</span>
             <span className='rounded-full text-sm text-center w-6 h-6 items-center bg-orange-600 mx-8'>{filteredProducts?.length}</span>
           </Link>
-        </div>
+        </div>}
+        {user.account_type==="Business" &&   <div className='mt-4 ml-3'>
+          <Link to="/my-shop" className='text-xl flex items-center mb-3 font-bold'>
+            <FaShop className='mr-2' />
+            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
+            
+            My Shop</span>
+            <span className='rounded-full text-sm text-center w-6 h-6 items-center bg-orange-600 mx-8'>{filteredProducts?.length}</span>
+          </Link>
+        </div>}
         <div className='mt-4 ml-3'>
           <Link to="/" className='text-xl flex items-center mb-3 font-bold'>
             <FaHome className='mr-2' />
