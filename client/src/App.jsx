@@ -20,7 +20,7 @@ import Contacts from './pages/Dashboard/contacts/Contacts';
 import Products from './pages/Dashboard/Products/Products';
 import MyTransactions from './pages/Dashboard/transactions.jsx/MyTransactions';
 import ErrorBoundary from './ErrorBoundary';
-
+import MyShop from './pages/shop';
 function App() {
   const { isLoading, isLoggedIn } = useGlobalContext();
   const user = useSelector(selectUserData);
@@ -56,6 +56,7 @@ function App() {
           <Route path="/my-dashboard/notifications" element={<Notifications />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/my-products" element={<Products />} />
+          <Route path="/my-shop" element={<MyShop/>} />
           <Route path={`/user/${user?.username}`} element={<User />} />
           <Route path="*" element={<h1>404</h1>} />
         </Routes>
