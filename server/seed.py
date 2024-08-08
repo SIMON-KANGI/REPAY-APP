@@ -62,23 +62,23 @@ with app.app_context():
     db.session.commit()
     
     
-    messages=[
-        Message(body='Hello, how are you?', status="sent", ownerId=1, senderId=2),
-        Message(body='Hello baby.',status="sent", ownerId=2, senderId=1),
-        Message(body='Uko wapi?',status="pending", ownerId=1, senderId=3),
-        Message(body='Ntakam around 10pm.', status="sent", ownerId=3, senderId=1)
-    ]
-    for message in messages:
-        db.session.add(message)
-    db.session.commit()
+    # messages=[
+    #     Message(body='Hello, how are you?', status="sent", ownerId=1, senderId=2),
+    #     Message(body='Hello baby.',status="sent", ownerId=2, senderId=1),
+    #     Message(body='Uko wapi?',status="pending", ownerId=1, senderId=3),
+    #     Message(body='Ntakam around 10pm.', status="sent", ownerId=3, senderId=1)
+    # ]
+    # for message in messages:
+    #     db.session.add(message)
+    # db.session.commit()
         
-    replies=[
-        Reply(body='Hello, im good.',status="sent", ownerId=2, senderId=1, message_id=1),
-        Reply(body='Hello, im good too.', status="sent", ownerId=1, senderId=2, message_id=1),
-        Reply(body='Niko kasa?', ownerId=3, status="pending", senderId=1, message_id=3),
-        Reply(body='Sawa utanishw ukifika.', status="sent", ownerId=1, senderId=3, message_id=4)
-    ]
-    for reply in replies:
-        db.session.add(reply)
-    db.session.commit()
+    # replies=[
+    #     Reply(body='Hello, im good.',status="sent", ownerId=2, senderId=1, message_id=1),
+    #     Reply(body='Hello, im good too.', status="sent", ownerId=1, senderId=2, message_id=1),
+    #     Reply(body='Niko kasa?', ownerId=3, status="pending", senderId=1, message_id=3),
+    #     Reply(body='Sawa utanishw ukifika.', status="sent", ownerId=1, senderId=3, message_id=4)
+    # ]
+    # for reply in replies:
+    #     db.session.add(reply)
+    # db.session.commit()
     print("Setup complete.")
