@@ -163,6 +163,15 @@ function SideBar() {
             <span className='rounded-full text-center text-sm w-6 h-6 items-center bg-orange-600 mx-8'>{filteredNotifications?.length}</span>
           </Link>
         </div>
+        <div className='mt-4 ml-3'>
+          <Link to="/inbox" className='text-xl flex items-center mb-3 font-bold'>
+            <IoIosNotifications className='mr-2' />
+            <span className={`${isCollapsed ? 'hidden' : 'block'}`}>
+            
+            Inbox</span>
+            <span className='rounded-full text-center text-sm w-6 h-6 items-center bg-orange-600 mx-8'>{filteredNotifications?.length}</span>
+          </Link>
+        </div>
         {user.account_type==="Business" &&   <div className='mt-4 ml-3'>
           <Link to="/my-products" className='text-xl flex items-center mb-3 font-bold'>
             <MdOutlineProductionQuantityLimits className='mr-2' />
