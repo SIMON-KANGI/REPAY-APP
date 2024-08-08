@@ -1,6 +1,6 @@
 import { Modal, ModalCloseButton, ModalContent,ModalHeader, ModalBody, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import React from 'react'
-
+import { addMessage } from '../../features/messages/messageSlice'
 function CreateMessage({handleChange, handleSubmit, formData}) {
     const {onClose, isOpen, onOpen} = useDisclosure()
   return (
@@ -22,7 +22,7 @@ function CreateMessage({handleChange, handleSubmit, formData}) {
               <textarea type='text' name="message" onChange={handleChange} value={formData.message} placeholder='Enter your message' className='border-2 rounded-md p-4'/>
            </div>
            
-              <button type='submit' className='w-full py-3 justify-center rounded-md text-white text-xl items-center bg-green-700 my-3'>Send</button>
+              <button type='submit' onClick={onClose} className='w-full py-3 justify-center rounded-md text-white text-xl items-center bg-green-700 my-3'>Send</button>
             </form>
           </ModalBody>
         </ModalContent>
