@@ -7,16 +7,20 @@ import App from './src/App.jsx';
 import './src/index.css';
 import Chakra from './src/theme/useTheme.jsx';
 import GlobalProvider from './src/context/GlobalProvider.jsx';
+import MessageProvider from './src/context/messageContext.jsx';
 
 const Root = () => {
   return (
     <Provider store={store}>
       <GlobalProvider>
+      <MessageProvider>
         <Chakra>
           <BrowserRouter>
             <App />
           </BrowserRouter>
         </Chakra>
+      </MessageProvider>
+        
       </GlobalProvider>
     </Provider>
   );
