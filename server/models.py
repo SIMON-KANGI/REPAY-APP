@@ -1,7 +1,8 @@
 from config import db, bcrypt
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
-
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     serialize_rules = ()
@@ -13,16 +14,18 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(255), nullable=False, unique=True)
     phone = db.Column(db.Integer, nullable=False, unique=True)
     location_id = db.Column(db.Integer, nullable=False)
-    _password = db.Column(db.String(255), nullable=False)  # Changed column name to _password
+    _password = db.Column(db.String(255), nullable=False)
     is_active = db.Column(db.Boolean, default=True)
-    subscribed=db.Column(db.Boolean, default=False)
+    subscribed = db.Column(db.Boolean, default=False)
     role = db.Column(db.String(255), nullable=False)
     account_type = db.Column(db.String(255), nullable=False)
-    accounts = db.relationship('Account', back_populates='users' ,cascade="all, delete-orphan")
+    accounts = db.relationship('Account', back_populates='users', cascade="all, delete-orphan")
     contacts = db.relationship('Contact', back_populates='users', cascade="all, delete-orphan")
     notifications = db.relationship('Notification', back_populates='users', cascade="all, delete-orphan")
-    invoices=db.relationship('Invoice', back_populates='users', cascade="all, delete-orphan")
-    products = db.relationship('Product', back_populates='users' ,cascade="all, delete-orphan")
+    invoices = db.relationship('Invoice', back_populates='users', cascade="all, delete-orphan")
+    products = db.relationship('Product', back_populates='users', cascade="all, delete-orphan")
+    messages = db.relationship('Message', foreign_keys='Message.ownerId', back_populates='owner', cascade="all, delete-orphan")
+    sent_messages = db.relationship('Message', foreign_keys='Message.senderId', back_populates='sender', cascade="all, delete-orphan")
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     @validates('email')
@@ -55,21 +58,22 @@ class User(db.Model, SerializerMixin):
         return bcrypt.check_password_hash(self._password, password)
 
     def to_dict(self):
-        location=Location.query.filter(self.location_id==Location.id).first()
+        location = Location.query.filter(self.location_id == Location.id).first()
         
         return {
             'id': self.id,
             'username': self.username,
             'email': self.email,
             'role': self.role,
-            'password':self.password,
+            'password': self.password,
             'account_type': self.account_type,
             'phone': self.phone,
             'profile': self.profile,
-            'location':location.name,
+            'location': location.name if location else None,
             'notifications': [{'id': message.id, 'message': message.message} for message in self.notifications],
-            'accounts': [{'id': account.id,'number': account.number, 'balance': account.balance} for account in self.accounts],
-            'contacts': [{'id': contact.id, 'name': contact.name, 'phone': contact.phone} for contact in self.contacts]
+            'accounts': [{'id': account.id, 'number': account.number, 'balance': account.balance} for account in self.accounts],
+            'contacts': [{'id': contact.id, 'name': contact.name, 'phone': contact.phone} for contact in self.contacts],
+            'messages': [{'id': message.id, 'body': message.body} for message in self.messages]
         }
 
 class Account(db.Model, SerializerMixin):
@@ -302,7 +306,79 @@ class Product(db.Model):
             'category': self.category
         }
         
-class Message(db.Model):
-    __tablename__ ='messages'
-    
-    
+
+from datetime import datetime, timedelta
+
+class Message(db.Model, SerializerMixin):
+    __tablename__ = 'messages'
+    serialize_rules = ()
+    serialize_only = {'body', 'ownerId', 'senderId'}
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(1000), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    senderId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    replies = db.relationship('Reply', back_populates='message', cascade="all, delete-orphan")
+    owner = db.relationship('User', foreign_keys=[ownerId], back_populates='messages')
+    sender = db.relationship('User', foreign_keys=[senderId], back_populates='sent_messages')
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    def to_dict(self):
+        sender = User.query.filter(self.senderId == User.id).first()
+        receiver = User.query.filter(User.id == self.ownerId).first()
+        return {
+            'id': self.id,
+            'body': self.body,
+            'ownerId': self.ownerId,
+            'senderId': self.senderId,
+            'senderName': sender.username,
+            'receiverName': receiver.username,
+            'profile': receiver.profile,
+            'date': self.human_readable_date(self.created_at),
+            'replies': [reply.to_dict() for reply in self.replies],
+        }
+
+    def human_readable_date(self, date):
+        now = datetime.now()
+        if date.date() == now.date():
+            return f"Today at {date.strftime('%I:%M %p')}"
+        elif date.date() == (now - timedelta(days=1)).date():
+            return f"Yesterday at {date.strftime('%I:%M %p')}"
+        else:
+            return date.strftime("%A at %I:%M %p")  # Returns the day of the week and time
+
+class Reply(db.Model, SerializerMixin):
+    __tablename__ = 'replies'
+    serialize_rules = ()
+    serialize_only = {'id', 'body', 'ownerId', 'senderId', 'message_id'}
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.String(1000), nullable=False)
+    ownerId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    senderId = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    status = db.Column(db.String(20), nullable=False)
+    message_id = db.Column(db.Integer, db.ForeignKey('messages.id'), nullable=False)
+    message = db.relationship('Message', back_populates='replies')
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    def to_dict(self):
+        sender = User.query.filter(self.senderId == User.id).first()
+        receiver = User.query.filter(User.id == self.ownerId).first()
+        return {
+            'id': self.id,
+            'body': self.body,
+            'ownerId': self.ownerId,
+            'senderId': self.senderId,
+            'senderName': sender.username,
+            'receiverName': receiver.username,
+            'date': self.human_readable_date(self.created_at),
+            'message_id': self.message_id,
+        }
+
+    def human_readable_date(self, date):
+        now = datetime.now()
+        if date.date() == now.date():
+            return f"Today at {date.strftime('%I:%M %p')}"
+        elif date.date() == (now - timedelta(days=1)).date():
+            return f"Yesterday at {date.strftime('%I:%M %p')}"
+        else:
+            return date.strftime("%A at %I:%M %p")  # Returns the day of the week and time
