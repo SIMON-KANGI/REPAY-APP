@@ -21,6 +21,8 @@ import Products from './pages/Dashboard/Products/Products';
 import MyTransactions from './pages/Dashboard/transactions.jsx/MyTransactions';
 import ErrorBoundary from './ErrorBoundary';
 import MyShop from './pages/shop';
+import Messages from './pages/message';
+import MessageDetails from './pages/message/messageDetails';
 function App() {
   const { isLoading, isLoggedIn } = useGlobalContext();
   const user = useSelector(selectUserData);
@@ -54,6 +56,8 @@ function App() {
           <Route path="/account" element={<AccountType />} />
           <Route path="/accounts/:id" element={<AccountDetails />} />
           <Route path="/my-dashboard/notifications" element={<Notifications />} />
+          <Route path="inbox" element={<Messages />} />
+          <Route path="/messages/:id" element={<MessageDetails/>}/>
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/my-products" element={<Products />} />
           <Route path="/my-shop" element={<MyShop/>} />
