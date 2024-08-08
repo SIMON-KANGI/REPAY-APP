@@ -6,9 +6,11 @@ import axios from 'axios';
 import { IoMdAdd } from "react-icons/io";
 import useFetch from '../../../hooks/UseFetch';
 import { useToast } from '@chakra-ui/react';
+import { selectCurrentToken } from '../../../features/auth/Authslice';
 function CreateAccount() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const user = useSelector(selectUserData);
+  const token = useSelector(selectCurrentToken);
   const { data: categories, loading, error } = useFetch('http://127.0.0.1:5555/categories');
   const toast=useToast()
   const [formData, setFormData] = useState({
@@ -25,7 +27,12 @@ function CreateAccount() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    axios.post('http://127.0.0.1:5555/accounts', formData)
+    axios.post('http://127.0.0.1:5555/account/accounts', formData,{
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(res => {
         console.log(res.data);
         onClose();
