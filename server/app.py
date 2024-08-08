@@ -16,11 +16,13 @@ from auth import auth_blueprint
 from users import user_blueprint
 from accounts import account_blueprint
 from transactions import transaction_blueprint
+from messages import chat_blueprint
 from datetime import datetime
+from flask_socketio import SocketIO, emit
 load_dotenv()
 app = create_app()
 api = Api(app)
-
+socketio = SocketIO(app, cors_allowed_origins="*")
 oauth = OAuth(app)
 
 api_url = 'https://n8jqr8.api.infobip.com/sms/2/text/advanced'
@@ -101,6 +103,7 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(user_blueprint, url_prefix='/user')
 app.register_blueprint(account_blueprint, url_prefix='/account')
 app.register_blueprint(transaction_blueprint, url_prefix='/transaction')
+app.register_blueprint(chat_blueprint, url_prefix='/chat')
 
 class ChangeCurrency(Resource):
     def patch(self, id):
@@ -380,7 +383,7 @@ class ProductId(Resource):
 api.add_resource(ProductId, '/products/<int:id>')
         
 
-if __name__ == "__main__":
-    app.run(port=5555, debug=True)
+if __name__ == '__main__':
+    socketio.run(app, debug=True, port=5555)
 
     
