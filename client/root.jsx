@@ -13,13 +13,13 @@ const Root = () => {
   return (
     <Provider store={store}>
       <GlobalProvider>
-      <MessageProvider>
+     
         <Chakra>
           <BrowserRouter>
             <App />
           </BrowserRouter>
         </Chakra>
-      </MessageProvider>
+      
         
       </GlobalProvider>
     </Provider>
