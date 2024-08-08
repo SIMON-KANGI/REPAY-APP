@@ -1,33 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import SideBar from '../Dashboard/SideBar';
 import TopNav from '../Dashboard/TopNav';
 import CreateMessage from './createMessage';
 import { selectCurrentToken, selectUserData } from '../../features/auth/Authslice';
 import { useToast } from '@chakra-ui/react';
 import MessageList from './messageList';
+import { addMessage, fetchMessages } from '../../features/messages/messageSlice';
+import io from 'socket.io-client';
 
+const socket = io('http://127.0.0.1:5555');
 function Messages() {
+    
     const token = useSelector(selectCurrentToken);
     const user = useSelector(selectUserData);
+    const dispatch = useDispatch();
     const toast = useToast();
     const [formData, setFormData] = useState({
         contact: '',
         message: '',
-        user_id:user?.id,
-       
+        user_id: user?.id,
     });
+    useEffect(() => {
+        socket.on('receive_message', (newMessage) => {
+            dispatch(addMessage(newMessage));
+        });
+    
+        return () => {
+            socket.off('receive_message');
+        };
+    }, [dispatch]);
+    
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setFormData((prevData) => ({
+        setFormData(prevData => ({
             ...prevData,
             [name]: value
         }));
     };
 
-    const handleSubmit = async (event) => {
+    async function handleSubmit(event) {
         event.preventDefault();
         try {
             const res = await axios.post('http://127.0.0.1:5555/chat/messages', formData, {
@@ -37,17 +51,28 @@ function Messages() {
                 }
             });
             if (res.status === 200) {
+                dispatch(addMessage(res.data));
+                dispatch(fetchMessages())
+                socket.emit('send_message', res.data);  // Emit the message event
                 toast({
-                    title: res.data,
+                    title: "Message sent",
                     position: 'top-center',
-                    status:'success',
+                    status: 'success',
                     isClosable: true,
-                })
+                });
             }
         } catch (error) {
             console.error('Error sending message:', error);
+            toast({
+                title: "Error sending message",
+                description: error.message,
+                position: 'top-center',
+                status: 'error',
+                isClosable: true,
+            });
         }
-    };
+    }
+    
 
     return (
         <div className="flex">
