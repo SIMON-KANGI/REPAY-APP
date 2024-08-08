@@ -37,7 +37,7 @@ class Messages(Resource):
                 db.session.add(new_message)
                 db.session.commit()
                 socketio.emit('receive_message', new_message.to_dict())
-                return jsonify("message sent")
+                return new_message.to_dict()
             else:
                 return jsonify({"error": "Contact not found"}), 404
 
@@ -81,7 +81,7 @@ class Replies(Resource):
             db.session.add(reply)
             db.session.commit()
             socketio.emit('receive_reply', reply.to_dict())
-            return message.to_dict(), 201
+            return reply.to_dict(), 201
 
 api.add_resource(Replies, '/replies')
 
