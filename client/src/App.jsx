@@ -22,22 +22,24 @@ import MyTransactions from './pages/Dashboard/transactions.jsx/MyTransactions';
 import ErrorBoundary from './ErrorBoundary';
 import MyShop from './pages/shop';
 import Messages from './pages/message';
+import { selectCurrentToken } from './features/auth/Authslice';
 import MessageDetails from './pages/message/messageDetails';
 function App() {
   const { isLoading, isLoggedIn } = useGlobalContext();
+const token = useSelector(selectCurrentToken)
   const user = useSelector(selectUserData);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   console.log('isLoading:', isLoading, 'isLoggedIn:', isLoggedIn); // Debugging line
-  //   if (!isLoading && isLoggedIn) {
-  //     navigate('/my-dashboard');
-  //   }
-  // }, [isLoading, isLoggedIn, navigate]);
+//  useEffect(()=>{
+//   if(!token){
+//    navigate('/login')
+//   }
+
+//  },[token, navigate])
 
   return (
     <ErrorBoundary> 
-      <main className="bg-sky-950 h-full" id="main">
+      <main className="bg-sky-950 max-h-screen" id="main">
      
         <Routes>
           <Route path="/" element={<Home />} />
