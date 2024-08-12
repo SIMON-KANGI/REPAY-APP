@@ -5,11 +5,14 @@ import TopNav from '../TopNav'
 import SideBar from '../SideBar'
 import axios from 'axios'
 import { selectUserData } from '../../../features/auth/Authslice'
+import { addContacts } from '../../../features/contacts/contactSlice';
 import { useSelector } from'react-redux'
 import ContactList from './ContactList'
 import { useToast } from '@chakra-ui/react'
+import { useDispatch } from 'react-redux'
 function Contacts() {
   const user=useSelector(selectUserData)
+  const dispatch = useDispatch();
   const toast=useToast()
   const [formData, setFormData]= useState(
     {
@@ -30,37 +33,35 @@ function Contacts() {
       [name]: value,
     }));
   }, []);
-  const handleSubmit=useCallback((event)=>{
-event.preventDefault();
+  const handleSubmit = useCallback(async (event) => {
+    event.preventDefault();
     setLoading(true);
-    try{
-          axios.post('http://127.0.0.1:5555/contacts', formData)
-          .then(res=>{
-            console.log(res.data);
+
+    try {
+        const res = await axios.post('http://127.0.0.1:5555/contacts', formData);
+
+        if (res.status === 200) {
+            dispatch(addContacts(res.data));
             setLoading(false);
             toast({
-              title:"Contact list updated",
-              position: 'top-center',
-              status:'success',
-              isClosable: true,
-
-            })
-          })
-    }catch(e){
-      console.error(e);
-      setLoading(false);
-      toast({
-        title:"Error occured",
-        position: 'top-center',
-        status:'error',
-        isClosable: true,
-
-      })
-      
+                title: "Contact list updated",
+                position: 'top-center',
+                status: 'success',
+                isClosable: true,
+            });
+        } 
+    } catch (e) {
+        console.error(e);
+        setLoading(false);
+        toast({
+            title: "Error occurred",
+            position: 'top-center',
+            status: 'error',
+            isClosable: true,
+        });
     }
+}, [formData, dispatch, toast]);
 
-
-  }, [formData])
 
   return (
     <div className='flex'>
