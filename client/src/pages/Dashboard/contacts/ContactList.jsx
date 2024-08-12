@@ -7,11 +7,14 @@ import { Menu, MenuButton, MenuItem, MenuList, Button } from '@chakra-ui/react';
 import SendMoney from './SendMoney';
 import { useDisclosure } from '@chakra-ui/react';
 import useFetch from '../../../hooks/UseFetch';
+
+import { useDispatch } from 'react-redux';
 function ContactList() {
   const { data:contacts, loading, error } = useFetch('http://127.0.0.1:5555/contacts');
   const { onOpen, isOpen, onClose } = useDisclosure();
   const [selectedContact, setSelectedContact] = useState(null);
   const user = useSelector(selectUserData);
+  const dispatch = useDispatch();
 
  
 
