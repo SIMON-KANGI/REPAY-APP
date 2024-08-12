@@ -101,7 +101,7 @@ function Login() {
                                 </button>
                             </div>
                             <div className="block w-full mt-4 relative p-4">
-                                <button className="bg-rose-600 py-3 w-96 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
+                                <button className="bg-emerald-600 py-3 w-96 text-center text-white rounded-md" type="submit" disabled={isSubmitting || isLoading}>
                                     {isLoading ? <Spinner /> : 'Login'}
                                 </button>
                             </div>
