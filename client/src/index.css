@@ -5,7 +5,7 @@
 #main{
     /* background-color: rgb(12, 12, 40); */
     background-color: rgb(230,230,230);
-    overflow: hidden;
+   
     scroll-behavior: smooth;
     scrollbar-width: 0;
 }
