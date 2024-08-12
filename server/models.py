@@ -231,7 +231,7 @@ class Contact(db.Model):
     __tablename__ = 'contacts'
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=True)
     phone = db.Column(db.String(20), nullable=False, unique=True)
     account=db.Column(db.BigInteger, nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=True)
@@ -239,13 +239,15 @@ class Contact(db.Model):
     users = db.relationship('User', back_populates='contacts')
     
     def to_dict(self):
+        contact=User.query.filter(User.phone == self.phone).first()
         return{
             'id': self.id,
             'name': self.name,
             'phone': self.phone,
             'account': self.account,
             'email': self.email,
-            'user_id': self.user_id
+            'user_id': self.user_id,
+            'profile':contact.profile
         }
         
 class Invoice(db.Model):
@@ -326,6 +328,7 @@ class Message(db.Model, SerializerMixin):
     def to_dict(self):
         sender = User.query.filter(self.senderId == User.id).first()
         receiver = User.query.filter(User.id == self.ownerId).first()
+        time_only = self.created_at.strftime("%H:%M")
         return {
             'id': self.id,
             'body': self.body,
@@ -335,6 +338,7 @@ class Message(db.Model, SerializerMixin):
             'receiverName': receiver.username,
             'profile': receiver.profile,
             'date': self.human_readable_date(self.created_at),
+            'time': time_only,
             'replies': [reply.to_dict() for reply in self.replies],
         }
 
@@ -363,6 +367,7 @@ class Reply(db.Model, SerializerMixin):
     def to_dict(self):
         sender = User.query.filter(self.senderId == User.id).first()
         receiver = User.query.filter(User.id == self.ownerId).first()
+        time_only = self.created_at.strftime("%H:%M")
         return {
             'id': self.id,
             'body': self.body,
@@ -371,6 +376,7 @@ class Reply(db.Model, SerializerMixin):
             'senderName': sender.username,
             'receiverName': receiver.username,
             'date': self.human_readable_date(self.created_at),
+            'time': time_only,
             'message_id': self.message_id,
         }
 
