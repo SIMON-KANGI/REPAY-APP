@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import SideBar from '../Dashboard/SideBar';
 import TopNav from '../Dashboard/TopNav';
 import { selectUserData, selectCurrentToken } from '../../features/auth/Authslice';
 import { addReply, fetchMessages } from '../../features/messages/messageSlice';
+import MessageList from './messageList';
 
 // Adjust the port as necessary for your backend
 const socket = io('http://127.0.0.1:5555');
@@ -27,10 +28,12 @@ function MessageDetails() {
         body: '',
         senderId: user?.id,
         ownerId: message?.senderId,
-        message_id: message.id,
+        message_id: message?.id,
     });
 
-    // Handle real-time replies using WebSocket
+    const messagesEndRef = useRef(null);
+
+    // real-time replies using WebSocket
     useEffect(() => {
         socket.on('receive_reply', (newReply) => {
             if (newReply.message_id === message.id) {
@@ -42,7 +45,12 @@ function MessageDetails() {
         return () => {
             socket.off('receive_reply');
         };
-    }, [dispatch, message.id]);
+    }, [dispatch, message?.id]);
+
+    // Scroll to the bottom when replies change
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [replies]);
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -107,47 +115,59 @@ function MessageDetails() {
     }
 
     return (
-        <div className="flex overflow-hidden">
+        <div className="flex h-screen">
             <SideBar />
-            <div className="w-full relative">
+            <div className="w-full flex flex-col">
                 <TopNav />
-                <div className="w-full bg-stone-300 shadow-md flex items-center p-4">
-                    <img src={message.profile} alt="user" className="rounded-full w-16 h-16" />
-                    <div className="ml-4">
-                        <h1 className="text-lg font-bold">{message.senderName}</h1>
-                        <p className="text-sm">{message.date}</p>
-                    </div>
-                </div>
-                <section className="flex justify-center items-center h-screen">
-                    <div className="align-middle p-4 shadow-md w-full h-full relative">
-                        <div className={`my-4 px-3 py-2 w-3/4 ${message.senderId === user.id ? 'bg-emerald-300 text-black rounded-full px-3 ml-auto' : 'bg-white rounded-full'}`}>
-                            <p>{message.body}</p>
-                        </div>
-                        <div className="mt-4">
-                            {replies.map(reply => (
-                                <div
-                                    key={reply.id}
-                                    className={`my-4 px-3 py-2 w-3/4 ${reply.senderId === user.id ? 'bg-emerald-300 text-black rounded-full px-3 ml-auto' : 'bg-white rounded-full'}`}
-                                >
-                                    <p>{reply.body}</p>
-                                </div>
-                            ))}
-                        </div>
-                        <form onSubmit={handleSubmit} className="absolute bottom-16 w-full p-4">
-                            <div className="flex items-center">
-                                <input
-                                    type="text"
-                                    name="body"
-                                    placeholder="Type your reply..."
-                                    className="border-2 border-gray-900 rounded-md p-3 w-full mt-2"
-                                    onChange={handleChange}
-                                    value={formData.body}
-                                />
-                                <button type="submit" className="p-3 ml-2">
-                                    <IoSend fontSize={'2rem'} />
-                                </button>
+                <section className="flex h-full container">
+                   
+                    <div className="w-full flex flex-col">
+                        <div className="bg-stone-600 shadow-md flex items-center p-4">
+                            <img src={message.profile} alt="user" className="rounded-full w-16 h-16" />
+                            <div className="ml-4">
+                                <h1 className="text-lg text-white font-bold">
+                                    {user.username === message.receiverName ? message.senderName : message.receiverName}
+                                </h1>
+                                <p className="text-sm text-stone-300">{message.date}</p>
                             </div>
-                        </form>
+                        </div>
+                        <section className="flex flex-col justify-between p-4 flex-1 overflow-y-auto">
+                            <div>
+                                <div className={`my-4 px-3 flex text-white py-2 w-fit ${message.senderId === user.id ? 'bg-emerald-600 rounded-md px-3 ml-auto' : 'bg-stone-600 rounded-full'}`}>
+                                    <p>{message.body}</p>
+                                    <p className='float-end text-gray-300 text-sm px-2 mt-2'>{message.time}</p>
+                                </div>
+                                <div className="mt-4">
+                                    {replies?.map(reply => (
+                                        <div
+                                            key={reply.id}
+                                            className={`my-4 px-3 rounded-md text-white py-2 w-fit flex ${reply.senderId === user.id ? 'bg-emerald-600 px-3 ml-auto' : 'bg-stone-600'}`}
+                                        >
+                                            <p>{reply.body}</p>
+                                            <p className='float-end text-gray-300 text-sm px-2 mt-2'>{reply.time}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div ref={messagesEndRef} />
+                            </div>
+                            <form onSubmit={handleSubmit} className="bg-stone-600 sticky z-10 bottom-0 p-2 mt-auto">
+                                <div className="flex items-center">
+                                    <input
+                                        type="text"
+                                        name="body"
+                                        placeholder="Type your reply..."
+                                        className="border-2 border-gray-900 text-slate-100 rounded-lg p-3 w-3/4"
+                                        onChange={handleChange}
+                                        value={formData.body}
+                                    />
+                                    {formData.body && (
+                                        <button type="submit" className="p-3 ml-2">
+                                            <IoSend fontSize={'2rem'} color='white' />
+                                        </button>
+                                    )}
+                                </div>
+                            </form>
+                        </section>    
                     </div>
                 </section>
             </div>
