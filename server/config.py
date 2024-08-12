@@ -20,7 +20,7 @@ def create_app():
     socketio = SocketIO(app, cors_allowed_origins="*")
     app.config['SECRET_KEY'] = 'v3DqpM9dN_IhDaD0zNrPybgwgoF5zQnx0NNPXZfZvVQ' # secret key
     app.config['JWT_SECRET_KEY'] = '1TZTcxUSuWa_D1afcqD4c9soQdR3ogR3BkPT9vZFUxY' # secret key
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 6000
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 100000
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", 'sqlite:///repay.db')
     # print("Database URI:", app.config["SQLALCHEMY_DATABASE_URI"])
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
