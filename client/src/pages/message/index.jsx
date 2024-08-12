@@ -9,6 +9,8 @@ import { useToast } from '@chakra-ui/react';
 import MessageList from './messageList';
 import { addMessage, fetchMessages } from '../../features/messages/messageSlice';
 import io from 'socket.io-client';
+import MessageDetails from './messageDetails';
+import ContactListMessage from './contactList';
 
 const socket = io('http://127.0.0.1:5555');
 function Messages() {
@@ -75,7 +77,7 @@ function Messages() {
     
 
     return (
-        <div className="flex">
+        <div className="flex overflow-hidden">
             <SideBar />
             <section className="w-full">
                 <TopNav />
@@ -86,9 +88,12 @@ function Messages() {
                     handleSubmit={handleSubmit}
                     formData={formData}
                 />  
+                <ContactListMessage/>
                 </div>
-               
+                <h1 className='text-center text-2xl font-bold text-emerald-700'>Recent conversations</h1>
                 <MessageList/>
+                
+                
             </section>
         </div>
     );
