@@ -203,16 +203,32 @@ api.add_resource(Locations, '/locations')
 class Contacts(Resource):
     def get(self):
         contacts = [contact.to_dict() for contact in Contact.query.all()]
-        return jsonify(contacts)
+        return contacts
     
     def post(self):
         data = request.get_json()
+        
         contact = Contact(name=data['name'], email=data['email'], 
                           phone=data['phone'],account=data['account'], user_id=data['user_id'])
         db.session.add(contact)
-        db.session.commit()
-        return ({"message": "Contact created successfully"})
+        db.session.commit()        
+        return contact.to_dict(),200
 api.add_resource(Contacts, '/contacts')
+
+class ContactId(Resource):
+    def get(self, id):
+        contact = Contact.query.filter_by(id=id).first()
+        return contact.to_dict(),200
+    
+    def delete(self,id):
+        contact = Contact.query.get(id)
+        if not contact:
+            return jsonify({"error": "Contact not found"}), 404
+        
+        db.session.delete(contact)
+        db.session.commit()
+        return 'Contact deleted successfully'
+api.add_resource(ContactId,  "/contacts/<int:id>")
 class CreateInvoice(Resource):
     def get(self):
         
